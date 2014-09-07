@@ -34,14 +34,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         url_inicio = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/' \
                      'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
-        urls = []
+        self.urls = []
 
-        if options['full_scrapping'] is True:
+        if 'full_scrapping' in options and options['full_scrapping'] is True:
             # Do full scrapping since 2011-08-27
             # Loop 100 to 3900 to get from 0001/2011-CR
             for i in range(100, 3900, 100):
-                urls.append(url_inicio + "&Start=" + str(i))
+                self.urls.append(url_inicio + "&Start=" + str(i))
         else:
             # Scrape only first page that has around 100 items
-            urls.append(url_inicio)
-        print(urls)
+            self.urls.append(url_inicio)
+        print(self.urls)
