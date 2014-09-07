@@ -91,13 +91,12 @@ class Command(BaseCommand):
         :return: metadata for proyecto de ley, "done_already"
         """
         try:
-            is_already_in_db = Proyecto.objects.get(
-                                numero_proyecto=obj['numero_proyecto']
-            )
+            Proyecto.objects.get(numero_proyecto=obj['numero_proyecto'])
+            return "already in database"
         except Proyecto.DoesNotExist:
-            is_already_in_db = False
+            # not in database
+            pass
 
-        return is_already_in_db
         """
         f = codecs.open(filename, "r", "utf-8")
         html = f.read()

@@ -1,11 +1,13 @@
 #-*- encoding: utf-8 -*-
 import codecs
+from datetime import datetime
 import os
 
 from bs4 import BeautifulSoup
 
 from django.test import TestCase
 from pdl.management.commands.scraper import Command
+from pdl.models import Proyecto
 
 
 class ScrapperTest(TestCase):
@@ -66,7 +68,15 @@ class ScrapperTest(TestCase):
             our_links = self.scrapper_cmd.extract_doc_links(soup)
         self.assertEqual(expected, our_links)
 
-    def test_extract_metadata(self):
+    def test_extract_metadata1(self):
         obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola'}
         result = self.scrapper_cmd.extract_metadata(obj)
-        self.assertEqual(False, result)
+        self.assertEqual("some metadata", result)
+
+    def test_extract_metadata2(self):
+        obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola'}
+        b = Proyecto(numero_proyecto='03774/2014-CR', titulo='hola',
+                     fecha_presentacion=datetime.now())
+        b.save()
+        result = self.scrapper_cmd.extract_metadata(obj)
+        self.assertEqual("already in database", result)
