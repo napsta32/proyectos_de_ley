@@ -2,3 +2,8 @@
 .*swp
 *pyc
 config.py*
+
+*json
+pages/*
+congresistas/*
+*db
