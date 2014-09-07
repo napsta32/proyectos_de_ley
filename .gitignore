@@ -1,10 +1,12 @@
+# Django development
+config.json
+
 .git/*
 .*swp
 *pyc
-config.py*
 .idea
 
 *json
 pages/*
-congresistas/*
+congresista/*
 *db
