@@ -14,5 +14,5 @@ class Proyecto(models.Model):
     pdf_url = models.URLField(max_length=200)
 
     # migrate from timestamp field
-    time_creation = models.DateTimeField(auto_now=True)
-    time_edited = models.DateTimeField(auto_now_add=True)
+    time_created = models.DateTimeField(auto_now_add=True)
+    time_edited = models.DateTimeField(auto_now=True)
