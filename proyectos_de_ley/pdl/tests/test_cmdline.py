@@ -69,9 +69,27 @@ class ScrapperTest(TestCase):
         self.assertEqual(expected, our_links)
 
     def test_extract_metadata1(self):
-        obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola'}
+        obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
+               'seguimiento_page': 'http://www2.congreso.gob.pe/Sicr/TraDocEst'
+                                   'Proc/CLProLey2011.nsf/Sicr/TraDocEstProc/'
+                                   'CLProLey2011.nsf/PAporNumeroInverso/96091'
+                                   '30B9871582F05257D4A00752301?opendocument',
+               }
         result = self.scrapper_cmd.extract_metadata(obj)
-        self.assertEqual("some metadata", result)
+        expected = {
+            'numero_proyecto': '03774/2014-CR',
+            'codigo': '03774',
+            'titulo': u'Propone establecer los lineamientos para la promoc'
+                      u'i\xf3n de la eficiencia y competitividad en la '
+                      u'actividad empresarial del Estado, garantizando su '
+                      u'aporte estrat\xe9gico para el desarrollo'
+                      u' descentralizado y la soberan\xeda nacional.',
+            'fecha_presentacion': '05/09/2014',
+            'link_to_pdf': 'http://www2.congreso.gob.pe/sicr/tradocestproc/'
+                           'Expvirt_2011.nsf/visbusqptramdoc/03774?opendocu'
+                           'ment',
+        }
+        self.assertEqual(expected, result)
 
     def test_extract_metadata2(self):
         obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
@@ -87,3 +105,13 @@ class ScrapperTest(TestCase):
         b.save()
         result = self.scrapper_cmd.extract_metadata(obj)
         self.assertEqual("already in database", result)
+
+    def test_extract_pdf_url(self):
+        link = 'http://www2.congreso.gob.pe/sicr/tradocestproc/Expvirt_2011' \
+               '.nsf/visbusqptramdoc/02764?opendocument'
+        codigo = '02764'
+        result = self.scrapper_cmd.extract_pdf_url(link, codigo)
+        expected = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/Contdoc0' \
+                   '2_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0/2a89be59a1' \
+                   'a3966b05257c01000a5cd5/$FILE/PL02764101013.pdf'
+        self.assertEqual(expected, result)

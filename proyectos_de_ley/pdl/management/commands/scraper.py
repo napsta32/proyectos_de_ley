@@ -122,8 +122,28 @@ class Command(BaseCommand):
             this_metadata['link_to_pdf'] = link_to_pdf
             print(this_metadata['link_to_pdf'])
 
-            #this_metadata['pdf_url'] = extract_pdf_url(link_to_pdf)
+            this_metadata['pdf_url'] = extract_pdf_url(
+                                                    link_to_pdf,
+                                                    this_metadata['codigo'],
+                                                       )
         except:
             print("no link to pdf")
-
         return this_metadata
+
+    def extract_pdf_url(self, link, codigo):
+        """Try to get the URL for PDF of project from the "expediente" page.
+        Such page might have many PDFs. Try to get the right one by looking
+        for the code in the PDF URL address."""
+        try:
+            pdf_soup = self.get(link)
+        except:
+            # Algunos proyectos de ley no tienen link hacia PDFs
+            return "none"
+
+        pattern = re.compile("/PL" + str(codigo) + "[0-9]+\.pdf$")
+        for i in pdf_soup.find_all("a"):
+            if re.search(pattern, i['href']):
+                my_pdf_link = str(i['href'])
+                return my_pdf_link
+        # Algunos proyectos de ley no tienen link hacia PDFs
+        return "none"
