@@ -20,7 +20,11 @@ def create_rss():
     db = dataset.connect("sqlite:///leyes.db")
     res = db.query("SELECT * FROM proyectos ORDER BY timestamp DESC")
     for i in res:
-        titulo = "Proyecto de Ley " + i['numero_proyecto'] + " " + i['titulo'][0:140]
+        try:
+            num = i['numero_proyecto'].split("/")[0]
+        except:
+            num = i['numero_proyecto']
+        titulo = i['titulo'][0:140]
         if len(i['titulo']) > 140:
             titulo += "..."
     

@@ -2,6 +2,7 @@ $( 'form' ).submit(function(e) {
     e.preventDefault();
     $("h2").remove();
     $("h1#proyectos_de_ley").remove();
+    $("h1#about").remove();
     $("div#page-selection").remove();
     var keyword = $("input:first").val();
     if( keyword != "" ) {
@@ -13,6 +14,7 @@ $( 'form' ).submit(function(e) {
         var out = '';
         $.getJSON( "http://{% base_url %}data_handler.py", { search: keyword } )
             .done(function(data) {
+            //console.log(keyword);
             //console.log(data);
             $.each(data, function(i, v) {
         
@@ -34,6 +36,13 @@ $( 'form' ).submit(function(e) {
                     }
                     else {
                         out += ' [sin Expediente]';
+                    }
+                    if( v.seguimient_page != "" ) {
+                        out += ' <span class="glyphicon glyphicon-link"></span>';
+                        out += ' <a href="' + v.seguimiento_page + '">Seguimiento</a>';
+                    }
+                    else {
+                        out += ' [sin Seguimiento]';
                     }
                     out += '</p>'
                     //console.log(v);
