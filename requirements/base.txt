@@ -5,5 +5,4 @@ PyYAML==3.11
 binaryornot==0.3.0
 Unipath==1.0
 beautifulsoup4==4.3.2
-requests==2.4.0
 
