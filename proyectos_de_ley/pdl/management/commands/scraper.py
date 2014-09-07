@@ -6,10 +6,14 @@ from datetime import date
 from datetime import timedelta as td
 import hashlib
 import json
+import urllib.request
+
 import os
 from random import randint
 from optparse import make_option
 import requests
+import socks
+import socket
 from bs4 import BeautifulSoup
 from time import sleep
 
@@ -46,7 +50,11 @@ class Command(BaseCommand):
             self.urls.append(url_inicio)
 
     def get(self, url):
-        req = requests.get(url)
-        html = req.text
+        """Does a HTTP request for a webpage and returns a BeautifulSoup
+        object. By default uses the *tor* network."""
+        socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
+        socket.socket = socks.socksocket
+        req = urllib.request.urlopen(url)
+        html = req.read()
         soup = BeautifulSoup(html)
         return soup
