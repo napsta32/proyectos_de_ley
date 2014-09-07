@@ -63,17 +63,81 @@ class Command(BaseCommand):
 
     def extract_doc_links(self, soup):
         """Parses a soup object from the Congress front pages and returns a
-        list of objects containing link and title for each project.
+        list of objects containing project_number, link and title for each
+        project.
         That link is actually the *Seguimiento* URL."""
         our_links = []
         for link in soup.find_all("a"):
             if re.search("[0-9]{5}/[0-9]{4}", link.get_text()):
+                numero_proyecto = link.get_text()
                 href = link.get("href")
                 title = link.get("title")
                 if href.endswith("ocument"):
                    our_link = "http://www2.congreso.gob.pe"
                    our_link += "/Sicr/TraDocEstProc/CLProLey2011.nsf/"
                    our_link += href
-                   our_links.append({'titulo': title, 'seguimiento_page':
-                       our_link})
+                   our_links.append({'numero_proyecto': numero_proyecto,
+                                     'titulo': title,
+                                     'seguimiento_page': our_link})
         return our_links
+
+    def extract_metadata(self, obj):
+        """
+        Using the ``numero_proyecto`` finds out if already in database. If
+        false, it will try to download the metadata for such a project and
+        return it. If we already have that data in the database, will will
+        return "done_already"
+        :param obj: {'numero_proyecto', 'titulo', 'seguimiento_page'}
+        :return: metadata for proyecto de ley, "done_already"
+        """
+        try:
+            is_already_in_db = Proyecto.objects.get(
+                                numero_proyecto=obj['numero_proyecto']
+            )
+        except Proyecto.DoesNotExist:
+            is_already_in_db = False
+
+        return is_already_in_db
+        """
+        f = codecs.open(filename, "r", "utf-8")
+        html = f.read()
+        f.close()
+
+        project_soup = BeautifulSoup(html)
+
+        this_metadata = dict()
+        for item in project_soup.find_all("input"):
+            if item['name'] == "SumIni":
+                this_metadata['titulo'] = item['value']
+            if item['name'] == "CodIni_web_1":
+                this_metadata['numero_proyecto'] = item['value']
+                #print "* numero_proyecto: %s" % this_metadata['numero_proyecto']
+            #if item['name'] == "DesGrupParla":
+                #metadata['grupo_parlamentario'] = item['value']
+            #if item['name'] == "NombreDeLaComision":
+                #metadata['comision'] = item['value']
+            if item['name'] == "NomCongre":
+                this_metadata['congresistas'] = parse_names(item['value'])
+            if item['name'] == "CodIni":
+                this_metadata['codigo'] = item['value']
+            if item['name'] == "fechapre":
+                this_metadata['fecha_presentacion'] = item['value']
+                #print "* fecha_presentacion: %s" % this_metadata['fecha_presentacion']
+        link_to_pdf = 'http://www2.congreso.gob.pe/sicr/tradocestproc/Expvirt_2011.nsf/visbusqptramdoc/' + this_metadata['codigo'] + '?opendocument'
+        try:
+            this_metadata['link_to_pdf'] = link_to_pdf
+            print this_metadata['link_to_pdf']
+
+            this_metadata['pdf_url'] = extract_pdf_url(link_to_pdf)
+        except:
+            print "no link to pdf"
+
+        # don't do this for now as OCR is not so critical
+        #get_pdf(metadata['pdf_url'], metadata['numero_proyecto'])
+
+        # Algunos proyectos de Ley no tienen links hacia PDFs
+        if this_metadata['pdf_url'] == "none":
+            del this_metadata['pdf_url']
+            del this_metadata['link_to_pdf']
+        return this_metadata
+        """

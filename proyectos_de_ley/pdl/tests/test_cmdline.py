@@ -12,35 +12,33 @@ class ScrapperTest(TestCase):
     def setUp(self):
         self.congreso_url = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/' \
                        'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
+        self.scrapper_cmd = Command()
+
     def test_url1(self):
         """Test when user does not enter any argument for the scrapper."""
         options = dict(full_scrapping = False)
-        scrapper_cmd = Command()
-        scrapper_cmd.handle(**options)
+        self.scrapper_cmd.handle(**options)
         expected = self.congreso_url
-        self.assertEqual(expected, scrapper_cmd.urls[0])
+        self.assertEqual(expected, self.scrapper_cmd.urls[0])
 
     def test_url2(self):
         """Test when user enter argument for full scrapping, since 20110727."""
         options = dict(full_scrapping = True)
-        scrapper_cmd = Command()
-        scrapper_cmd.handle(**options)
+        self.scrapper_cmd.handle(**options)
         expected_last = self.congreso_url + '&Start=3800'
-        self.assertEqual(expected_last, scrapper_cmd.urls[-1])
+        self.assertEqual(expected_last, self.scrapper_cmd.urls[-1])
 
     def test_get(self):
-        scrapper_cmd = Command()
-        soup = scrapper_cmd.get("http://www.bbc.com/news/")
+        soup = self.scrapper_cmd.get("http://www.bbc.com/news/")
         result = soup.title.get_text()
         expected = "BBC News - Home"
         self.assertEqual(result, expected)
 
     def test_extract_doc_links(self):
-        scrapper_cmd = Command()
         expected = [
             {
             #'codigo': u'03774',
-            #'numero_proyecto': '03774/2014-CR',
+            'numero_proyecto': '03774/2014-CR',
             #'link': None,
             #'link_to_pdf': 'http://www2.congreso.gob.pe/sicr/tradocestproc/'
                            #'Expvirt_2011.nsf/visbusqptramdoc/03774?opendocument'
@@ -65,6 +63,10 @@ class ScrapperTest(TestCase):
         with codecs.open(html_file, "r", "utf-8") as f:
             html = f.read()
             soup = BeautifulSoup(html)
-            our_links = scrapper_cmd.extract_doc_links(soup)
+            our_links = self.scrapper_cmd.extract_doc_links(soup)
         self.assertEqual(expected, our_links)
 
+    def test_extract_metadata(self):
+        obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola'}
+        result = self.scrapper_cmd.extract_metadata(obj)
+        self.assertEqual(False, result)
