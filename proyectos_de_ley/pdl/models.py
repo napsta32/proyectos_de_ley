@@ -1,3 +1,18 @@
 from django.db import models
 
 # Create your models here.
+class Proyecto(models.Model):
+    codigo = models.CharField(max_length=20)
+    numero_proyecto = models.CharField(max_length=50)
+    short_url = models.CharField(max_length=20)
+    congresistas = models.TextField()
+
+    # migrate from date as string
+    fecha_presentacion = models.DateField()
+    titulo = models.TextField()
+    link_to_pdf = models.URLField(max_length=200)
+    pdf_url = models.URLField(max_length=200)
+
+    # migrate from timestamp field
+    time_creation = models.DateTimeField(auto_now=True)
+    time_edited = models.DateTimeField(auto_now_add=True)
