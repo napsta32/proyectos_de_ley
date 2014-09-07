@@ -36,7 +36,7 @@ class Command(BaseCommand):
                      'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
         self.urls = []
 
-        if 'full_scrapping' in options and options['full_scrapping'] is True:
+        if options['full_scrapping'] is True:
             # Do full scrapping since 2011-08-27
             # Loop 100 to 3900 to get from 0001/2011-CR
             for i in range(100, 3900, 100):
