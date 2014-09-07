@@ -6,6 +6,7 @@ from datetime import date
 from datetime import timedelta as td
 import hashlib
 import json
+import re
 import urllib.request
 
 import os
@@ -58,3 +59,20 @@ class Command(BaseCommand):
         html = req.read()
         soup = BeautifulSoup(html)
         return soup
+
+    def extract_doc_links(self, soup):
+        """Parses a soup object from the Congress front pages and returns a
+        list of objects containing link and title for each project.
+        That link is actually the *Seguimiento* URL."""
+        our_links = []
+        for link in soup.find_all("a"):
+            if re.search("[0-9]{5}/[0-9]{4}", link.get_text()):
+                href = link.get("href")
+                title = link.get("title")
+                if href.endswith("ocument"):
+                   our_link = "http://www2.congreso.gob.pe"
+                   our_link += "/Sicr/TraDocEstProc/CLProLey2011.nsf/"
+                   our_link += href
+                   our_links.append({'titulo': title, 'seguimiento_page':
+                       our_link})
+        return our_links
