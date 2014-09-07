@@ -74,8 +74,15 @@ class ScrapperTest(TestCase):
         self.assertEqual("some metadata", result)
 
     def test_extract_metadata2(self):
-        obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola'}
+        obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
+            'seguimiento_page': 'http://www2.congreso.gob.pe/Sicr/TraDocEst'
+                                'Proc/CLProLey2011.nsf/Sicr/TraDocEstProc/'
+                                'CLProLey2011.nsf/PAporNumeroInverso/96091'
+                                '30B9871582F05257D4A00752301?opendocument',
+            'fecha_presentacion': datetime.now()
+        }
         b = Proyecto(numero_proyecto='03774/2014-CR', titulo='hola',
+                     seguimiento_page=obj['seguimiento_page'],
                      fecha_presentacion=datetime.now())
         b.save()
         result = self.scrapper_cmd.extract_metadata(obj)

@@ -12,6 +12,7 @@ class Proyecto(models.Model):
     titulo = models.TextField()
     link_to_pdf = models.URLField(max_length=200)
     pdf_url = models.URLField(max_length=200)
+    seguimiento_page = models.URLField(max_length=200, blank=True)
 
     # migrate from timestamp field
     time_created = models.DateTimeField(auto_now_add=True)

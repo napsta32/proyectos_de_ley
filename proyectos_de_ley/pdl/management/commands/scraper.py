@@ -97,12 +97,7 @@ class Command(BaseCommand):
             # not in database
             pass
 
-        """
-        f = codecs.open(filename, "r", "utf-8")
-        html = f.read()
-        f.close()
-
-        project_soup = BeautifulSoup(html)
+        project_soup = self.get(obj['seguimiento_page'])
 
         this_metadata = dict()
         for item in project_soup.find_all("input"):
@@ -115,8 +110,8 @@ class Command(BaseCommand):
                 #metadata['grupo_parlamentario'] = item['value']
             #if item['name'] == "NombreDeLaComision":
                 #metadata['comision'] = item['value']
-            if item['name'] == "NomCongre":
-                this_metadata['congresistas'] = parse_names(item['value'])
+            #if item['name'] == "NomCongre":
+                #this_metadata['congresistas'] = parse_names(item['value'])
             if item['name'] == "CodIni":
                 this_metadata['codigo'] = item['value']
             if item['name'] == "fechapre":
@@ -125,18 +120,10 @@ class Command(BaseCommand):
         link_to_pdf = 'http://www2.congreso.gob.pe/sicr/tradocestproc/Expvirt_2011.nsf/visbusqptramdoc/' + this_metadata['codigo'] + '?opendocument'
         try:
             this_metadata['link_to_pdf'] = link_to_pdf
-            print this_metadata['link_to_pdf']
+            print(this_metadata['link_to_pdf'])
 
-            this_metadata['pdf_url'] = extract_pdf_url(link_to_pdf)
+            #this_metadata['pdf_url'] = extract_pdf_url(link_to_pdf)
         except:
-            print "no link to pdf"
+            print("no link to pdf")
 
-        # don't do this for now as OCR is not so critical
-        #get_pdf(metadata['pdf_url'], metadata['numero_proyecto'])
-
-        # Algunos proyectos de Ley no tienen links hacia PDFs
-        if this_metadata['pdf_url'] == "none":
-            del this_metadata['pdf_url']
-            del this_metadata['link_to_pdf']
         return this_metadata
-        """
