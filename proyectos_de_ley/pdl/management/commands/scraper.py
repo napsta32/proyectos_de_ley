@@ -44,4 +44,3 @@ class Command(BaseCommand):
         else:
             # Scrape only first page that has around 100 items
             self.urls.append(url_inicio)
-        print(self.urls)
