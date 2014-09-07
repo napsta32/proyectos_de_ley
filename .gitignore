@@ -1,5 +1,6 @@
 # Django development
 config.json
+__pycache__
 
 .git/*
 .*swp
