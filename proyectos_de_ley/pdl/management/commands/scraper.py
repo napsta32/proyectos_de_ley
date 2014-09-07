@@ -54,6 +54,7 @@ class Command(BaseCommand):
         """Does a HTTP request for a webpage and returns a BeautifulSoup
         object. By default uses the *tor* network."""
         socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
+        socket.setdefaulttimeout(10) # 10 seconds for timeout
         socket.socket = socks.socksocket
         req = urllib.request.urlopen(url)
         html = req.read()
