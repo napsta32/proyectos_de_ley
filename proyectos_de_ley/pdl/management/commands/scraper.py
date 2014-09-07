@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
+from optparse import make_option
 import codecs
 import datetime
 from datetime import date
 from datetime import timedelta as td
 import hashlib
 import json
-from optparse import make_option
 import os
 from random import randint
-import re
-from time import sleep
-
 from optparse import make_option
+import requests
+from bs4 import BeautifulSoup
+from time import sleep
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
@@ -44,3 +44,9 @@ class Command(BaseCommand):
         else:
             # Scrape only first page that has around 100 items
             self.urls.append(url_inicio)
+
+    def get(self, url):
+        req = requests.get(url)
+        html = req.text
+        soup = BeautifulSoup(html)
+        return soup
