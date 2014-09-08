@@ -16,16 +16,34 @@ class ScrapperTest(TestCase):
                        'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
         self.scrapper_cmd = Command()
 
+    def test_tor1(self):
+        """If user does not enter argument for tor, it should be True by
+        default."""
+        options = dict(tor=False, full_scrapping=False)
+        self.scrapper_cmd.handle(**options)
+        result = self.scrapper_cmd.tor
+        expected = False
+        self.assertEqual(expected, result)
+
+    def test_tor2(self):
+        """If user does not enter argument for tor, it should be True by
+        default."""
+        options = dict(tor=True, full_scrapping=False)
+        self.scrapper_cmd.handle(**options)
+        result = self.scrapper_cmd.tor
+        expected = True
+        self.assertEqual(expected, result)
+
     def test_url1(self):
         """Test when user does not enter any argument for the scrapper."""
-        options = dict(full_scrapping = False)
+        options = dict(full_scrapping=False, tor=False)
         self.scrapper_cmd.handle(**options)
         expected = self.congreso_url
         self.assertEqual(expected, self.scrapper_cmd.urls[0])
 
     def test_url2(self):
         """Test when user enter argument for full scrapping, since 20110727."""
-        options = dict(full_scrapping = True)
+        options = dict(full_scrapping=True, tor=False)
         self.scrapper_cmd.handle(**options)
         expected_last = self.congreso_url + '&Start=3800'
         self.assertEqual(expected_last, self.scrapper_cmd.urls[-1])

@@ -34,12 +34,27 @@ class Command(BaseCommand):
                     default=False,
                     help='Hace un scrapping total desde 27 de Julio del 2011.',
                     ),
+        make_option('-t',
+                    '--tor',
+                    action='store',
+                    dest='tor',
+                    default=False,
+                    help='Hace pedidos HTTP detrás de *tor*. Usar --tor '
+                         'True/False',
+                    ),
     )
 
     def handle(self, *args, **options):
         url_inicio = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/' \
                      'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
         self.urls = []
+
+        if 'tor' not in options:
+            raise CommandError("Usar argumento --tor True/False")
+        elif options['tor'] is True:
+            self.tor = True
+        elif options['tor'] is False:
+            self.tor = False
 
         if options['full_scrapping'] is True:
             # Do full scrapping since 2011-08-27

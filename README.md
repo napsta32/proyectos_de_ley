@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/aniversarioperu/proyectos_de_ley/badge.png)](https://coveralls.io/r/aniversarioperu/proyectos_de_ley)
+
 # Dependencias
 Estos scripts ha sido probados en una computadora usando Ubuntu 13.10 y
 necesitan que las siguientes dependencias estén instaladas.
