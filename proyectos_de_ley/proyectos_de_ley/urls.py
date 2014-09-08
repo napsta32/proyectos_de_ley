@@ -1,10 +1,10 @@
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
+# from django.contrib import admin
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'proyectos_de_ley.views.home', name='home'),
+    url(r'^$', include('pdl.urls', namespace='pdl')),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
+    # url(r'^admin/', include(admin.site.urls)),
 )
