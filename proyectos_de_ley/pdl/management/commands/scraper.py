@@ -190,4 +190,6 @@ class Command(BaseCommand):
         :return: dict containing all needed metadata.
         """
         obj = self.extract_metadata(obj)
+        obj['short_url'] =self.create_shorturl(obj['codigo'])
+        obj['fecha_presentacion'] = self.fix_date(obj['fecha_presentacion'])
         return obj

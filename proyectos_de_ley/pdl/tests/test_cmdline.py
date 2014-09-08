@@ -183,7 +183,7 @@ class ScrapperTest(TestCase):
                                 'LProLey2011.nsf/PAporNumeroInverso/A4604A5'
                                 '7E03E482405257C01000B1980?opendocument',
             'codigo': '02764',
-            'fecha_presentacion': '10/10/2013',
+            'fecha_presentacion': date(2013, 10, 10),
             'expediente': 'http://www2.congreso.gob.pe/sicr/tradocestproc/'
                           'Expvirt_2011.nsf/visbusqptramdoc/02764?opendocu'
                           'ment',
@@ -218,6 +218,7 @@ class ScrapperTest(TestCase):
                             'Del Carmen; Vacchelli Corbetto, Gian Carlo; '
                             'Valqui Matos, Nestor Antonio; Iberico Nuñez, '
                             'Luis',
+            'short_url': '4zhube',
         }
         result = self.scrapper_cmd.gather_all_metadata(obj)
         self.assertEqual(expected, result)
