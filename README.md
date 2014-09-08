@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/aniversarioperu/proyectos_de_ley.svg?branch=master)](https://travis-ci.org/aniversarioperu/proyectos_de_ley)
 [![Coverage Status](https://coveralls.io/repos/aniversarioperu/proyectos_de_ley/badge.png)](https://coveralls.io/r/aniversarioperu/proyectos_de_ley)
 
 # Dependencias
