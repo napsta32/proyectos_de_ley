@@ -1,11 +1,18 @@
 Django==1.7
 Jinja2==2.7.3
+Mako==1.0.0
 MarkupSafe==0.23
+PySocks==1.5.0
 PyYAML==3.11
-binaryornot==0.3.0
+SQLAlchemy==0.9.7
+Unidecode==0.04.16
 Unipath==1.0
+alembic==0.6.6
 beautifulsoup4==4.3.2
-
-# additional packages needed for development
+binaryornot==0.3.0
+certifi==14.05.14
 cookiecutter==0.7.2
+coverage==3.7.1
 dataset==0.5.5
+python-slugify==0.0.9
+requests==2.4.0
