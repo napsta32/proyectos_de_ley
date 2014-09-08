@@ -1,6 +1,7 @@
 #-*- encoding: utf-8 -*-
 import codecs
 from datetime import datetime
+from datetime import date
 import os
 
 from bs4 import BeautifulSoup
@@ -156,4 +157,10 @@ class ScrapperTest(TestCase):
         codigo = "03774"
         expected = "4aw8ym"
         result = self.scrapper_cmd.create_shorturl(codigo)
+        self.assertEqual(expected, result)
+
+    def test_fix_date(self):
+        date_string = "08/28/2014"
+        expected = date(2014, 8, 28)
+        result = self.scrapper_cmd.fix_date(date_string)
         self.assertEqual(expected, result)

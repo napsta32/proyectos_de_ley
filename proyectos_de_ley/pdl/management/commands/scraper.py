@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+from datetime import date
 import re
 import urllib.request
 
@@ -174,3 +176,12 @@ class Command(BaseCommand):
         mystring = self.legislatura + codigo
         url = short_url.encode_url(int(mystring))
         return url
+
+    def fix_date(self, string):
+        """
+        Takes an string date from Proyecto and converts it to Date object.
+        :param string: "08/28/2014"
+        :return: date(2014, 08, 28)
+        """
+        mydate = datetime.date(datetime.strptime(string, '%m/%d/%Y'))
+        return mydate
