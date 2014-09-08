@@ -220,3 +220,28 @@ class ScrapperTest(TestCase):
         }
         result = self.scrapper_cmd.gather_all_metadata(obj)
         self.assertEqual(expected, result)
+
+
+    def test_save_project1(self):
+        """Item is not in the database"""
+        obj = dict(numero_proyecto="03774/2014-CR", short_url="4aw8ym",
+                   fecha_presentacion=date.today(),
+                   )
+        self.scrapper_cmd.save_project(obj)
+        item = Proyecto.objects.get(short_url="4aw8ym")
+        result = item.fecha_presentacion
+        expected = date.today()
+        self.assertEqual(expected, result)
+
+    def test_save_project2(self):
+        """Item is already in the database"""
+        obj = dict(numero_proyecto="03774/2014-CR", short_url="4aw8ym",
+                   fecha_presentacion=date.today(),
+                   )
+        self.scrapper_cmd.save_project(obj)
+
+        obj['short_url'] = "another url"
+        result = self.scrapper_cmd.save_project(obj)
+
+        expected = "already in database"
+        self.assertEqual(expected, result)

@@ -193,3 +193,15 @@ class Command(BaseCommand):
         obj['short_url'] =self.create_shorturl(obj['codigo'])
         obj['fecha_presentacion'] = self.fix_date(obj['fecha_presentacion'])
         return obj
+
+    def save_project(self, obj):
+        """
+        Saves all metadata for our project into our database.
+        """
+        try:
+            Proyecto.objects.get(numero_proyecto=obj['numero_proyecto'])
+            return "already in database"
+        except Proyecto.DoesNotExist:
+            # not in database
+            b = Proyecto(**obj)
+            b.save()
