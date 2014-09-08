@@ -10,7 +10,7 @@ class Proyecto(models.Model):
     # migrate from date as string
     fecha_presentacion = models.DateField()
     titulo = models.TextField()
-    link_to_pdf = models.URLField(max_length=200)
+    expediente = models.URLField(max_length=200)
     pdf_url = models.URLField(max_length=200)
     seguimiento_page = models.URLField(max_length=200, blank=True)
 

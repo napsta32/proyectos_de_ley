@@ -58,7 +58,8 @@ class Command(BaseCommand):
             self.urls.append(url_inicio)
 
     def get(self, url):
-        """Does a HTTP request for a webpage and returns a BeautifulSoup
+        """
+        Does a HTTP request for a webpage and returns a BeautifulSoup
         object."""
         if self.tor is True:
             socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
@@ -70,7 +71,8 @@ class Command(BaseCommand):
         return soup
 
     def extract_doc_links(self, soup):
-        """Parses a soup object from the Congress front pages and returns a
+        """
+        Parses a soup object from the Congress front pages and returns a
         list of objects containing project_number, link and title for each
         project.
         That link is actually the *Seguimiento* URL."""
@@ -123,28 +125,23 @@ class Command(BaseCommand):
                 this_metadata['codigo'] = item['value']
             if item['name'] == "fechapre":
                 this_metadata['fecha_presentacion'] = item['value']
-        link_to_pdf = 'http://www2.congreso.gob.pe/sicr/tradocestproc' \
+        expediente = 'http://www2.congreso.gob.pe/sicr/tradocestproc' \
                       '/Expvirt_2011.nsf/visbusqptramdoc/'
-        link_to_pdf += this_metadata['codigo'] + '?opendocument'
-        this_metadata['link_to_pdf'] = link_to_pdf
-        try:
-            this_metadata['pdf_url'] = extract_pdf_url(
-                                                    link_to_pdf,
+        expediente += this_metadata['codigo'] + '?opendocument'
+        this_metadata['expediente'] = expediente
+        this_metadata['pdf_url'] = self.extract_pdf_url(
+                                                    expediente,
                                                     this_metadata['codigo'],
                                                        )
-        except:
-            print("no link to pdf")
+        this_metadata['seguimiento_page'] = obj['seguimiento_page']
         return this_metadata
 
-    def extract_pdf_url(self, link, codigo):
-        """Try to get the URL for PDF of project from the "expediente" page.
+    def extract_pdf_url(self, expediente, codigo):
+        """
+        Try to get the URL for PDF of project from the "expediente" page.
         Such page might have many PDFs. Try to get the right one by looking
         for the code in the PDF URL address."""
-        try:
-            pdf_soup = self.get(link)
-        except:
-            # Algunos proyectos de ley no tienen link hacia PDFs
-            return "none"
+        pdf_soup = self.get(expediente)
 
         pattern = re.compile("/PL" + str(codigo) + "[0-9]+\.pdf$")
         for i in pdf_soup.find_all("a"):
@@ -185,3 +182,12 @@ class Command(BaseCommand):
         """
         mydate = datetime.date(datetime.strptime(string, '%m/%d/%Y'))
         return mydate
+
+    def gather_all_metadata(self, obj):
+        """
+        Uses several functions to pull all metadata for a certain proyecto.
+        :param obj: dict {'numero_proyecto', 'titulo', 'seguimiento_page'}
+        :return: dict containing all needed metadata.
+        """
+        obj = self.extract_metadata(obj)
+        return obj
