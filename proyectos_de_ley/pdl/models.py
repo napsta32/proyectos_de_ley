@@ -11,7 +11,7 @@ class Proyecto(models.Model):
     fecha_presentacion = models.DateField()
     titulo = models.TextField()
     expediente = models.URLField(max_length=200)
-    pdf_url = models.URLField(max_length=200)
+    pdf_url = models.URLField(max_length=200, blank=True)
     seguimiento_page = models.URLField(max_length=200, blank=True)
 
     # migrate from timestamp field
