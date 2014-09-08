@@ -92,10 +92,8 @@ class ScrapperTest(TestCase):
 
     def test_extract_metadata1(self):
         obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
-               'seguimiento_page': 'http://www2.congreso.gob.pe/Sicr/TraDocEst'
-                                   'Proc/CLProLey2011.nsf/Sicr/TraDocEstProc/'
-                                   'CLProLey2011.nsf/PAporNumeroInverso/96091'
-                                   '30B9871582F05257D4A00752301?opendocument',
+               'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
+                                   'seguimiento_03774.html',
                }
         result = self.scrapper_cmd.extract_metadata(obj)
         expected = {
@@ -114,16 +112,20 @@ class ScrapperTest(TestCase):
                             'Lescano Ancieta, Yonhy; Merino De Lama, Manue'
                             'l; Guevara Amasifuen, Mesias Antonio; Mavila '
                             'Leon, Rosa Delsa; Mendoza Frisch, Veronika Fanny',
+            'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
+                                'seguimiento_03774.html',
+            'pdf_url': 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/Cont'
+                       'doc02_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0/'
+                       'dbc9030966aac60905257d4a007b75d9/$FILE/PL037740509'
+                       '14.pdf',
         }
         self.assertEqual(expected, result)
 
     def test_extract_metadata2(self):
         obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
-            'seguimiento_page': 'http://www2.congreso.gob.pe/Sicr/TraDocEst'
-                                'Proc/CLProLey2011.nsf/Sicr/TraDocEstProc/'
-                                'CLProLey2011.nsf/PAporNumeroInverso/96091'
-                                '30B9871582F05257D4A00752301?opendocument',
-            'fecha_presentacion': datetime.now()
+               'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
+                                   'seguimiento_03774.html',
+               'fecha_presentacion': datetime.now(),
         }
         b = Proyecto(numero_proyecto='03774/2014-CR', titulo='hola',
                      seguimiento_page=obj['seguimiento_page'],
@@ -133,8 +135,8 @@ class ScrapperTest(TestCase):
         self.assertEqual("already in database", result)
 
     def test_extract_pdf_url(self):
-        expediente = 'http://www2.congreso.gob.pe/sicr/tradocestproc/' \
-                     'Expvirt_2011.nsf/visbusqptramdoc/02764?opendocument'
+        expediente = 'http://aniversarioperu.me/utero/test_pdl/expediente_' \
+                     '02764.html'
         codigo = '02764'
         result = self.scrapper_cmd.extract_pdf_url(expediente, codigo)
         expected = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/Contdoc0' \
@@ -170,18 +172,14 @@ class ScrapperTest(TestCase):
         obj = {
             'numero_proyecto': '02764/2013-CR',
             'titulo': 'Propone Ley Universitaria',
-            'seguimiento_page': 'http://www2.congreso.gob.pe/Sicr/TraDocEst'
-                                'Proc/CLProLey2011.nsf/Sicr/TraDocEstProc/C'
-                                'LProLey2011.nsf/PAporNumeroInverso/A4604A5'
-                                '7E03E482405257C01000B1980?opendocument',
+            'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
+                                'seguimiento_02764.html',
         }
         expected = {
             'numero_proyecto': '02764/2013-CR',
             'titulo': 'Propone Ley Universitaria',
-            'seguimiento_page': 'http://www2.congreso.gob.pe/Sicr/TraDocEst'
-                                'Proc/CLProLey2011.nsf/Sicr/TraDocEstProc/C'
-                                'LProLey2011.nsf/PAporNumeroInverso/A4604A5'
-                                '7E03E482405257C01000B1980?opendocument',
+            'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
+                                'seguimiento_02764.html',
             'codigo': '02764',
             'fecha_presentacion': date(2013, 10, 10),
             'expediente': 'http://www2.congreso.gob.pe/sicr/tradocestproc/'
