@@ -12,9 +12,11 @@ from pdl.models import Proyecto
 
 class ScrapperTest(TestCase):
     def setUp(self):
+        options = dict(tor=False, full_scrapping=False)
         self.congreso_url = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/' \
                        'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
         self.scrapper_cmd = Command()
+        self.scrapper_cmd.handle(**options)
 
     def test_tor1(self):
         """If user does not enter argument for tor, it should be True by

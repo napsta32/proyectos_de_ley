@@ -66,12 +66,12 @@ class Command(BaseCommand):
             self.urls.append(url_inicio)
 
     def get(self, url):
-        # TODO usage of tor should be optional not by default.
         """Does a HTTP request for a webpage and returns a BeautifulSoup
-        object. By default uses the *tor* network."""
-        socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
-        socket.setdefaulttimeout(20) # 10 seconds for timeout
-        socket.socket = socks.socksocket
+        object."""
+        if self.tor is True:
+            socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
+            socket.setdefaulttimeout(20) # 10 seconds for timeout
+            socket.socket = socks.socksocket
         req = urllib.request.urlopen(url)
         html = req.read()
         soup = BeautifulSoup(html)
