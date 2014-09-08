@@ -115,3 +115,15 @@ class ScrapperTest(TestCase):
                    '2_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0/2a89be59a1' \
                    'a3966b05257c01000a5cd5/$FILE/PL02764101013.pdf'
         self.assertEqual(expected, result)
+
+    def test_parse_names(self):
+        congresistas = "Dammert Ego Aguirre  Manuel Enrique Ernesto,Lescano" \
+                       " Ancieta  Yonhy,Merino De Lama  Manuel,Guevara " \
+                       "Amasifuen  Mesias Antonio,Mavila Leon  Rosa Delsa," \
+                       "Mendoza Frisch  Veronika Fanny"
+        expected = "Dammert Ego Aguirre, Manuel Enrique Ernesto; Lescano " \
+                   "Ancieta, Yonhy; Merino De Lama, Manuel; Guevara " \
+                   "Amasifuen, Mesias Antonio; Mavila Leon, Rosa Delsa; " \
+                   "Mendoza Frisch, Veronika Fanny"
+        result = self.scrapper_cmd.parse_names(congresistas)
+        self.assertEqual(expected, result)

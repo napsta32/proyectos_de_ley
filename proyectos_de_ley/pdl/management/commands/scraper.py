@@ -51,10 +51,11 @@ class Command(BaseCommand):
             self.urls.append(url_inicio)
 
     def get(self, url):
+        # TODO usage of tor should be optional not by default.
         """Does a HTTP request for a webpage and returns a BeautifulSoup
         object. By default uses the *tor* network."""
         socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
-        socket.setdefaulttimeout(10) # 10 seconds for timeout
+        socket.setdefaulttimeout(20) # 10 seconds for timeout
         socket.socket = socks.socksocket
         req = urllib.request.urlopen(url)
         html = req.read()
@@ -105,7 +106,6 @@ class Command(BaseCommand):
                 this_metadata['titulo'] = item['value']
             if item['name'] == "CodIni_web_1":
                 this_metadata['numero_proyecto'] = item['value']
-                #print "* numero_proyecto: %s" % this_metadata['numero_proyecto']
             #if item['name'] == "DesGrupParla":
                 #metadata['grupo_parlamentario'] = item['value']
             #if item['name'] == "NombreDeLaComision":
@@ -116,12 +116,11 @@ class Command(BaseCommand):
                 this_metadata['codigo'] = item['value']
             if item['name'] == "fechapre":
                 this_metadata['fecha_presentacion'] = item['value']
-                #print "* fecha_presentacion: %s" % this_metadata['fecha_presentacion']
-        link_to_pdf = 'http://www2.congreso.gob.pe/sicr/tradocestproc/Expvirt_2011.nsf/visbusqptramdoc/' + this_metadata['codigo'] + '?opendocument'
+        link_to_pdf = 'http://www2.congreso.gob.pe/sicr/tradocestproc' \
+                      '/Expvirt_2011.nsf/visbusqptramdoc/'
+        link_to_pdf += this_metadata['codigo'] + '?opendocument'
+        this_metadata['link_to_pdf'] = link_to_pdf
         try:
-            this_metadata['link_to_pdf'] = link_to_pdf
-            print(this_metadata['link_to_pdf'])
-
             this_metadata['pdf_url'] = extract_pdf_url(
                                                     link_to_pdf,
                                                     this_metadata['codigo'],
@@ -147,3 +146,16 @@ class Command(BaseCommand):
                 return my_pdf_link
         # Algunos proyectos de ley no tienen link hacia PDFs
         return "none"
+
+    def parse_names(self, string):
+        """
+        :param string: Person names separated by commas.
+        :return: String of person names separated by colons and family names
+                 separated from given names by commas.
+        """
+        names = ""
+        for i in string.split(","):
+            i = re.sub("\s{2}", ", ", i)
+            names += i + "; "
+        names = re.sub(";\s$", "", names)
+        return names
