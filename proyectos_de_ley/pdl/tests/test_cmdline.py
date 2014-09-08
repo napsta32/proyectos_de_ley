@@ -108,6 +108,10 @@ class ScrapperTest(TestCase):
             'link_to_pdf': 'http://www2.congreso.gob.pe/sicr/tradocestproc/'
                            'Expvirt_2011.nsf/visbusqptramdoc/03774?opendocu'
                            'ment',
+            'congresistas': 'Dammert Ego Aguirre, Manuel Enrique Ernesto; ' \
+                            'Lescano Ancieta, Yonhy; Merino De Lama, Manue' \
+                            'l; Guevara Amasifuen, Mesias Antonio; Mavila ' \
+                            'Leon, Rosa Delsa; Mendoza Frisch, Veronika Fanny',
         }
         self.assertEqual(expected, result)
 
@@ -146,4 +150,10 @@ class ScrapperTest(TestCase):
                    "Amasifuen, Mesias Antonio; Mavila Leon, Rosa Delsa; " \
                    "Mendoza Frisch, Veronika Fanny"
         result = self.scrapper_cmd.parse_names(congresistas)
+        self.assertEqual(expected, result)
+
+    def test_create_shorturl(self):
+        codigo = "03774"
+        expected = "4aw8ym"
+        result = self.scrapper_cmd.create_shorturl(codigo)
         self.assertEqual(expected, result)

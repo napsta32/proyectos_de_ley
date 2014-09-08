@@ -1,25 +1,14 @@
 # -*- coding: utf-8 -*-
-from optparse import make_option
-import codecs
-import datetime
-from datetime import date
-from datetime import timedelta as td
-import hashlib
-import json
 import re
 import urllib.request
 
-import os
-from random import randint
+from bs4 import BeautifulSoup
 from optparse import make_option
-import requests
+import short_url
 import socks
 import socket
-from bs4 import BeautifulSoup
-from time import sleep
 
 from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
 
 from pdl.models import Proyecto
 
@@ -48,6 +37,7 @@ class Command(BaseCommand):
         url_inicio = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/' \
                      'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
         self.urls = []
+        self.legislatura = "2011"
 
         if 'tor' not in options:
             raise CommandError("Usar argumento --tor True/False")
@@ -125,8 +115,8 @@ class Command(BaseCommand):
                 #metadata['grupo_parlamentario'] = item['value']
             #if item['name'] == "NombreDeLaComision":
                 #metadata['comision'] = item['value']
-            #if item['name'] == "NomCongre":
-                #this_metadata['congresistas'] = parse_names(item['value'])
+            if item['name'] == "NomCongre":
+                this_metadata['congresistas'] = self.parse_names(item['value'])
             if item['name'] == "CodIni":
                 this_metadata['codigo'] = item['value']
             if item['name'] == "fechapre":
@@ -174,3 +164,13 @@ class Command(BaseCommand):
             names += i + "; "
         names = re.sub(";\s$", "", names)
         return names
+
+    def create_shorturl(self, codigo):
+        """
+        Use "legislatura" and codigo to build a short url.
+        :param codigo: Code for Proyecto de ley "03774"
+        :return: 4aw8ym
+        """
+        mystring = self.legislatura + codigo
+        url = short_url.encode_url(int(mystring))
+        return url
