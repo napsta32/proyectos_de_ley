@@ -6,5 +6,16 @@
 
 
 {% block content %}
-        <h1 id="proyectos_de_ley">Proyectos de Ley</h1>
+<div class="container">
+  <h1 id="proyectos_de_ley">Proyectos de Ley</h1>
+</div>
+
+<div id="contenido" class="container">
+  {% for i in items %}
+    {{ i }}
+  {% empty %}
+    <h2>Aún no hay registros en nuestra base de datos.</h2>
+  {% endfor %}
+</div>
 {% endblock %}
+
