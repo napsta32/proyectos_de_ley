@@ -3,6 +3,7 @@ import codecs
 from datetime import datetime
 from datetime import date
 import os
+import unittest
 
 from bs4 import BeautifulSoup
 
@@ -21,8 +22,6 @@ class ScrapperTest(TestCase):
         self.maxDiff = None
 
     def test_tor1(self):
-        """If user does not enter argument for tor, it should be True by
-        default."""
         options = dict(tor=False, full_scrapping=False)
         self.scrapper_cmd.handle(**options)
         result = self.scrapper_cmd.tor
@@ -37,6 +36,12 @@ class ScrapperTest(TestCase):
         result = self.scrapper_cmd.tor
         expected = True
         self.assertEqual(expected, result)
+
+    @unittest.expectedFailure
+    def test_tor3(self):
+        """If user does not enter argument for tor, exit with error."""
+        options = dict(full_scrapping=False)
+        self.scrapper_cmd.handle(**options)
 
     def test_url1(self):
         """Test when user does not enter any argument for the scrapper."""
@@ -57,6 +62,13 @@ class ScrapperTest(TestCase):
         result = soup.title.get_text()
         expected = "Aniversario Peru"
         self.assertEqual(result, expected)
+
+        # Test if we get a tor proxy for get request when tor is TRUE.
+        options = dict(tor=True, full_scrapping=False)
+        new_scrapper_cmd = Command()
+        new_scrapper_cmd.handle(**options)
+        new_scrapper_cmd.get("http://aniversarioperu.me/")
+        self.assertEqual(b'127.0.0.1', new_scrapper_cmd.mysocket[1])
 
     def test_extract_doc_links(self):
         expected = [

@@ -39,6 +39,7 @@ class Command(BaseCommand):
         url_inicio = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/' \
                      'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
         self.urls = []
+        self.mysocket = ""
         self.legislatura = "2011"
 
         if 'tor' not in options:
@@ -65,6 +66,7 @@ class Command(BaseCommand):
             socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
             socket.setdefaulttimeout(10) # 10 seconds for timeout
             socket.socket = socks.socksocket
+            self.mysocket = socket.socket.default_proxy
         cj = http.cookiejar.CookieJar()
         opener = urllib.request.build_opener(
             urllib.request.HTTPCookieProcessor(cj))
