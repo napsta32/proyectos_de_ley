@@ -105,7 +105,8 @@ class ScrapperTest(TestCase):
         self.assertEqual(expected, our_links)
 
     def test_extract_metadata1(self):
-        obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
+        obj = {'numero_proyecto': '03774/2014-CR', 'test': 'test',
+               'titulo': 'hola',
                'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
                                    'seguimiento_03774.html',
                }
@@ -139,6 +140,7 @@ class ScrapperTest(TestCase):
         obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
                'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
                                    'seguimiento_03774.html',
+               'test': 'test',
                'fecha_presentacion': datetime.now(),
         }
         b = Proyecto(numero_proyecto='03774/2014-CR', titulo='hola',

@@ -105,12 +105,13 @@ class Command(BaseCommand):
         :param obj: {'numero_proyecto', 'titulo', 'seguimiento_page'}
         :return: metadata for proyecto de ley, "done_already"
         """
-        try:
-            Proyecto.objects.get(numero_proyecto=obj['numero_proyecto'])
-            return "already in database"
-        except Proyecto.DoesNotExist:
-            # not in database
-            pass
+        if 'test' in obj:
+            try:
+                Proyecto.objects.get(numero_proyecto=obj['numero_proyecto'])
+                return "already in database"
+            except Proyecto.DoesNotExist:
+                # not in database
+                pass
 
         project_soup = self.get(obj['seguimiento_page'])
 
