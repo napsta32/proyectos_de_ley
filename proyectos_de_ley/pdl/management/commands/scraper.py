@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from datetime import date
+import http.cookiejar
 import re
 import urllib.request
 
@@ -65,7 +65,10 @@ class Command(BaseCommand):
             socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
             socket.setdefaulttimeout(10) # 10 seconds for timeout
             socket.socket = socks.socksocket
-        req = urllib.request.urlopen(url)
+        cj = http.cookiejar.CookieJar()
+        opener = urllib.request.build_opener(
+            urllib.request.HTTPCookieProcessor(cj))
+        req = opener.open(url)
         html = req.read()
         soup = BeautifulSoup(html)
         return soup
