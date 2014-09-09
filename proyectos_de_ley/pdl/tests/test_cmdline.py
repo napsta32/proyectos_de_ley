@@ -53,9 +53,9 @@ class ScrapperTest(TestCase):
         self.assertEqual(expected_last, self.scrapper_cmd.urls[-1])
 
     def test_get(self):
-        soup = self.scrapper_cmd.get("http://www.bbc.com/news/")
+        soup = self.scrapper_cmd.get("http://aniversarioperu.me/")
         result = soup.title.get_text()
-        expected = "BBC News - Home"
+        expected = "Aniversario Peru"
         self.assertEqual(result, expected)
 
     def test_extract_doc_links(self):

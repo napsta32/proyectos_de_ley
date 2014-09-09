@@ -63,7 +63,7 @@ class Command(BaseCommand):
         object."""
         if self.tor is True:
             socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
-            socket.setdefaulttimeout(20) # 10 seconds for timeout
+            socket.setdefaulttimeout(2) # 10 seconds for timeout
             socket.socket = socks.socksocket
         req = urllib.request.urlopen(url)
         html = req.read()
