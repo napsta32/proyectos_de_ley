@@ -190,6 +190,7 @@ class ScrapperTest(TestCase):
             'titulo': 'Propone Ley Universitaria',
             'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
                                 'seguimiento_02764.html',
+            'test': 'test',
         }
         expected = {
             'numero_proyecto': '02764/2013-CR',
