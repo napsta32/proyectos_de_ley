@@ -5,6 +5,6 @@ python:
 
 install: pip install -r requirements/dev.txt 
 
-script: coverage run --source proyectos_de_ley proyectos_de_ley/manage.py test pdl --settings=proyectos_de_ley.settings.base
+script: coverage run --source proyectos_de_ley proyectos_de_ley/manage.py test -v 2 pdl --settings=proyectos_de_ley.settings.base
 
 after_success: coveralls
