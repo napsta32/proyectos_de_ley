@@ -11,6 +11,8 @@
 </div>
 
 <div id="contenido" class="container">
+  {% load endless %}
+  {% paginate items %}
   {% for i in items %}
     <div>
       {{ i|safe }}
@@ -20,5 +22,14 @@
     <h2>Aún no hay registros en nuestra base de datos.</h2>
   {% endfor %}
 </div>
+
+
+    <div class="container" style="text-align: center;">
+      <div id="page-selection" class="container">
+        {% show_pages %}
+      </div>
+    </div>
+
 {% endblock %}
+
 
