@@ -11,37 +11,40 @@ def index(request):
 def get_last_items():
     """All items from the database are extracted as list of dictionaries."""
     items = Proyecto.objects.all().order_by('-codigo')
-    return items
+    pretty_items = []
+    for i in items:
+        pretty_items.append(prettify_item(i))
+    return pretty_items
 
 
 def prettify_item(item):
     out = ""
     out += "<p>"
-    out += "<a href='/p/" + str(item['short_url'])
+    out += "<a href='/p/" + str(item.short_url)
     out += "' title='Permalink'>"
-    out += "<b>" + item['numero_proyecto'] + "</b></a></p>\n"
-    out += "<h4>" + item['titulo'] +  "</h4>\n"
-    out += "<p>" + hiperlink_congre(item['congresistas']) + "</p>\n"
+    out += "<b>" + item.numero_proyecto + "</b></a></p>\n"
+    out += "<h4>" + item.titulo +  "</h4>\n"
+    out += "<p>" + hiperlink_congre(item.congresistas) + "</p>\n"
 
-    if 'pdf_url' in item:
+    if hasattr(item, 'pdf_url') is True:
         out += "<a class='btn btn-lg btn-primary'"
-        out += " href='" + item['pdf_url'] + "' role='button'>PDF</a>\n"
+        out += " href='" + item.pdf_url + "' role='button'>PDF</a>\n"
     else:
         out += "<a class='btn btn-lg btn-primary disabled'"
         out += " href='#' role='button'>Sin PDF</a>\n"
 
-    if 'expediente' in item:
+    if hasattr(item, 'expediente') is True:
         out += "<a class='btn btn-lg btn-primary'"
-        out += " href='" + item['expediente']
+        out += " href='" + item.expediente
         out += "' role='button'>EXPEDIENTE</a>\n"
     else:
         out += "<a class='btn btn-lg btn-primary disabled'"
         out += " href='#' role='button'>Sin EXPEDIENTE</a>\n"
 
-    if 'seguimiento_page' in item:
-        if item['seguimiento_page'] != "":
+    if hasattr(item, 'seguimiento_page') is True:
+        if item.seguimiento_page != "":
             out += "<a class='btn btn-lg btn-primary'"
-            out += " href='" + item['seguimiento_page'] + "' role='button'>Seguimiento</a>"
+            out += " href='" + item.seguimiento_page + "' role='button'>Seguimiento</a>"
     return out
 
 
@@ -49,7 +52,7 @@ def hiperlink_congre(congresistas):
     # tries to make a hiperlink for each congresista name to its own webpage
     for name in congresistas.split("; "):
         link = "<a href='/congresista/"
-        link += convert_name_to_slug(name)
+        link += str(convert_name_to_slug(name))
         link += "' title='ver todos sus proyectos'>"
         link += name + "</a>"
         congresistas = congresistas.replace(name, link)

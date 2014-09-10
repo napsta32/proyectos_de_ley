@@ -12,7 +12,10 @@
 
 <div id="contenido" class="container">
   {% for i in items %}
-    {{ i }}
+    <div>
+      {{ i|safe }}
+    </div>
+    <hr>
   {% empty %}
     <h2>Aún no hay registros en nuestra base de datos.</h2>
   {% endfor %}
