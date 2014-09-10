@@ -5,7 +5,7 @@ from pdl.models import Proyecto
 
 def index(request):
     items = get_last_items()
-    return render(request, "pdl/index.html", {"items": items})
+    return render(request, "index.html", {"items": items})
 
 
 def get_last_items():
