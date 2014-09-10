@@ -155,7 +155,7 @@ class Command(BaseCommand):
                 my_pdf_link = str(i['href'])
                 return my_pdf_link
         # Algunos proyectos de ley no tienen link hacia PDFs
-        return "none"
+        return ''
 
     def parse_names(self, string):
         """

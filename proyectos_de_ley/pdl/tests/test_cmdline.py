@@ -150,7 +150,7 @@ class ScrapperTest(TestCase):
         result = self.scrapper_cmd.extract_metadata(obj)
         self.assertEqual("already in database", result)
 
-    def test_extract_pdf_url(self):
+    def test_extract_pdf_url1(self):
         expediente = 'http://aniversarioperu.me/utero/test_pdl/expediente_' \
                      '02764.html'
         codigo = '02764'
@@ -158,6 +158,14 @@ class ScrapperTest(TestCase):
         expected = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/Contdoc0' \
                    '2_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0/2a89be59a1' \
                    'a3966b05257c01000a5cd5/$FILE/PL02764101013.pdf'
+        self.assertEqual(expected, result)
+
+    def test_extract_pdf_url2(self):
+        expediente = 'http://aniversarioperu.me/utero/test_pdl/expediente_' \
+                     '02764_no_pdf_url.html'
+        codigo = '02764'
+        result = self.scrapper_cmd.extract_pdf_url(expediente, codigo)
+        expected = ''
         self.assertEqual(expected, result)
 
     def test_parse_names(self):
