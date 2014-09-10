@@ -1,16 +1,18 @@
 import json
 import os
+import re
 import unittest
 
 from bs4 import BeautifulSoup
 
 from django.test import Client
+from django.test import TestCase
 
 from pdl import views
 from pdl.models import Proyecto
 
 
-class SimpleTest(unittest.TestCase):
+class SimpleTest(TestCase):
     def setUp(self):
         this_folder = os.path.abspath(os.path.dirname(__file__))
         dummy_db_json = os.path.join(this_folder, 'dummy_db.json')
@@ -25,13 +27,14 @@ class SimpleTest(unittest.TestCase):
         self.assertEqual('Proyectos de Ley', result)
 
     def test_get_last_items(self):
+        # TODO make sure we are not using the production database
         for i in self.dummy_items:
             b = Proyecto(**i)
             b.save()
 
-        expected = dict(codigo="03774")
+        expected = '03774'
         item = views.get_last_items()[0]
-        result = dict(codigo=item.codigo)
+        result = re.search("<b>([0-9]{5})/[0-9]{4}-CR</b>", item).groups()[0]
         self.assertEqual(expected, result)
 
     def test_prettify_item(self):
@@ -40,6 +43,12 @@ class SimpleTest(unittest.TestCase):
         with open(prettified_file, "r") as f:
             prettified_item = f.read()
         item = self.dummy_items[0]
+
+        # save it to test database
+        b = Proyecto(**item)
+        b.save()
+        # now get it as QuerySet object
+        item = Proyecto.objects.get(codigo='03774')
         result = views.prettify_item(item)
         self.assertEqual(prettified_item, result)
 
