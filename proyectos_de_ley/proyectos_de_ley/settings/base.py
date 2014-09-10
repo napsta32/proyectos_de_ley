@@ -81,12 +81,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+
 
 SECRET_KEY = "hola"
-
+ENDLESS_PAGINATION_DEFAULT_CALLABLE_ARROWS = True
 # for pagination
 ENDLESS_PAGINATION_PER_PAGE = 20
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.request',
 )
+

@@ -1,4 +1,4 @@
-{% extends "pdl/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}
         Proyectos de ley emitidos por el Congreso de la República del Perú
@@ -26,7 +26,12 @@
 
     <div class="container" style="text-align: center;">
       <div id="page-selection" class="container">
-        {% show_pages %}
+        {% get_pages %}
+          <ul class="pagination pagination-mg">
+            {% if pages.paginated %}
+              <li>{{ pages }}</li>
+            {% endif %}
+          </ul>
       </div>
     </div>
 
