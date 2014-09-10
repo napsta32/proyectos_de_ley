@@ -8,6 +8,16 @@ def index(request):
     return render(request, "pdl/index.html", {"items": items})
 
 
+def proyecto(request, short_url):
+    item = Proyecto.objects.get(short_url=short_url)
+    num_proy = item.numero_proyecto
+    item = prettify_item(item)
+    return render(request, "pdl/proyecto.html", {'item': item, 'num_proy':
+                                                 num_proy,
+                                                 }
+                  )
+
+
 def get_last_items():
     """All items from the database are extracted as list of dictionaries."""
     items = Proyecto.objects.all().order_by('-codigo')
@@ -22,7 +32,7 @@ def prettify_item(item):
     out += "<a href='/p/" + str(item.short_url)
     out += "' title='Permalink'>"
     out += "<b>" + item.numero_proyecto + "</b></a></p>\n"
-    out += "<h4>" + item.titulo +  "</h4>\n"
+    out += "<h4>" + item.titulo + "</h4>\n"
     out += "<p>" + hiperlink_congre(item.congresistas) + "</p>\n"
 
     if item.pdf_url != '':
@@ -42,7 +52,8 @@ def prettify_item(item):
 
     if item.seguimiento_page != '':
         out += "<a class='btn btn-lg btn-primary'"
-        out += " href='" + item.seguimiento_page + "' role='button'>Seguimiento</a>"
+        out += " href='" + item.seguimiento_page
+        out += "' role='button'>Seguimiento</a>"
     return out
 
 
@@ -61,7 +72,7 @@ def hiperlink_congre(congresistas):
 def convert_name_to_slug(name):
     """Takes a congresista name and returns its slug."""
     name = name.replace(",", "").lower()
-    #name = name.encode("ascii", "ignore")
+    # name = name.encode("ascii", "ignore")
     name = name.split(" ")
 
     if len(name) > 2:
@@ -71,5 +82,5 @@ def convert_name_to_slug(name):
             slug += name[i]
             if i < 2:
                 slug += "_"
-            i = i + 1
+            i += 1
         return slug + "/"

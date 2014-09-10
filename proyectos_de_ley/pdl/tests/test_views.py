@@ -87,3 +87,15 @@ class SimpleTest(TestCase):
         expected = 'eguren_neuenschwander_juan/'
         result = views.convert_name_to_slug(name)
         self.assertEqual(expected, result)
+
+    def test_proyecto_view(self):
+        i = self.dummy_items[0]
+        b = Proyecto(**i)
+        b.save()
+
+        c = Client()
+        response = c.get('/p/4aw8ym/')
+        soup = BeautifulSoup(response.content)
+        result = soup.title.get_text().strip()
+        expected = 'Proyectos de ley emitidos por el Congreso | 03774/2014-CR'
+        self.assertEqual(expected, result)
