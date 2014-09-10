@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', include('pdl.urls', namespace='pdl')),
+    url(r'^', include('pdl.urls', namespace='pdl')),
     url(r'^p/', include('pdl.urls', namespace='pdl-proyecto')),
     # url(r'^blog/', include('blog.urls')),
 

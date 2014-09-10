@@ -1,0 +1,24 @@
+{% extends "pdl/base.html" %}
+
+{% block title %}
+Proyectos de ley emitidos por el Congreso de la República del Perú | About
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  <h1 id="proyectos_de_ley">Proyecto de Ley</h1>
+</div>
+
+<div id="contenido" class="container">
+    <div>
+      {{ item|safe }}
+    </div>
+    <hr>
+</div>
+
+
+
+{% endblock %}
+
+

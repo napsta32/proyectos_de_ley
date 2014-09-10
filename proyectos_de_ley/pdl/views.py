@@ -18,6 +18,10 @@ def proyecto(request, short_url):
                   )
 
 
+def about(request):
+    return render(request, "pdl/about.html")
+
+
 def get_last_items():
     """All items from the database are extracted as list of dictionaries."""
     items = Proyecto.objects.all().order_by('-codigo')
