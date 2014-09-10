@@ -27,7 +27,6 @@ class SimpleTest(TestCase):
         self.assertEqual('Proyectos de Ley', result)
 
     def test_get_last_items(self):
-        # TODO make sure we are not using the production database
         for i in self.dummy_items:
             b = Proyecto(**i)
             b.save()
@@ -37,12 +36,31 @@ class SimpleTest(TestCase):
         result = re.search("<b>([0-9]{5})/[0-9]{4}-CR</b>", item).groups()[0]
         self.assertEqual(expected, result)
 
-    def test_prettify_item(self):
+    def test_prettify_item1(self):
         this_folder = os.path.abspath(os.path.dirname(__file__))
         prettified_file = os.path.join(this_folder, 'prettified_03774.txt')
         with open(prettified_file, "r") as f:
             prettified_item = f.read()
         item = self.dummy_items[0]
+
+        # save it to test database
+        b = Proyecto(**item)
+        b.save()
+        # now get it as QuerySet object
+        item = Proyecto.objects.get(codigo='03774')
+        result = views.prettify_item(item)
+        self.assertEqual(prettified_item, result)
+
+    def test_prettify_item2(self):
+        """Test when no pdf_url and no expediente are Blank in object."""
+        this_folder = os.path.abspath(os.path.dirname(__file__))
+        prettified_file = os.path.join(this_folder, 'prettified_03774_2.txt')
+        with open(prettified_file, "r") as f:
+            prettified_item = f.read()
+        item = self.dummy_items[0]
+        item['pdf_url'] = ''
+        item['expediente'] = ''
+        item['seguimiento_page'] = ''
 
         # save it to test database
         b = Proyecto(**item)
