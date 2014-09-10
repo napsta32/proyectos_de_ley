@@ -42,13 +42,7 @@ DATABASES = {
     }
 }
 
-TEMPLATE_DIRS = (
-    'pdl/templates/pdl',
-)
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+
 
 # optional for scrapper
 CRAWLERA_USER = get_secret("CRAWLERA_USER")
