@@ -70,7 +70,7 @@ def find_in_db(query):
         if len(items) > 0:
             results = []
             for i in items:
-                results.append(prettify_item(i))
+                results.append(prettify_item_small(i))
         else:
             results = "No se encontraron resultados."
     except Proyecto.DoesNotExist:
@@ -128,6 +128,32 @@ def prettify_item(item):
         out += "' role='button'>Seguimiento</a>"
     return out
 
+
+def prettify_item_small(item):
+    out = "<p><a href='/p/" + item.short_url
+    out += "' title='Permalink'>"
+    out += item.codigo
+    out += "</a> \n"
+    out += item.titulo
+    if item.pdf_url != '':
+        out += ' <span class="glyphicon glyphicon-cloud-download"></span>'
+        out += ' <a href="' + item.pdf_url + '">PDF</a>'
+    else:
+        out += ' [sin PDF]'
+
+    if item.expediente != '':
+        out += ' <span class="glyphicon glyphicon-link"></span>'
+        out += ' <a href="' + item.expediente + '">Expediente</a>'
+    else:
+        out += ' [sin Expediente]'
+
+    if item.seguimiento_page != '':
+        out += ' <span class="glyphicon glyphicon-link"></span>'
+        out += ' <a href="' + item.seguimiento_page + '">Seguimiento</a>'
+    else:
+        out += ' [sin Seguimiento]'
+    out += '</p>'
+    return out
 
 def hiperlink_congre(congresistas):
     # tries to make a hiperlink for each congresista name to its own webpage
