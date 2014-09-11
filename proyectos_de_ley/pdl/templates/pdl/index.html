@@ -15,9 +15,9 @@
   {% paginate items %}
   {% for i in items %}
     <div>
+      <hr>
       {{ i|safe }}
     </div>
-    <hr>
   {% empty %}
     <h2>Aún no hay registros en nuestra base de datos.</h2>
   {% endfor %}
