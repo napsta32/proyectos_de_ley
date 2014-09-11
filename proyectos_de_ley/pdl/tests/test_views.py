@@ -107,3 +107,9 @@ class SimpleTest(TestCase):
         expected = 'Proyectos de ley emitidos por el Congreso de la ' \
                    'República del Perú | About'
         self.assertEqual(expected, result)
+
+    def test_sanitize(self):
+        mystring = "'/\\*%"
+        expected = ''
+        result = views.sanitize(mystring)
+        self.assertEqual(expected, result)
