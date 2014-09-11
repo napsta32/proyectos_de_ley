@@ -99,3 +99,12 @@ class SimpleTest(TestCase):
         result = soup.title.get_text().strip()
         expected = 'Proyectos de ley emitidos por el Congreso | 03774/2014-CR'
         self.assertEqual(expected, result)
+
+    def test_about_view(self):
+        c = Client()
+        response = c.get('/about/')
+        soup = BeautifulSoup(response.content)
+        result = soup.title.get_text().strip()
+        expected = 'Proyectos de ley emitidos por el Congreso de la ' \
+                   'República del Perú | About'
+        self.assertEqual(expected, result)
