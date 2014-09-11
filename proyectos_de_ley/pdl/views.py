@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.template import RequestContext, loader
+from django.shortcuts import redirect
 
 from pdl.models import Proyecto
 
@@ -20,6 +23,33 @@ def proyecto(request, short_url):
 
 def about(request):
     return render(request, "pdl/about.html")
+
+
+def search(request):
+    if 'q' in request.GET:
+        template = loader.get_template('pdl/search.html')
+        answer = "got query"
+        query = request.GET['q']
+        if query.strip() == '':
+            return redirect("/")
+        """
+            else:
+                results = find_in_db(query)
+                context = RequestContext(request, {
+                    'items': results,
+                    'keyword': query,
+                })
+                return HttpResponse(template.render(context))
+        else:
+            message = "you submitted and empty form."
+        context = RequestContext(request, {
+            'content': message,
+            'keyword': query,
+        })
+        return HttpResponse(template.render(context))
+        """
+        return HttpResponse(answer)
+    return HttpResponse("no answer")
 
 
 def get_last_items():

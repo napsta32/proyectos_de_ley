@@ -81,9 +81,11 @@ rss icon by: http://glyphicons.com/
             <li class="divider-vertical"></li>
             <li><a href="http://proyectosdeley.pe/rss.xml"><img src="http://proyectosdeley.pe/g_rss.png" /></a></li>
           </ul>
-          <form class="navbar-form navbar-right" role="search">
+          <form action="{% url 'pdl:search' %}"
+                method="get" class="navbar-form navbar-right" role="search">
               <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Palabra clave, n&uacute;mero o autor">
+                  <input type="text" id="query" name="q" class="form-control"
+                         placeholder="Palabra clave, n&uacute;mero o autor">
               </div>
               <button type="submit" class="btn btn-info" id="search_button">
                   <span class="glyphicon glyphicon-search"></span>
