@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import redirect
+from django.db.models import Q
 
 from pdl.models import Proyecto
 
@@ -27,14 +28,15 @@ def about(request):
 
 def search(request):
     if 'q' in request.GET:
-        template = loader.get_template('pdl/search.html')
         answer = "got query"
         query = request.GET['q']
+        query = sanitize(query)
         if query.strip() == '':
             return redirect("/")
+        else:
+            template = loader.get_template('pdl/search.html')
+            results = find_in_db(query)
         """
-            else:
-                results = find_in_db(query)
                 context = RequestContext(request, {
                     'items': results,
                     'keyword': query,
@@ -48,8 +50,44 @@ def search(request):
         })
         return HttpResponse(template.render(context))
         """
-        return HttpResponse(answer)
+        return render(request, "pdl/search.html", {"results": results,
+                                                   "keyword": query})
     return HttpResponse("no answer")
+
+
+def find_in_db(query):
+    try:
+        items = Proyecto.objects.filter(
+            Q(short_url__icontains=query) |
+            Q(codigo__icontains=query) |
+            Q(numero_proyecto__icontains=query) |
+            Q(titulo__icontains=query) |
+            Q(pdf_url__icontains=query) |
+            Q(expediente__icontains=query) |
+            Q(seguimiento_page__icontains=query) |
+            Q(congresistas__icontains=query),
+        ).order_by('-codigo')
+        if len(items) > 0:
+            results = []
+            for i in items:
+                results.append(prettify_item(i))
+        else:
+            results = "No se encontraron resultados."
+    except Proyecto.DoesNotExist:
+        results = "No se encontraron resultados."
+    return results
+
+
+def sanitize(s):
+    s = s.replace("'", "")
+    s = s.replace('"', "")
+    s = s.replace("/", "")
+    s = s.replace("\\", "")
+    s = s.replace(";", "")
+    s = s.replace("=", "")
+    s = s.replace("*", "")
+    s = s.replace("%", "")
+    return s
 
 
 def get_last_items():

@@ -6,14 +6,18 @@ Proyectos de ley emitidos por el Congreso de la República del Perú | About
 
 
 {% block content %}
-<div class="container">
+<div id="contenido" class="container">
   <h1>Resultados de búsqueda</h1>
+  {% for i in results %}
+  <hr>
+    {{ i|safe }}
+  {% endfor %}
 </div>
-
-
-
-
-
 {% endblock %}
 
 
+{% block highlight_keyword %}
+<script>
+    $("#contenido").highlight('{{ keyword }}');
+</script>
+{% endblock %}
