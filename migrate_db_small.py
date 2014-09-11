@@ -18,11 +18,15 @@ for i in res:
     i['time_edited'] = timestamp
 
     try:
-        fecha_presentacion = datetime.datetime.strptime(i['fecha_presentacion'],
-                                                    '%d/%m/%Y')
+        fecha_presentacion = datetime.datetime.strptime(
+            i['fecha_presentacion'],
+            '%d/%m/%Y',
+        )
     except ValueError:
-        fecha_presentacion = datetime.datetime.strptime(i['fecha_presentacion'],
-                                                        '%d/%m/%y')
+        fecha_presentacion = datetime.datetime.strptime(
+            i['fecha_presentacion'],
+            '%d/%m/%y',
+        )
 
     fecha_presentacion = datetime.datetime.date(fecha_presentacion)
     i['fecha_presentacion'] = fecha_presentacion

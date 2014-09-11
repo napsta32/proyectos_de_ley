@@ -3,7 +3,8 @@ from django.conf.urls import patterns, url
 from . import views
 
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^$', views.index, name='index'),
     url(r'^about/$', views.about, name='about'),
     url(r'^(?P<short_url>[0-9a-z]+)/$', views.proyecto),

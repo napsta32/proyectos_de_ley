@@ -32,7 +32,6 @@ def get_secret(setting, secrets=secrets):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_secret("SECRET_KEY")
 
-
 # Database needed for ``pdf`` app
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 DATABASES = {
@@ -41,8 +40,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'leyes_sqlite3.db'),
     }
 }
-
-
 
 # optional for scrapper
 CRAWLERA_USER = get_secret("CRAWLERA_USER")

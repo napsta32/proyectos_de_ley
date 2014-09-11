@@ -64,7 +64,7 @@ class Command(BaseCommand):
         object."""
         if self.tor is True:
             socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
-            socket.setdefaulttimeout(10) # 10 seconds for timeout
+            socket.setdefaulttimeout(10)  # 10 seconds for timeout
             socket.socket = socks.socksocket
             self.mysocket = socket.socket.default_proxy
         cj = http.cookiejar.CookieJar()
@@ -88,12 +88,12 @@ class Command(BaseCommand):
                 href = link.get("href")
                 title = link.get("title")
                 if href.endswith("ocument"):
-                   our_link = "http://www2.congreso.gob.pe"
-                   our_link += "/Sicr/TraDocEstProc/CLProLey2011.nsf/"
-                   our_link += href
-                   our_links.append({'numero_proyecto': numero_proyecto,
-                                     'titulo': title,
-                                     'seguimiento_page': our_link})
+                    our_link = "http://www2.congreso.gob.pe"
+                    our_link += "/Sicr/TraDocEstProc/CLProLey2011.nsf/"
+                    our_link += href
+                    our_links.append({'numero_proyecto': numero_proyecto,
+                                      'titulo': title,
+                                      'seguimiento_page': our_link})
         return our_links
 
     def extract_metadata(self, obj):
@@ -121,10 +121,10 @@ class Command(BaseCommand):
                 this_metadata['titulo'] = item['value']
             if item['name'] == "CodIni_web_1":
                 this_metadata['numero_proyecto'] = item['value']
-            #if item['name'] == "DesGrupParla":
-                #metadata['grupo_parlamentario'] = item['value']
-            #if item['name'] == "NombreDeLaComision":
-                #metadata['comision'] = item['value']
+            # if item['name'] == "DesGrupParla":
+                # metadata['grupo_parlamentario'] = item['value']
+            # if item['name'] == "NombreDeLaComision":
+                # metadata['comision'] = item['value']
             if item['name'] == "NomCongre":
                 this_metadata['congresistas'] = self.parse_names(item['value'])
             if item['name'] == "CodIni":
@@ -132,13 +132,13 @@ class Command(BaseCommand):
             if item['name'] == "fechapre":
                 this_metadata['fecha_presentacion'] = item['value']
         expediente = 'http://www2.congreso.gob.pe/sicr/tradocestproc' \
-                      '/Expvirt_2011.nsf/visbusqptramdoc/'
+                     '/Expvirt_2011.nsf/visbusqptramdoc/'
         expediente += this_metadata['codigo'] + '?opendocument'
         this_metadata['expediente'] = expediente
         this_metadata['pdf_url'] = self.extract_pdf_url(
-                                                    expediente,
-                                                    this_metadata['codigo'],
-                                                       )
+            expediente,
+            this_metadata['codigo'],
+        )
         this_metadata['seguimiento_page'] = obj['seguimiento_page']
         return this_metadata
 
@@ -196,7 +196,7 @@ class Command(BaseCommand):
         :return: dict containing all needed metadata.
         """
         obj = self.extract_metadata(obj)
-        obj['short_url'] =self.create_shorturl(obj['codigo'])
+        obj['short_url'] = self.create_shorturl(obj['codigo'])
         obj['fecha_presentacion'] = self.fix_date(obj['fecha_presentacion'])
         return obj
 

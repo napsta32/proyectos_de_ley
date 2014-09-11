@@ -1,4 +1,4 @@
-#-*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 import codecs
 from datetime import datetime
 from datetime import date
@@ -16,7 +16,7 @@ class ScrapperTest(TestCase):
     def setUp(self):
         options = dict(tor=False, full_scrapping=False)
         self.congreso_url = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/' \
-                       'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
+                            'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
         self.scrapper_cmd = Command()
         self.scrapper_cmd.handle(**options)
         self.maxDiff = None
@@ -73,17 +73,8 @@ class ScrapperTest(TestCase):
         self.assertEqual(b'127.0.0.1', new_scrapper_cmd.mysocket[1])
 
     def test_extract_doc_links(self):
-        expected = [
-            {
-            #'codigo': u'03774',
+        expected = [{
             'numero_proyecto': '03774/2014-CR',
-            #'link': None,
-            #'link_to_pdf': 'http://www2.congreso.gob.pe/sicr/tradocestproc/'
-                           #'Expvirt_2011.nsf/visbusqptramdoc/03774?opendocument'
-            #'pdf_url': 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/'
-                       #'Contdoc02_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0'
-                       #'dbc9030966aac60905257d4a007b75d9/$FILE
-                       # /PL03774050914.pdf',
             'titulo': u'Propone establecer los lineamientos para la promoc'
                       u'i\xf3n de la eficiencia y competitividad en la '
                       u'actividad empresarial del Estado, garantizando su '
@@ -137,11 +128,12 @@ class ScrapperTest(TestCase):
         self.assertEqual(expected, result)
 
     def test_extract_metadata2(self):
-        obj = {'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
-               'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
-                                   'seguimiento_03774.html',
-               'test': 'test',
-               'fecha_presentacion': datetime.now(),
+        obj = {
+            'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
+            'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
+                                'seguimiento_03774.html',
+            'test': 'test',
+            'fecha_presentacion': datetime.now(),
         }
         b = Proyecto(numero_proyecto='03774/2014-CR', titulo='hola',
                      seguimiento_page=obj['seguimiento_page'],
@@ -245,7 +237,6 @@ class ScrapperTest(TestCase):
         }
         result = self.scrapper_cmd.gather_all_metadata(obj)
         self.assertEqual(expected, result)
-
 
     def test_save_project1(self):
         """Item is not in the database"""

@@ -1,7 +1,6 @@
 import json
 import os
 import re
-import unittest
 
 from bs4 import BeautifulSoup
 

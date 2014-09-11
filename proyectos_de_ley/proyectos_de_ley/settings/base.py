@@ -16,14 +16,10 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-
-
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -77,11 +73,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
-
 
 SECRET_KEY = "hola"
 ENDLESS_PAGINATION_DEFAULT_CALLABLE_ARROWS = True
