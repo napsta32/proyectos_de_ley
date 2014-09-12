@@ -145,3 +145,7 @@ class SimpleTest(TestCase):
         items = views.find_in_db(query='03774')
         result = items[0]
         self.assertEqual(prettified_item, result)
+
+        # find elements not in our database
+        result = views.find_in_db(query='037741111111111111111111111111111')
+        self.assertEqual("No se encontraron resultados.", result)

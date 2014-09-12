@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.template import RequestContext, loader
 from django.shortcuts import redirect
 from django.db.models import Q
 
@@ -28,13 +27,11 @@ def about(request):
 
 def search(request):
     if 'q' in request.GET:
-        answer = "got query"
         query = request.GET['q']
         query = sanitize(query)
         if query.strip() == '':
             return redirect("/")
         else:
-            template = loader.get_template('pdl/search.html')
             results = find_in_db(query)
         """
                 context = RequestContext(request, {
