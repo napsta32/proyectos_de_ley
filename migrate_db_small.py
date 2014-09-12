@@ -1,8 +1,26 @@
 import dataset
 import datetime
 import os
+import unicodedata
+
 
 """Only migrate 100 records."""
+def convert_name_to_slug(name):
+    """Takes a congresista name and returns its slug."""
+    name = name.replace(",", "").lower()
+    name = name.split(" ")
+
+    if len(name) > 2:
+        i = 0
+        slug = ""
+        while i < 3:
+            slug += name[i]
+            if i < 2:
+                slug += "_"
+            i += 1
+        slug = unicodedata.normalize('NFKD', slug).encode('ascii', 'ignore')
+        slug = str(slug, encoding="utf-8")
+        return slug + "/"
 
 old_db = os.path.join("..", "leyes.db")
 new_db = "leyes_sqlite3.db"
@@ -42,6 +60,16 @@ for i in res:
     del i['timestamp']
     del i['id']
     del i['link']
+
+    congresistas = i['congresistas'].split(';')
+    congresistas_slug = ""
+    for congre in congresistas:
+        congre = congre.strip()
+        if congre is not None and congre.strip() != '':
+            congresistas_slug += convert_name_to_slug(congre).replace('/', '') + '; '
+        else:
+            congresistas_slug = ''
+    i['congresistas_slug'] = congresistas_slug
 
     new_items.append(i)
     j += 1

@@ -1,3 +1,6 @@
+# -*- encoding: utf-8 -*-
+import unicodedata
+
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.db.models import Q
@@ -37,6 +40,13 @@ def search(request):
     return redirect("/")
 
 
+def congresista(request, congresista_slug):
+    results = find_slug_in_db(congresista_slug.replace('/', ''))
+    return render(request, "pdl/congresista.html", {"results":
+                                                        results, "congresista":
+                                                        congresista_slug})
+
+
 def find_in_db(query):
     items = Proyecto.objects.filter(
         Q(short_url__icontains=query) |
@@ -52,6 +62,19 @@ def find_in_db(query):
         results = []
         for i in items:
             results.append(prettify_item_small(i))
+    else:
+        results = "No se encontraron resultados."
+    return results
+
+
+def find_slug_in_db(query):
+    items = Proyecto.objects.filter(
+        Q(congresistas_slug__icontains=query),
+        ).order_by('-codigo')
+    if len(items) > 0:
+        results = []
+        for i in items:
+            results.append(prettify_item(i))
     else:
         results = "No se encontraron resultados."
     return results
@@ -150,7 +173,6 @@ def hiperlink_congre(congresistas):
 def convert_name_to_slug(name):
     """Takes a congresista name and returns its slug."""
     name = name.replace(",", "").lower()
-    # name = name.encode("ascii", "ignore")
     name = name.split(" ")
 
     if len(name) > 2:
@@ -161,4 +183,6 @@ def convert_name_to_slug(name):
             if i < 2:
                 slug += "_"
             i += 1
+        slug = unicodedata.normalize('NFKD', slug).encode('ascii', 'ignore')
+        slug = str(slug, encoding="utf-8")
         return slug + "/"

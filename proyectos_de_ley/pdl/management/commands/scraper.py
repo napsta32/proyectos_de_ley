@@ -204,6 +204,7 @@ class Command(BaseCommand):
         """
         Saves all metadata for our project into our database.
         """
+        # TODO create and insert congresitas_slug
         try:
             Proyecto.objects.get(numero_proyecto=obj['numero_proyecto'])
             return "already in database"

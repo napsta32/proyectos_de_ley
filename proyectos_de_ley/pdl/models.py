@@ -6,11 +6,12 @@ class Proyecto(models.Model):
     codigo = models.CharField(max_length=20)
     numero_proyecto = models.CharField(max_length=50)
     short_url = models.CharField(max_length=20)
-    congresistas = models.TextField()
+    congresistas = models.TextField(blank=True)
+    congresistas_slug = models.TextField(blank=True)
 
     # migrate from date as string
-    fecha_presentacion = models.DateField()
-    titulo = models.TextField()
+    fecha_presentacion = models.DateField(blank=True)
+    titulo = models.TextField(blank=True)
     expediente = models.URLField(max_length=200, blank=True)
     pdf_url = models.URLField(max_length=200, blank=True)
     seguimiento_page = models.URLField(max_length=200, blank=True)
