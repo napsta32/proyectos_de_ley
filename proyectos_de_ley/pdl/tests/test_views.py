@@ -149,3 +149,23 @@ class SimpleTest(TestCase):
         # find elements not in our database
         result = views.find_in_db(query='037741111111111111111111111111111')
         self.assertEqual("No se encontraron resultados.", result)
+
+    def test_search1(self):
+        """Search attempt is redirected to index."""
+        c = Client()
+        response = c.get('/search/')
+        self.assertEqual(302, response.status_code)
+
+    def test_search2(self):
+        """Search attempt is redirected to index."""
+        query = "'*;/"
+        c = Client()
+        response = c.get('/search/?q=' + query)
+        self.assertEqual(302, response.status_code)
+
+    def test_search3(self):
+        """Search attempt is redirected to index."""
+        query = "propone"
+        c = Client()
+        response = c.get('/search/?q=' + query)
+        self.assertEqual(200, response.status_code)
