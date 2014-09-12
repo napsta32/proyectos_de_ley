@@ -85,6 +85,21 @@ class SimpleTest(TestCase):
         result = views.prettify_item_small(item)
         self.assertEqual(prettified_item, result)
 
+        # no PDF
+        item.pdf_url = ''
+        result = views.prettify_item_small(item)
+        self.assertTrue('sin PDF' in result)
+
+        # no expediente
+        item.expediente = ''
+        result = views.prettify_item_small(item)
+        self.assertTrue('sin Expediente' in result)
+
+        # no seguimiento_page
+        item.seguimiento_page = ''
+        result = views.prettify_item_small(item)
+        self.assertTrue('sin Seguimiento' in result)
+
     def test_hiperlink_congre(self):
         expected = "<a href='/congresista/dammert_ego_aguirre/' title='ver " \
                    "todos sus proyectos'>Dammert Ego Aguirre, Manuel " \
