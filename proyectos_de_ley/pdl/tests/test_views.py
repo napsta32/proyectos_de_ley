@@ -69,6 +69,22 @@ class SimpleTest(TestCase):
         result = views.prettify_item(item)
         self.assertEqual(prettified_item, result)
 
+    def test_prettify_item_small(self):
+        this_folder = os.path.abspath(os.path.dirname(__file__))
+        prettified_file = os.path.join(this_folder,
+                                       'prettified_03774_small.txt')
+        with open(prettified_file, "r") as f:
+            prettified_item = f.read()
+        item = self.dummy_items[0]
+
+        # save it to test database
+        b = Proyecto(**item)
+        b.save()
+        # now get it as QuerySet object
+        item = Proyecto.objects.get(codigo='03774')
+        result = views.prettify_item_small(item)
+        self.assertEqual(prettified_item, result)
+
     def test_hiperlink_congre(self):
         expected = "<a href='/congresista/dammert_ego_aguirre/' title='ver " \
                    "todos sus proyectos'>Dammert Ego Aguirre, Manuel " \

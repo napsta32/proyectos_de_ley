@@ -133,25 +133,25 @@ def prettify_item_small(item):
     out = "<p><a href='/p/" + item.short_url
     out += "' title='Permalink'>"
     out += item.codigo
-    out += "</a> \n"
+    out += "</a>\n "
     out += item.titulo
     if item.pdf_url != '':
-        out += ' <span class="glyphicon glyphicon-cloud-download"></span>'
+        out += '\n <span class="glyphicon glyphicon-cloud-download"></span>'
         out += ' <a href="' + item.pdf_url + '">PDF</a>'
     else:
         out += ' [sin PDF]'
 
     if item.expediente != '':
-        out += ' <span class="glyphicon glyphicon-link"></span>'
+        out += '\n <span class="glyphicon glyphicon-link"></span>'
         out += ' <a href="' + item.expediente + '">Expediente</a>'
     else:
         out += ' [sin Expediente]'
 
     if item.seguimiento_page != '':
-        out += ' <span class="glyphicon glyphicon-link"></span>'
+        out += '\n <span class="glyphicon glyphicon-link"></span>'
         out += ' <a href="' + item.seguimiento_page + '">Seguimiento</a>'
     else:
-        out += ' [sin Seguimiento]'
+        out += '\n [sin Seguimiento]'
     out += '</p>'
     return out
 
