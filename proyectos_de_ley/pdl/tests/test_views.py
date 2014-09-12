@@ -129,3 +129,19 @@ class SimpleTest(TestCase):
         expected = ''
         result = views.sanitize(mystring)
         self.assertEqual(expected, result)
+
+    def test_find_in_db(self):
+        this_folder = os.path.abspath(os.path.dirname(__file__))
+        prettified_file = os.path.join(this_folder,
+                                       'prettified_03774_small.txt')
+        with open(prettified_file, "r") as f:
+            prettified_item = f.read()
+        item = self.dummy_items[0]
+
+        # save it to test database
+        b = Proyecto(**item)
+        b.save()
+        # now get it as QuerySet object
+        items = views.find_in_db(query='03774')
+        result = items[0]
+        self.assertEqual(prettified_item, result)
