@@ -56,24 +56,21 @@ def search(request):
 
 
 def find_in_db(query):
-    try:
-        items = Proyecto.objects.filter(
-            Q(short_url__icontains=query) |
-            Q(codigo__icontains=query) |
-            Q(numero_proyecto__icontains=query) |
-            Q(titulo__icontains=query) |
-            Q(pdf_url__icontains=query) |
-            Q(expediente__icontains=query) |
-            Q(seguimiento_page__icontains=query) |
-            Q(congresistas__icontains=query),
-        ).order_by('-codigo')
-        if len(items) > 0:
-            results = []
-            for i in items:
-                results.append(prettify_item_small(i))
-        else:
-            results = "No se encontraron resultados."
-    except Proyecto.DoesNotExist:
+    items = Proyecto.objects.filter(
+        Q(short_url__icontains=query) |
+        Q(codigo__icontains=query) |
+        Q(numero_proyecto__icontains=query) |
+        Q(titulo__icontains=query) |
+        Q(pdf_url__icontains=query) |
+        Q(expediente__icontains=query) |
+        Q(seguimiento_page__icontains=query) |
+        Q(congresistas__icontains=query),
+    ).order_by('-codigo')
+    if len(items) > 0:
+        results = []
+        for i in items:
+            results.append(prettify_item_small(i))
+    else:
         results = "No se encontraron resultados."
     return results
 
@@ -154,6 +151,7 @@ def prettify_item_small(item):
         out += '\n [sin Seguimiento]'
     out += '</p>'
     return out
+
 
 def hiperlink_congre(congresistas):
     # tries to make a hiperlink for each congresista name to its own webpage
