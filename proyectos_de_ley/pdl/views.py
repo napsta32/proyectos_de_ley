@@ -33,23 +33,9 @@ def search(request):
             return redirect("/")
         else:
             results = find_in_db(query)
-        """
-                context = RequestContext(request, {
-                    'items': results,
-                    'keyword': query,
-                })
-                return HttpResponse(template.render(context))
-        else:
-            message = "you submitted and empty form."
-        context = RequestContext(request, {
-            'content': message,
-            'keyword': query,
-        })
-        return HttpResponse(template.render(context))
-        """
         return render(request, "pdl/search.html", {"results": results,
                                                    "keyword": query})
-    return HttpResponse("no answer")
+    return redirect("/")
 
 
 def find_in_db(query):
