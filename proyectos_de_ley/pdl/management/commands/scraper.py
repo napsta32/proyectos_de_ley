@@ -63,8 +63,8 @@ class Command(BaseCommand):
         for url in self.urls:
             soup = self.get(url)
             doc_links = self.extract_doc_links(soup)
-            for link in doc_links:
-                print(link)
+            for obj in doc_links:
+                print(obj)
 
     def get(self, url):
         """
