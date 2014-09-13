@@ -32,6 +32,7 @@ class Command(BaseCommand):
                     default=False,
                     help='Hace pedidos HTTP detrás de *tor*. Usar --tor '
                          'True/False',
+                    choices=['True', 'False']
                     ),
     )
 
@@ -42,11 +43,11 @@ class Command(BaseCommand):
         self.mysocket = ""
         self.legislatura = "2011"
 
-        if 'tor' not in options:
+        if options['tor'] is False:
             raise CommandError("Usar argumento --tor True/False")
-        elif options['tor'] is True:
+        elif options['tor'] == 'True':
             self.tor = True
-        elif options['tor'] is False:
+        elif options['tor'] == 'False':
             self.tor = False
 
         if options['full_scrapping'] is True:
@@ -212,3 +213,4 @@ class Command(BaseCommand):
             # not in database
             b = Proyecto(**obj)
             b.save()
+
