@@ -64,7 +64,15 @@ class Command(BaseCommand):
             soup = self.get(url)
             doc_links = self.extract_doc_links(soup)
             for obj in doc_links:
-                print(obj)
+                print("Working on %s:" % obj['numero_proyecto'])
+                obj = self.gather_all_metadata(obj)
+                if obj != "already in database":
+                    # save
+                    self.save_project(obj)
+                    print("Saved %s" % obj['codigo'])
+                    break
+                else:
+                    print("\t" + obj)
 
     def get(self, url):
         """
@@ -114,13 +122,12 @@ class Command(BaseCommand):
         :param obj: {'numero_proyecto', 'titulo', 'seguimiento_page'}
         :return: metadata for proyecto de ley, "done_already"
         """
-        if 'test' in obj:
-            try:
-                Proyecto.objects.get(numero_proyecto=obj['numero_proyecto'])
-                return "already in database"
-            except Proyecto.DoesNotExist:
-                # not in database
-                pass
+        try:
+            Proyecto.objects.get(numero_proyecto=obj['numero_proyecto'])
+            return "already in database"
+        except Proyecto.DoesNotExist:
+            # not in database
+            pass
 
         project_soup = self.get(obj['seguimiento_page'])
 
@@ -205,9 +212,12 @@ class Command(BaseCommand):
         :return: dict containing all needed metadata.
         """
         obj = self.extract_metadata(obj)
-        obj['short_url'] = self.create_shorturl(obj['codigo'])
-        obj['fecha_presentacion'] = self.fix_date(obj['fecha_presentacion'])
-        return obj
+        if obj != "already in database":
+            obj['short_url'] = self.create_shorturl(obj['codigo'])
+            obj['fecha_presentacion'] = self.fix_date(obj['fecha_presentacion'])
+            return obj
+        else:
+            return "already in database"
 
     def save_project(self, obj):
         """
