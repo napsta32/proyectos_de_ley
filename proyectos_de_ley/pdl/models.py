@@ -7,7 +7,6 @@ class Proyecto(models.Model):
     numero_proyecto = models.CharField(max_length=50)
     short_url = models.CharField(max_length=20)
     congresistas = models.TextField(blank=True)
-    congresistas_slug = models.TextField(blank=True)
 
     # migrate from date as string
     fecha_presentacion = models.DateField(blank=True)
@@ -19,3 +18,10 @@ class Proyecto(models.Model):
     # migrate from timestamp field
     time_created = models.DateTimeField(auto_now_add=True)
     time_edited = models.DateTimeField(auto_now=True)
+
+
+class Slug(models.Model):
+    """A translation table between a Congresista name and a slug to be used
+    as hiperlink."""
+    nombre = models.CharField(max_length=200)
+    slug = models.CharField(max_length=100)

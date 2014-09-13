@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.db.models import Q
 
 from pdl.models import Proyecto
+from pdl.models import Slug
 
 
 def index(request):
@@ -41,10 +42,18 @@ def search(request):
 
 
 def congresista(request, congresista_slug):
-    results = find_slug_in_db(congresista_slug.replace('/', ''))
-    return render(request, "pdl/congresista.html", {"results":
+    congresista_name = find_slug_in_db(congresista_slug)
+    if congresista_name is not None:
+        results = find_congresista_in_db(congresista_name)
+        return render(request, "pdl/congresista.html", {"results":
                                                         results, "congresista":
-                                                        congresista_slug})
+                                                            congresista_name})
+    else:
+        msg = [
+            "No se pudo encontrar el congresista.",
+            "Quizá el nombre está incorrecto."
+            ]
+        return render(request, "pdl/congresista.html", {"msg": msg})
 
 
 def find_in_db(query):
@@ -67,10 +76,9 @@ def find_in_db(query):
     return results
 
 
-def find_slug_in_db(query):
+def find_congresista_in_db(congresista_name):
     items = Proyecto.objects.filter(
-        Q(congresistas_slug__icontains=query),
-        ).order_by('-codigo')
+        congresistas__icontains=congresista_name).order_by('-codigo')
     if len(items) > 0:
         results = []
         for i in items:
@@ -78,6 +86,19 @@ def find_slug_in_db(query):
     else:
         results = "No se encontraron resultados."
     return results
+
+
+def find_slug_in_db(congresista_slug):
+    try:
+        item = Slug.objects.get(slug=congresista_slug)
+        return item.nombre
+    except Slug.DoesNotExist:
+        try:
+            congresista_slug += '/'
+            item = Slug.objects.get(slug=congresista_slug)
+            return item.nombre
+        except Slug.DoesNotExist:
+            return None
 
 
 def sanitize(s):
@@ -172,6 +193,7 @@ def hiperlink_congre(congresistas):
 
 def convert_name_to_slug(name):
     """Takes a congresista name and returns its slug."""
+    name = name.strip()
     name = name.replace(",", "").lower()
     name = name.split(" ")
 

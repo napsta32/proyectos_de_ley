@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 import json
 import os
 import re
@@ -8,7 +9,7 @@ from django.test import Client
 from django.test import TestCase
 
 from pdl import views
-from pdl.models import Proyecto
+from pdl.models import Proyecto, Slug
 
 
 class SimpleTest(TestCase):
@@ -164,6 +165,57 @@ class SimpleTest(TestCase):
         # find elements not in our database
         result = views.find_in_db(query='037741111111111111111111111111111')
         self.assertEqual("No se encontraron resultados.", result)
+
+    def test_find_slug_in_db(self):
+        item = self.dummy_items[0]
+
+        slugs = []
+        for i in item['congresistas'].split(';'):
+            congre_slug = views.convert_name_to_slug(i)
+            obj = dict(nombre=i.strip(), slug=congre_slug)
+            if obj not in slugs:
+                slugs.append(obj)
+        for i in slugs:
+            b = Slug(**i)
+            b.save()
+
+        # save it to test database
+        b = Proyecto(**item)
+        b.save()
+
+        # now get it as QuerySet object
+        slug = 'dammert_ego_aguirre'
+        expected = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
+        result = views.find_slug_in_db(slug)
+        self.assertEqual(expected, result)
+
+        # find elements not in our database
+        slug = 'dammert_ego_aguirre/'
+        result = views.find_slug_in_db(slug)
+        self.assertEqual(expected, result)
+
+        slug = 'dammert_ego_aguirreaaaaaaaa'
+        result = views.find_slug_in_db(slug)
+        self.assertEqual(None, result)
+
+    def test_find_congresista_in_db1(self):
+        item = self.dummy_items[0]
+        # save it to test database
+        b = Proyecto(**item)
+        b.save()
+        nombre = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
+        result = views.find_congresista_in_db(nombre)
+        self.assertTrue('03774/2014-CR' in result[0])
+
+    def test_find_congresista_in_db2(self):
+        item = self.dummy_items[0]
+        # save it to test database
+        b = Proyecto(**item)
+        b.save()
+        nombre = 'Pachecho, Yoni'
+        result = views.find_congresista_in_db(nombre)
+        expected = 'No se encontraron resultados.'
+        self.assertEqual(expected, result)
 
     def test_search1(self):
         """Search attempt is redirected to index."""
