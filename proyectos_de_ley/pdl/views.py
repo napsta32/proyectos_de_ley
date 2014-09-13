@@ -15,13 +15,20 @@ def index(request):
 
 
 def proyecto(request, short_url):
-    item = Proyecto.objects.get(short_url=short_url)
-    num_proy = item.numero_proyecto
-    item = prettify_item(item)
-    return render(request, "pdl/proyecto.html", {'item': item, 'num_proy':
-                                                 num_proy,
-                                                 }
-                  )
+    try:
+        item = Proyecto.objects.get(short_url=short_url)
+        num_proy = item.numero_proyecto
+        item = prettify_item(item)
+        return render(request, "pdl/proyecto.html", {'item': item, 'num_proy':
+                                                     num_proy,
+                                                     }
+                      )
+    except Proyecto.DoesNotExist:
+        msg = [
+            "No se pudo encontrar el proyecto.",
+            "Quizá ingresó URL incorrecto."
+        ]
+        return render(request, "pdl/proyecto.html", {"msg": msg})
 
 
 def about(request):
@@ -42,7 +49,11 @@ def search(request):
 
 
 def congresista(request, congresista_slug):
+    if congresista_slug.strip() == '':
+        return redirect('/')
+
     congresista_name = find_slug_in_db(congresista_slug)
+
     if congresista_name is not None:
         results = find_congresista_in_db(congresista_name)
         return render(request, "pdl/congresista.html", {"results":

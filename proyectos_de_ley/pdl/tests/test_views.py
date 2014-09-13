@@ -14,10 +14,17 @@ from pdl.models import Proyecto, Slug
 
 class SimpleTest(TestCase):
     def setUp(self):
+        self.maxDiff = None
+
         this_folder = os.path.abspath(os.path.dirname(__file__))
         dummy_db_json = os.path.join(this_folder, 'dummy_db.json')
         self.dummy_items = json.loads(open(dummy_db_json, 'r').read())
-        self.maxDiff = None
+
+        dummy_slugs = os.path.join(this_folder, 'dummy_slugs.json')
+        self.dummy_slugs = json.loads(open(dummy_slugs, 'r').read())
+        for i in self.dummy_slugs:
+            b = Slug(**i)
+            b.save()
 
     def test_index(self):
         c = Client()
@@ -139,6 +146,11 @@ class SimpleTest(TestCase):
         expected = 'Proyectos de ley emitidos por el Congreso de la ' \
                    'República del Perú | About'
         self.assertEqual(expected, result)
+
+    def test_congresista_view(self):
+        c = Client()
+        response = c.get('/congresista/')
+        self.assertEqual(302, response.status_code)
 
     def test_sanitize(self):
         mystring = "'/\\*%"

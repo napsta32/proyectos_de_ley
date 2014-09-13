@@ -6,15 +6,22 @@ Proyectos de ley emitidos por el Congreso | {{ num_proy }}
 
 
 {% block content %}
+
+{% if not msg %}
 <div class="container">
   <h1 id="proyectos_de_ley">Proyecto de Ley</h1>
 </div>
+{% endif %}
 
 <div id="contenido" class="container">
   <hr>
     <div>
       {{ item|safe }}
     </div>
+
+  {% for i in msg %}
+    <h3>{{ i }}</h3>
+  {% endfor %}
 </div>
 
 
