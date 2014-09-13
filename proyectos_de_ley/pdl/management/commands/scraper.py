@@ -59,6 +59,13 @@ class Command(BaseCommand):
             # Scrape only first page that has around 100 items
             self.urls.append(url_inicio)
 
+        # Do scrapping
+        for url in self.urls:
+            soup = self.get(url)
+            doc_links = self.extract_doc_links(soup)
+            for link in doc_links:
+                print(link)
+
     def get(self, url):
         """
         Does a HTTP request for a webpage and returns a BeautifulSoup
@@ -92,7 +99,8 @@ class Command(BaseCommand):
                     our_link = "http://www2.congreso.gob.pe"
                     our_link += "/Sicr/TraDocEstProc/CLProLey2011.nsf/"
                     our_link += href
-                    our_links.append({'numero_proyecto': numero_proyecto,
+                    if title is not None:
+                        our_links.append({'numero_proyecto': numero_proyecto,
                                       'titulo': title,
                                       'seguimiento_page': our_link})
         return our_links
