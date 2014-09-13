@@ -6,8 +6,5 @@ coverage:
 migrate:
 	python ../migrate_db.py
 
-migrate_small:
-	python ../migrate_db_small.py
-
 lint:
 	flake8 pdl ../proyectos_de_ley

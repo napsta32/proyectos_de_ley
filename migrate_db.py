@@ -4,7 +4,6 @@ import os
 import unicodedata
 
 
-"""Only migrate 100 records."""
 def convert_name_to_slug(name):
     """Takes a congresista name and returns its slug."""
     name = name.replace(",", "").lower()
@@ -29,6 +28,7 @@ db = dataset.connect("sqlite:///" + old_db)
 res = db.query("select *  from proyectos")
 
 new_items = []
+slugs = []  # translation table between name an URL
 for i in res:
     timestamp = datetime.datetime.fromtimestamp(i['timestamp'])
     i['time_created'] = timestamp
@@ -61,17 +61,22 @@ for i in res:
     del i['link']
 
     congresistas = i['congresistas'].split(';')
-    congresistas_slug = ""
     for congre in congresistas:
         congre = congre.strip()
+        obj = dict(nombre=congre)
         if congre is not None and congre.strip() != '':
-            congresistas_slug += convert_name_to_slug(congre).replace('/', '') + '; '
-        else:
-            congresistas_slug = ''
-    i['congresistas_slug'] = congresistas_slug
+            congre_slug = convert_name_to_slug(congre)
+            obj['slug'] = congre_slug
+            if obj not in slugs and congre_slug is not None:
+                slugs.append(obj)
 
     new_items.append(i)
 
 db = dataset.connect("sqlite:///" + new_db)
 table = db['pdl_proyecto']
 table.insert_many(new_items)
+
+
+
+table = db['pdl_slug']
+table.insert_many(slugs)

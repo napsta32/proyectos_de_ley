@@ -163,6 +163,22 @@ class SimpleTest(TestCase):
         response = c.get('/congresista/dammert_ego_aguirre/')
         self.assertTrue(b'Dammert Ego Aguirre' in response.content)
 
+    def test_congresista_view_pagination(self):
+        entries = []
+        j = 1
+        for i in self.dummy_items:
+            i['id'] = j
+            entries.append(Proyecto(**i))
+            j += 1
+        Proyecto.objects.bulk_create(entries)
+
+        for i in Proyecto.objects.all():
+            print(i.codigo)
+
+        c = Client()
+        response = c.get('/congresista/dammert_ego_aguirre/?page=2')
+        self.assertTrue(b'endless_page_link' in response.content)
+
     def test_sanitize(self):
         mystring = "'/\\*%"
         expected = ''
