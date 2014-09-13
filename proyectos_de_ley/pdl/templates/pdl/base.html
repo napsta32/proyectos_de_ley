@@ -37,7 +37,7 @@ rss icon by: http://glyphicons.com/
         }
 </style>
 
-   <link rel="alternate" type="application/rss+xml" title="Proyectos de Ley &raquo; RSS feed" href="http://proyectosdeley.pe/rss.xml" />
+   <link rel="alternate" type="application/rss+xml" title="Proyectos de Ley &raquo; RSS feed" href="/rss.xml" />
 
     <!-- Custom styles for this template -->
 
@@ -79,7 +79,8 @@ rss icon by: http://glyphicons.com/
             <li><a href="#contact">Contact</a></li>
             -->
             <li class="divider-vertical"></li>
-            <li><a href="http://proyectosdeley.pe/rss.xml"><img src="http://proyectosdeley.pe/g_rss.png" /></a></li>
+            <li><a
+                href="/rss.xml"><img src="{% static 'img/g_rss.png' %}"/></a></li>
           </ul>
           <form action="{% url 'pdl:search' %}"
                 method="get" class="navbar-form navbar-right" role="search">

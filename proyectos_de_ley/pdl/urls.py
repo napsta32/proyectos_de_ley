@@ -3,6 +3,7 @@ from django.conf.urls import patterns, url
 from . import views
 
 
+
 urlpatterns = patterns(
     '',
     url(r'^$', views.index, name='index'),
@@ -10,5 +11,6 @@ urlpatterns = patterns(
     url(r'^search/$', views.search, name='search'),
     url(r'^congresista/(?P<congresista_slug>.*)$', views.congresista,
         name='congresista'),
+
     url(r'^(?P<short_url>[0-9a-z]*)/$', views.proyecto),
 )
