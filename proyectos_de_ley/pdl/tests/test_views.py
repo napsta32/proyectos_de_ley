@@ -21,8 +21,8 @@ class SimpleTest(TestCase):
         self.dummy_items = json.loads(open(dummy_db_json, 'r').read())
 
         dummy_slugs = os.path.join(this_folder, 'dummy_slugs.json')
-        self.dummy_slugs = json.loads(open(dummy_slugs, 'r').read())
-        for i in self.dummy_slugs:
+        dummy_slugs = json.loads(open(dummy_slugs, 'r').read())
+        for i in dummy_slugs:
             b = Slug(**i)
             b.save()
 
@@ -138,6 +138,10 @@ class SimpleTest(TestCase):
         expected = 'Proyectos de ley emitidos por el Congreso | 03774/2014-CR'
         self.assertEqual(expected, result)
 
+        response = c.get('/p/4aw8ymaaaaaaaaaaaaaa/')
+        self.assertTrue(b'No se pudo encontrar el proyecto' in
+                        response.content)
+
     def test_about_view(self):
         c = Client()
         response = c.get('/about/')
@@ -151,6 +155,13 @@ class SimpleTest(TestCase):
         c = Client()
         response = c.get('/congresista/')
         self.assertEqual(302, response.status_code)
+
+        response = c.get('/congresista/pacheco_yoni/')
+        self.assertTrue(b'No se pudo encontrar el congresista' in
+                        response.content)
+
+        response = c.get('/congresista/dammert_ego_aguirre/')
+        self.assertTrue(b'Dammert Ego Aguirre' in response.content)
 
     def test_sanitize(self):
         mystring = "'/\\*%"
@@ -181,16 +192,6 @@ class SimpleTest(TestCase):
     def test_find_slug_in_db(self):
         item = self.dummy_items[0]
 
-        slugs = []
-        for i in item['congresistas'].split(';'):
-            congre_slug = views.convert_name_to_slug(i)
-            obj = dict(nombre=i.strip(), slug=congre_slug)
-            if obj not in slugs:
-                slugs.append(obj)
-        for i in slugs:
-            b = Slug(**i)
-            b.save()
-
         # save it to test database
         b = Proyecto(**item)
         b.save()
@@ -203,6 +204,10 @@ class SimpleTest(TestCase):
 
         # find elements not in our database
         slug = 'dammert_ego_aguirre/'
+        result = views.find_slug_in_db(slug)
+        self.assertEqual(expected, result)
+
+        slug = 'dammert_ego_aguirre'
         result = views.find_slug_in_db(slug)
         self.assertEqual(expected, result)
 
