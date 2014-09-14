@@ -14,48 +14,68 @@ from pdl.models import Proyecto
 
 class ScrapperTest(TestCase):
     def setUp(self):
-        options = dict(tor=False, full_scrapping=False)
+        args = ()
+        options = {
+            'settings': 'proyectos_de_ley.settings.local',
+            'no_color': False, 'full_scrapping': False, 'verbosity': '1',
+            'traceback': None, 'tor': 'False', 'debug': True,
+            'pythonpath': None}
         self.congreso_url = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/' \
                             'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
         self.scrapper_cmd = Command()
-        self.scrapper_cmd.handle(**options)
+        self.scrapper_cmd.handle(self, *args, **options)
         self.maxDiff = None
 
     def test_tor1(self):
-        options = dict(tor=False, full_scrapping=False)
-        self.scrapper_cmd.handle(**options)
-        result = self.scrapper_cmd.tor
+        args = ()
+        options = {
+            'settings': 'proyectos_de_ley.settings.local',
+            'full_scrapping': False, 'verbosity': '2',
+            'traceback': None, 'tor': 'False', 'debug': True,
+            'pythonpath': None}
+        scrapper_cmd = Command()
+        scrapper_cmd.handle(*args, **options)
+        result = scrapper_cmd.tor
         expected = False
         self.assertEqual(expected, result)
 
-    def test_tor2(self):
-        """If user does not enter argument for tor, it should be True by
-        default."""
-        options = dict(tor=True, full_scrapping=False)
-        self.scrapper_cmd.handle(**options)
-        result = self.scrapper_cmd.tor
-        expected = True
-        self.assertEqual(expected, result)
-
     @unittest.expectedFailure
-    def test_tor3(self):
+    def test_tor2(self):
         """If user does not enter argument for tor, exit with error."""
-        options = dict(full_scrapping=False)
-        self.scrapper_cmd.handle(**options)
+        args = ()
+        options = {
+            'settings': 'proyectos_de_ley.settings.local',
+            'full_scrapping': False, 'verbosity': '2',
+            'traceback': None, 'debug': True,
+            'pythonpath': None}
+        scrapper_cmd = Command()
+        scrapper_cmd.handle(*args, **options)
 
     def test_url1(self):
         """Test when user does not enter any argument for the scrapper."""
-        options = dict(full_scrapping=False, tor=False)
-        self.scrapper_cmd.handle(**options)
+        args = ()
+        options = {
+            'settings': 'proyectos_de_ley.settings.local',
+            'full_scrapping': False, 'verbosity': '2',
+            'traceback': None, 'tor': 'False', 'debug': True,
+            'pythonpath': None}
+        scrapper_cmd = Command()
+        scrapper_cmd.handle(*args, **options)
         expected = self.congreso_url
-        self.assertEqual(expected, self.scrapper_cmd.urls[0])
+        self.assertEqual(expected, scrapper_cmd.urls[0])
 
     def test_url2(self):
         """Test when user enter argument for full scrapping, since 20110727."""
-        options = dict(full_scrapping=True, tor=False)
-        self.scrapper_cmd.handle(**options)
+        args = ()
+        options = {
+            'settings': 'proyectos_de_ley.settings.local',
+            'full_scrapping': True, 'verbosity': '2',
+            'traceback': None, 'tor': 'False', 'debug': True,
+            'pythonpath': None}
+        scrapper_cmd = Command()
+        scrapper_cmd.handle(*args, **options)
         expected_last = self.congreso_url + '&Start=3800'
-        self.assertEqual(expected_last, self.scrapper_cmd.urls[-1])
+        self.assertEqual(expected_last, scrapper_cmd.urls[-1])
 
     def test_get1(self):
         soup = self.scrapper_cmd.get("http://aniversarioperu.me/")

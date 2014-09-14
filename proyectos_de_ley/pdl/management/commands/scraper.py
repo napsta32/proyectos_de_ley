@@ -32,11 +32,19 @@ class Command(BaseCommand):
                     default=False,
                     help='Hace pedidos HTTP detrás de *tor*. Usar --tor '
                          'True/False',
-                    choices=['True', 'False']
+                    choices=['True', 'False'],
                     ),
+        make_option('-d',
+                    '--debug',
+                    action='store_true',
+                    dest='debug',
+                    default=False,
+                    help='Usar cuando se ejecuten tests.',
+        ),
     )
 
     def handle(self, *args, **options):
+        # print(options)
         url_inicio = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/' \
                      'CLProLey2011.nsf/PAporNumeroInverso?OpenView'
         self.urls = []
@@ -59,20 +67,21 @@ class Command(BaseCommand):
             # Scrape only first page that has around 100 items
             self.urls.append(url_inicio)
 
-        # Do scrapping
-        for url in self.urls:
-            soup = self.get(url)
-            doc_links = self.extract_doc_links(soup)
-            for obj in doc_links:
-                print("Working on %s:" % obj['numero_proyecto'])
-                obj = self.gather_all_metadata(obj)
-                if obj != "already in database":
-                    # save
-                    self.save_project(obj)
-                    print("Saved %s" % obj['codigo'])
-                    break
-                else:
-                    print("\t" + obj)
+        if options['debug'] is not True:
+            # Do scrapping
+            for url in self.urls:
+                soup = self.get(url)
+                doc_links = self.extract_doc_links(soup)
+                for obj in doc_links:
+                    print("Working on %s:" % obj['numero_proyecto'])
+                    obj = self.gather_all_metadata(obj)
+                    if obj != "already in database":
+                        # save
+                        self.save_project(obj)
+                        print("Saved %s" % obj['codigo'])
+                        break
+                    else:
+                        print("\t" + obj)
 
     def get(self, url):
         """
