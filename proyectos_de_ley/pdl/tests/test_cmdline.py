@@ -51,6 +51,35 @@ class ScrapperTest(TestCase):
         scrapper_cmd = Command()
         scrapper_cmd.handle(*args, **options)
 
+    @unittest.expectedFailure
+    def test_tor3(self):
+        args = ()
+        options = {
+            'settings': 'proyectos_de_ley.settings.local',
+            'full_scrapping': False, 'verbosity': '2',
+            'traceback': None, 'debug': True, 'tor': False,
+            'pythonpath': None}
+        scrapper_cmd = Command()
+        scrapper_cmd.handle(*args, **options)
+
+    def test_scraping(self):
+        args = ()
+        options = {
+            'settings': 'proyectos_de_ley.settings.local',
+            'full_scrapping': False, 'verbosity': '2',
+            'traceback': None, 'debug': False, 'test': True,
+            'tor': 'True', 'pythonpath': None}
+        scrapper_cmd = Command()
+        scrapper_cmd.handle(*args, **options)
+        res = Proyecto.objects.all()
+        self.assertEqual(1, len(res))
+
+        # Test when already in db
+        scrapper_cmd = Command()
+        scrapper_cmd.handle(*args, **options)
+        res = Proyecto.objects.all()
+        self.assertEqual(2, len(res))
+
     def test_url1(self):
         """Test when user does not enter any argument for the scrapper."""
         args = ()
@@ -261,6 +290,12 @@ class ScrapperTest(TestCase):
         }
         result = self.scrapper_cmd.gather_all_metadata(obj)
         self.assertEqual(expected, result)
+
+        # Test when item already in db.
+        b = Proyecto(**expected)
+        b.save()
+        result = self.scrapper_cmd.gather_all_metadata(obj)
+        self.assertEqual("already in database", result)
 
     def test_save_project1(self):
         """Item is not in the database"""

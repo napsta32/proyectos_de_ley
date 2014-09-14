@@ -21,7 +21,7 @@ class LatestEntriesFeed(Feed):
     feed_type = CorrectMimeTypeFeed
 
     def items(self):
-        return Proyecto.objects.order_by('-codigo')[:10]
+        return Proyecto.objects.order_by('-codigo')
 
     def item_title(self, item):
         return item.titulo[:140] + "..."

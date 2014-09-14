@@ -67,7 +67,7 @@ class Command(BaseCommand):
             # Scrape only first page that has around 100 items
             self.urls.append(url_inicio)
 
-        if options['debug'] is not True:
+        if 'debug' in options and options['debug'] is not True:
             # Do scrapping
             for url in self.urls:
                 soup = self.get(url)
@@ -79,7 +79,8 @@ class Command(BaseCommand):
                         # save
                         self.save_project(obj)
                         print("Saved %s" % obj['codigo'])
-                        break
+                        if 'test' in options and options['test'] is True:
+                            break
                     else:
                         print("\t" + obj)
 
