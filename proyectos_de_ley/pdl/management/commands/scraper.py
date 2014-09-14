@@ -70,6 +70,7 @@ class Command(BaseCommand):
         if 'debug' in options and options['debug'] is not True:
             # Do scrapping
             for url in self.urls:
+                print(">> TOR: ", self.tor)
                 soup = self.get(url)
                 doc_links = self.extract_doc_links(soup)
                 for obj in doc_links:
