@@ -86,7 +86,11 @@ class ScrapperTest(TestCase):
     @unittest.expectedFailure
     def test_get2(self):
         """Test if we get a tor proxy for get request when tor is TRUE."""
-        options = dict(tor=True, full_scrapping=False)
+        options = {
+            'settings': 'proyectos_de_ley.settings.local',
+            'full_scrapping': False, 'verbosity': '2',
+            'traceback': None, 'tor': 'True', 'debug': True,
+            'pythonpath': None}
         new_scrapper_cmd = Command()
         new_scrapper_cmd.handle(**options)
         new_scrapper_cmd.get("http://aniversarioperu.me/")
