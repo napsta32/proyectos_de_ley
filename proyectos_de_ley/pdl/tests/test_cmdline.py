@@ -68,7 +68,7 @@ class ScrapperTest(TestCase):
             'settings': 'proyectos_de_ley.settings.local',
             'full_scrapping': False, 'verbosity': '2',
             'traceback': None, 'debug': False, 'test': True,
-            'tor': 'True', 'pythonpath': None}
+            'tor': 'False', 'pythonpath': None}
         scrapper_cmd = Command()
         scrapper_cmd.handle(*args, **options)
         res = Proyecto.objects.all()
