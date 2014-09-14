@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from django.utils.feedgenerator import Rss201rev2Feed
