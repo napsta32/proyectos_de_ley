@@ -30,11 +30,11 @@ del folder que contiene el proyecto de Django::
 
 Ejecutar el scrapper
 --------------------
-* El comando ``python manage.py scrape`` se encarga de cosechar la 
-información del servidor del congreso y almacernarla en una base de datos 
-local.
-* Toda la información cosechada se almancena en una base de datos SQLite3. 
-Django se encarga de servir las páginas y motor de búsqueda.
+* El comando ``python manage.py scrape`` se encarga de cosechar la
+  información del servidor del congreso y almacernarla en una base de datos
+  local.
+* Toda la información cosechada se almancena en una base de datos SQLite3.
+  Django se encarga de servir las páginas y motor de búsqueda.
 
 Plantilla HTML
 --------------
