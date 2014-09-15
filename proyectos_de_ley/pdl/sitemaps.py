@@ -33,4 +33,3 @@ class CongresistaSitemap(Sitemap):
     def location(self, item):
         loc = '/congresista/' + item.slug
         return loc
-
