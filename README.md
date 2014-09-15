@@ -5,26 +5,19 @@
 Estos scripts ha sido probados en una computadora usando Ubuntu 13.10 y
 necesitan que las siguientes dependencias estén instaladas.
 
-* Python
+* Python3, django1.7
 * pip: ``sudo apt-get install python-pip``
-* bs4: ``sudo apt-get install python-bs4``
-* requests: ``sudo apt-get install python-requests``
-* dataset: ``sudo pip install dataset``
-* short_url: ``sudo pip install short_url``
-* PyRSS2Gen: ``sudo pip install pyrss2gen``
+* > pip install -r requirements/dev.txt
 
 # Modo de ejecución
 
-## script scrape.py
+## Custom django command
 
-* El script ``scrape.py`` se encarga de cosechar la información del servidor del
-congreso.
-* Elabora un HTML con la lista de proyectos ``index.html``,
-información básica (título, autores, código) y enlaces al expediente y PDF del
-proyecto. 
-* Toda la información cosechada se almancena en una base de datos SQLite3. El
-  código en javascript se encarga de obtener los datos de esta base de datos
-  usando JQuery y AJAX.
+* El comando ``python manage.py scrape`` se encarga de cosechar la 
+información del servidor del congreso y almacernarla en una base de datos 
+local.
+* Toda la información cosechada se almancena en una base de datos SQLite3. 
+Django se encarga de servir las páginas y motor de búsqueda.
 
 ## script do_ocr.py
 [We don't want OCR yet]
@@ -46,18 +39,5 @@ ya que no se ha actualizado recientemente.
   Cualquier cambio al estilo se debe realizar en este archivo. Esta plantilla
   usa un estilo basado en Twitter Bootstrap con *responsive features* para que
   se vea bien en computadoras y dispositivos móbiles.
-* También se puede usar un HTML radicalmente diferente como plantilla. Pero es
-  necesario que este archivo se llame ``base.html`` y tenga los siguientes
-  campos:
-
-     * ``{% titulo %}``
-     * ``{% content %}``
-
 * Esos campos se usan para introducir en contenido en la plantilla y generar
   los archivos HTML.
-
-## Configuración Apache
-Hay que asegurarse que se ha copiado el archivo .htaccess y que Apache2 está
-configurado con los modulos requeridos, especialmente rewrite.
-
-
