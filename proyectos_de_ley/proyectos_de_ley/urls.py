@@ -2,11 +2,12 @@ from django.conf.urls import patterns, include, url
 from django.contrib.sitemaps.views import sitemap
 
 from pdl.feeds import LatestEntriesFeed
-from pdl.sitemaps import ProyectoSitemap
+from pdl.sitemaps import ProyectoSitemap, CongresistaSitemap
 # from django.contrib import admin
 
 sitemaps = {
     'static': ProyectoSitemap,
+    'congresista': CongresistaSitemap,
     }
 
 urlpatterns = patterns(
