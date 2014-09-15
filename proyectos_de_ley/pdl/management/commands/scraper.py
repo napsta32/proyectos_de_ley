@@ -40,7 +40,7 @@ class Command(BaseCommand):
                     dest='debug',
                     default=False,
                     help='Usar cuando se ejecuten tests.',
-        ),
+                    ),
     )
 
     def handle(self, *args, **options):
@@ -120,8 +120,9 @@ class Command(BaseCommand):
                     our_link += href
                     if title is not None:
                         our_links.append({'numero_proyecto': numero_proyecto,
-                                      'titulo': title,
-                                      'seguimiento_page': our_link})
+                                          'titulo': title,
+                                          'seguimiento_page': our_link},
+                                         )
         return our_links
 
     def extract_metadata(self, obj):
@@ -225,7 +226,9 @@ class Command(BaseCommand):
         obj = self.extract_metadata(obj)
         if obj != "already in database":
             obj['short_url'] = self.create_shorturl(obj['codigo'])
-            obj['fecha_presentacion'] = self.fix_date(obj['fecha_presentacion'])
+            obj['fecha_presentacion'] = self.fix_date(
+                obj['fecha_presentacion'],
+            )
             return obj
         else:
             return "already in database"
@@ -242,4 +245,3 @@ class Command(BaseCommand):
             # not in database
             b = Proyecto(**obj)
             b.save()
-

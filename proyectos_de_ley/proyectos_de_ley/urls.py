@@ -19,4 +19,3 @@ urlpatterns = patterns(
         name='django.contrib.sitemaps.views.sitemap'),
     # url(r'^admin/', include(admin.site.urls)),
 )
-

@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 from django.contrib.syndication.views import Feed
-from django.core.urlresolvers import reverse
 from django.utils.feedgenerator import Rss201rev2Feed
 
 from pdl.models import Proyecto
@@ -11,7 +10,8 @@ class CorrectMimeTypeFeed(Rss201rev2Feed):
 
 
 class LatestEntriesFeed(Feed):
-    title = 'Proyectos de ley emitidos por el Congreso de la República del Perú'
+    title = 'Proyectos de ley emitidos por el Congreso de la República del' \
+            ' Perú'
     link = '/rss.xml'
     description = 'proyectosdeley.pe es un intento de transparentar el Cong' \
                   'reso y poner al alcance de la mayor cantidad de personas' \

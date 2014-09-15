@@ -1,15 +1,13 @@
 # -*- encoding: utf-8 -*-
 import json
 import os
-import re
 
 from bs4 import BeautifulSoup
 
 from django.test import Client
 from django.test import TestCase
 
-from pdl import views
-from pdl.models import Proyecto, Slug
+from pdl.models import Proyecto
 
 
 class SimpleTest(TestCase):
@@ -29,5 +27,3 @@ class SimpleTest(TestCase):
         response = c.get('/rss.xml')
         soup = BeautifulSoup(response.content)
         self.assertEqual(1, len(soup.find_all('item')))
-
-

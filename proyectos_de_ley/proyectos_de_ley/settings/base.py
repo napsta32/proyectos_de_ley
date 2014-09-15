@@ -96,7 +96,8 @@ STATICFILES_DIRS = (
 )
 
 # needed for building sitemaps
-TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 )
 SITE_ID = 1
