@@ -81,10 +81,10 @@ class Command(BaseCommand):
                     if obj != "already in database":
                         # save
                         self.save_project(obj)
+                        self.save_slug(obj)
                         print("Saved %s" % obj['codigo'])
                     else:
                         print("\t" + obj)
-                    self.save_slug(obj)
 
                     if 'test' in options and options['test'] is True:
                         break

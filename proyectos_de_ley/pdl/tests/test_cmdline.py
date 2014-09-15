@@ -77,10 +77,9 @@ class ScrapperTest(TestCase):
         self.assertEqual(1, len(res))
 
         # Test when already in db
-        scrapper_cmd = Command()
         scrapper_cmd.handle(*args, **options)
         res = Proyecto.objects.all()
-        self.assertEqual(2, len(res))
+        self.assertEqual(1, len(res))
 
     def test_url1(self):
         """Test when user does not enter any argument for the scrapper."""
