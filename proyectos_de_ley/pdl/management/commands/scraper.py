@@ -82,10 +82,12 @@ class Command(BaseCommand):
                         # save
                         self.save_project(obj)
                         print("Saved %s" % obj['codigo'])
-                        if 'test' in options and options['test'] is True:
-                            break
                     else:
                         print("\t" + obj)
+                    self.save_slug(obj)
+
+                    if 'test' in options and options['test'] is True:
+                        break
 
     def get(self, url):
         """
