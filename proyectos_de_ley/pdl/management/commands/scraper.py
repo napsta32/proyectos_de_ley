@@ -13,6 +13,8 @@ import socket
 from django.core.management.base import BaseCommand, CommandError
 
 from pdl.models import Proyecto
+from pdl.models import Slug
+from pdl.views import convert_name_to_slug
 
 
 class Command(BaseCommand):
@@ -237,7 +239,6 @@ class Command(BaseCommand):
         """
         Saves all metadata for our project into our database.
         """
-        # TODO create and insert congresitas_slug
         try:
             Proyecto.objects.get(numero_proyecto=obj['numero_proyecto'])
             return "already in database"
@@ -245,3 +246,18 @@ class Command(BaseCommand):
             # not in database
             b = Proyecto(**obj)
             b.save()
+
+    def save_slug(self, obj):
+        for congre in obj['congresistas'].split(';'):
+            congre = congre.strip()
+            congre_slug = dict(nombre=congre)
+            if congre is not None and congre != '':
+                slug = convert_name_to_slug(congre)
+                congre_slug['slug'] = slug
+
+                try:
+                    Slug.objects.get(slug=congre_slug['slug'])
+                    return "slug already in database"
+                except Slug.DoesNotExist:
+                    b = Slug(**congre_slug)
+                    b.save()

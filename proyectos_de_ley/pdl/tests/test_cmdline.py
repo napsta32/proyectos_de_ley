@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from django.test import TestCase
 from pdl.management.commands.scraper import Command
 from pdl.models import Proyecto
+from pdl.models import Slug
 
 
 class ScrapperTest(TestCase):
@@ -300,11 +301,51 @@ class ScrapperTest(TestCase):
 
     def test_save_project1(self):
         """Item is not in the database"""
-        obj = dict(numero_proyecto="03774/2014-CR", short_url="4aw8ym",
-                   fecha_presentacion=date.today(),
-                   )
+        obj = {
+            'numero_proyecto': '02764/2013-CR',
+            'titulo': 'Propone Ley Universitaria',
+            'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
+                                'seguimiento_02764.html',
+            'codigo': '02764',
+            'fecha_presentacion': date.today(),
+            'expediente': 'http://www2.congreso.gob.pe/sicr/tradocestproc/'
+                          'Expvirt_2011.nsf/visbusqptramdoc/02764?opendocu'
+                          'ment',
+            'pdf_url': 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/Cont'
+                       'doc02_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0/2'
+                       'a89be59a1a3966b05257c01000a5cd5/$FILE/PL02764101013'
+                       '.pdf',
+            'congresistas': 'Elias Avalos, Jose Luis; Chávez Cossío, Martha;'
+                            ' Salgado Rubianes, Luz; Tait Villacorta, Cecilia;'
+                            ' Chacón de Vettori, Cecilia Isabel; Aguinaga '
+                            'Recuenco, Alejandro Aurelio; Cuculiza Torre, '
+                            'Luisa María; García Belaunde, Víctor Andrés; '
+                            'Bedoya de Vivanco, Javier Alonso; Galarreta '
+                            'Velarde, Luis Fernando; Abugattás Majluf, Daniel '
+                            'Fernando; Fujimori Higuchi, Kenji Gerardo; Acuña '
+                            'Nuñez, Richard Frank; Acuña Peralta, Virgilio; '
+                            'Bardalez Cochagne, Aldo Maximiliano; Cabrera '
+                            'Ganoza, Eduardo Felipe; Ccama Layme, Francisco; '
+                            'Chihuan Ramos, Leyla Felicita; Cordero Jon Tay, '
+                            'Maria Del Pilar; Diaz Dios, Juan Jose; Gagó '
+                            'Perez, Julio César; Hurtado Zamudio, Jesus '
+                            'Panfilo; Lopez Cordova, Maria Magdalena; Medina '
+                            'Ortiz, Antonio; Melgar Valdez, Elard Galo; Neyra '
+                            'Olaychea, Angel; Pariona Galindo, Federico; '
+                            'Ramirez Gamarra, Reber Joaquin; Rondon Fudinaga, '
+                            'Gustavo Bernardo; Rosas Huaranga, Julio Pablo; '
+                            'Salazar Miranda, Octavio Edilberto; Sarmiento '
+                            'Betancourt, Freddy Fernando; Schaefer Cuculiza, '
+                            'Karla Melissa; Spadaro Philipps, Pedro Carmelo; '
+                            'Tan De Inafuko, Aurelia; Tapia Bernal, Segundo '
+                            'Leocadio; Tubino Arias Schreiber, Carlos Mario '
+                            'Del Carmen; Vacchelli Corbetto, Gian Carlo; '
+                            'Valqui Matos, Nestor Antonio; Iberico Nuñez, '
+                            'Luis',
+            'short_url': '4zhube',
+        }
         self.scrapper_cmd.save_project(obj)
-        item = Proyecto.objects.get(short_url="4aw8ym")
+        item = Proyecto.objects.get(short_url="4zhube")
         result = item.fecha_presentacion
         expected = date.today()
         self.assertEqual(expected, result)
@@ -321,3 +362,56 @@ class ScrapperTest(TestCase):
 
         expected = "already in database"
         self.assertEqual(expected, result)
+
+    def test_save_slug(self):
+        obj = {
+            'numero_proyecto': '02764/2013-CR',
+            'titulo': 'Propone Ley Universitaria',
+            'seguimiento_page': 'http://aniversarioperu.me/utero/test_pdl/'
+                                'seguimiento_02764.html',
+            'codigo': '02764',
+            'fecha_presentacion': date.today(),
+            'expediente': 'http://www2.congreso.gob.pe/sicr/tradocestproc/'
+                          'Expvirt_2011.nsf/visbusqptramdoc/02764?opendocu'
+                          'ment',
+            'pdf_url': 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/Cont'
+                       'doc02_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0/2'
+                       'a89be59a1a3966b05257c01000a5cd5/$FILE/PL02764101013'
+                       '.pdf',
+            'congresistas': 'Elias Avalos, Jose Luis; Chávez Cossío, Martha;'
+                            ' Salgado Rubianes, Luz; Tait Villacorta, Cecilia;'
+                            ' Chacón de Vettori, Cecilia Isabel; Aguinaga '
+                            'Recuenco, Alejandro Aurelio; Cuculiza Torre, '
+                            'Luisa María; García Belaunde, Víctor Andrés; '
+                            'Bedoya de Vivanco, Javier Alonso; Galarreta '
+                            'Velarde, Luis Fernando; Abugattás Majluf, Daniel '
+                            'Fernando; Fujimori Higuchi, Kenji Gerardo; Acuña '
+                            'Nuñez, Richard Frank; Acuña Peralta, Virgilio; '
+                            'Bardalez Cochagne, Aldo Maximiliano; Cabrera '
+                            'Ganoza, Eduardo Felipe; Ccama Layme, Francisco; '
+                            'Chihuan Ramos, Leyla Felicita; Cordero Jon Tay, '
+                            'Maria Del Pilar; Diaz Dios, Juan Jose; Gagó '
+                            'Perez, Julio César; Hurtado Zamudio, Jesus '
+                            'Panfilo; Lopez Cordova, Maria Magdalena; Medina '
+                            'Ortiz, Antonio; Melgar Valdez, Elard Galo; Neyra '
+                            'Olaychea, Angel; Pariona Galindo, Federico; '
+                            'Ramirez Gamarra, Reber Joaquin; Rondon Fudinaga, '
+                            'Gustavo Bernardo; Rosas Huaranga, Julio Pablo; '
+                            'Salazar Miranda, Octavio Edilberto; Sarmiento '
+                            'Betancourt, Freddy Fernando; Schaefer Cuculiza, '
+                            'Karla Melissa; Spadaro Philipps, Pedro Carmelo; '
+                            'Tan De Inafuko, Aurelia; Tapia Bernal, Segundo '
+                            'Leocadio; Tubino Arias Schreiber, Carlos Mario '
+                            'Del Carmen; Vacchelli Corbetto, Gian Carlo; '
+                            'Valqui Matos, Nestor Antonio; Iberico Nuñez, '
+                            'Luis',
+            'short_url': '4zhube',
+            }
+        self.scrapper_cmd.save_slug(obj)
+        item = Slug.objects.get(nombre='Elias Avalos, Jose Luis')
+        result = item.slug
+        expected = 'elias_avalos_jose/'
+        self.assertEqual(expected, result)
+
+        self.assertEqual('slug already in database',
+                         self.scrapper_cmd.save_slug(obj))
