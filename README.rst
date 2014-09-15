@@ -47,5 +47,6 @@ Plantilla HTML
 
 .. |Build Status| image:: https://travis-ci.org/aniversarioperu/proyectos_de_ley.svg?branch=master
    :target: https://travis-ci.org/aniversarioperu/proyectos_de_ley
-.. |Coverage Status| image:: https://coveralls.io/repos/aniversarioperu/proyectos_de_ley/badge.png
+.. |Coverage alls| image:: https://coveralls
+.io/repos/aniversarioperu/proyectos_de_ley/badge.png
    :target: https://coveralls.io/r/aniversarioperu/proyectos_de_ley
