@@ -80,3 +80,9 @@ table.insert_many(new_items)
 
 table = db['pdl_slug']
 table.insert_many(slugs)
+
+
+# fix domain from example.com to proyectosdeley.pe
+table = db['django_site']
+table.update(dict(id=1, domain='proyectosdeley.pe',
+    name='proyectosdeley.pe'), ['id'])

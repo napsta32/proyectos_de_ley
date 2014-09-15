@@ -29,6 +29,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sitemaps',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
 
     'endless_pagination',
@@ -87,7 +89,14 @@ TEMPLATE_CONTEXT_PROCESSORS += (
 TEMPLATE_DIRS = (
     'pdl/templates/pdl',
 )
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+# needed for building sitemaps
+TEMPLATE_LOADERS = ('django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader',
+)
+SITE_ID = 1
