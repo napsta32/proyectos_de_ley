@@ -1,0 +1,16 @@
+.pagination>li:last-child>a {
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
+.pagination>li:last-child>span {
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
+.pagination>li:first-child>a {
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
+.pagination>li:first-child>span {
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
