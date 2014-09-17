@@ -1,12 +1,11 @@
-$(document).ready(function(){
+$(document).ready(function () {
     // to fade in on page load
-    $("#contenido").fadeIn(400);
-    // to fade out before redirect
-    $('a[rel="page"]').click(function(e){
+    $('a[rel="page"]').click(function (e) {
         redirect = $(this).attr('href');
         e.preventDefault();
-        $('#contenido').fadeOut(400, function(){
-            document.location.href = redirect
-        });
+        $('html, body').animate({ scrollTop: 0 }, 0, function () {});
+        $('#contenido').fadeOut(400, function() {});
+        document.location.href = redirect;
+        $('#contenido').fadeIn(900, function() {});
     });
 })
