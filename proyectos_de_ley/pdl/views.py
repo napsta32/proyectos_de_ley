@@ -24,21 +24,16 @@ def index(request):
 
     try:
         items = paginator.page(page)
-        pretty_items = []
-        for i in items.object_list:
-            pretty_items.append(prettify_item(i))
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
         items = paginator.page(1)
-        pretty_items = []
-        for i in items.object_list:
-            pretty_items.append(prettify_item(i))
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         items = paginator.page(paginator.num_pages)
-        pretty_items = []
-        for i in items.object_list:
-            pretty_items.append(prettify_item(i))
+
+    pretty_items = []
+    for i in items.object_list:
+        pretty_items.append(prettify_item(i))
 
     if cur > 20:
         first_half = range(cur - 10, cur)
