@@ -6,6 +6,7 @@ $(document).ready(function () {
         $('#contenido').fadeOut(400, function() {
             document.location.href = redirect;
         });
+        $('html, body').animate({ scrollTop: 0 }, 0);
         $('#contenido').fadeIn(1000, function() {});
     });
 })
