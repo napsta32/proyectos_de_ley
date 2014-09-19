@@ -5,24 +5,62 @@ import unicodedata
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from pdl.models import Proyecto
 from pdl.models import Slug
 
 
 def index(request):
-    if 'page' in request.GET:
-        page = request.GET['page']
-        res = re.search('([0-9]*)', page)
-        if res:
-            page = res.groups()[0].strip()
-            if page != '':
-                return "HOLA"
+    all_items = Proyecto.objects.all().order_by('-codigo')
+    paginator = Paginator(all_items, 20)
+
+    page = request.GET.get('page')
+
+    if page is not None:
+        cur = int(page)
     else:
-        # get first 20 items
-        items = get_last_items()
-        count = Proyecto.objects.all().count()
-    return render(request, "pdl/index.html", {"items": items, "count": count,})
+        cur = 1
+
+    try:
+        items = paginator.page(page)
+        pretty_items = []
+        for i in items.object_list:
+            pretty_items.append(prettify_item(i))
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        items = paginator.page(1)
+        pretty_items = []
+        for i in items.object_list:
+            pretty_items.append(prettify_item(i))
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        items = paginator.page(paginator.num_pages)
+        pretty_items = []
+        for i in items.object_list:
+            pretty_items.append(prettify_item(i))
+
+    if cur > 20:
+        first_half = range(cur - 10, cur)
+        # is current less than last page?
+        if cur < paginator.page_range[-1] - 10:
+            second_half = range(cur+1, cur + 10)
+        else:
+            second_half = range(cur+1, paginator.page_range[-1])
+    else:
+        first_half = range(1, cur)
+        second_half = range(cur+1, 21)
+
+    return render(request, "pdl/index.html", {
+            "items": items,
+            "pretty_items": pretty_items,
+            "first_half": first_half,
+            "second_half": second_half,
+            "first_page": paginator.page_range[0],
+            "last_page": paginator.page_range[-1],
+            "current": cur,
+            }
+    )
 
 
 def proyecto(request, short_url):
