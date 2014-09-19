@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import re
 import unicodedata
 
 from django.shortcuts import render
@@ -10,8 +11,18 @@ from pdl.models import Slug
 
 
 def index(request):
-    items = get_last_items()
-    return render(request, "pdl/index.html", {"items": items})
+    if 'page' in request.GET:
+        page = request.GET['page']
+        res = re.search('([0-9]*)', page)
+        if res:
+            page = res.groups()[0].strip()
+            if page != '':
+                return "HOLA"
+    else:
+        # get first 20 items
+        items = get_last_items()
+        count = Proyecto.objects.all().count()
+    return render(request, "pdl/index.html", {"items": items, "count": count,})
 
 
 def proyecto(request, short_url):
@@ -126,7 +137,7 @@ def sanitize(s):
 
 def get_last_items():
     """All items from the database are extracted as list of dictionaries."""
-    items = Proyecto.objects.all().order_by('-codigo')
+    items = Proyecto.objects.all().order_by('-codigo')[:20]
     pretty_items = []
     for i in items:
         pretty_items.append(prettify_item(i))

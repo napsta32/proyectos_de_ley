@@ -11,8 +11,6 @@
 </div>
 
 <div id="contenido" class="container">
-  {% load endless %}
-  {% paginate items %}
   {% for i in items %}
     <div>
       <hr>
@@ -26,8 +24,8 @@
 
     <div class="container" style="text-align: center;">
       <div id="page-selection" class="container">
-        {% get_pages %}
           <ul class="pagination pagination-mg">
+            {{ count }}
             {% if pages.paginated %}
               <li>{{ pages }}</li>
             {% endif %}
