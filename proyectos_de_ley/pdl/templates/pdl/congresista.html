@@ -11,10 +11,6 @@ Proyectos de ley emitidos por el Congreso de la República del Perú
 </div>
 
 <div id="contenido" class="container">
-  {% if results %}
-    {% load endless %}
-    {% paginate results %}
-  {% endif %}
 
   {% for i in results %}
   <hr>
@@ -32,11 +28,8 @@ Proyectos de ley emitidos por el Congreso de la República del Perú
 {% if results %}
     <div class="container" style="text-align: center;">
       <div id="page-selection" class="container">
-        {% get_pages %}
           <ul class="pagination pagination-mg">
-            {% if pages.paginated %}
               <li>{{ pages }}</li>
-            {% endif %}
           </ul>
       </div>
     </div>

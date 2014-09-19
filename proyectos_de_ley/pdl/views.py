@@ -13,48 +13,17 @@ from pdl.models import Slug
 
 def index(request):
     all_items = Proyecto.objects.all().order_by('-codigo')
-    paginator = Paginator(all_items, 20)
-
-    page = request.GET.get('page')
-
-    if page is not None:
-        cur = int(page)
-    else:
-        cur = 1
-
-    try:
-        items = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        items = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        items = paginator.page(paginator.num_pages)
-
-    pretty_items = []
-    for i in items.object_list:
-        pretty_items.append(prettify_item(i))
-
-    if cur > 20:
-        first_half = range(cur - 10, cur)
-        # is current less than last page?
-        if cur < paginator.page_range[-1] - 10:
-            second_half = range(cur+1, cur + 10)
-        else:
-            second_half = range(cur+1, paginator.page_range[-1])
-    else:
-        first_half = range(1, cur)
-        second_half = range(cur+1, 21)
+    obj = do_pagination(request, all_items)
 
     return render(request, "pdl/index.html", {
-            "items": items,
-            "pretty_items": pretty_items,
-            "first_half": first_half,
-            "second_half": second_half,
-            "first_page": paginator.page_range[0],
-            "last_page": paginator.page_range[-1],
-            "current": cur,
-            }
+        "items": obj['items'],
+        "pretty_items": obj['pretty_items'],
+        "first_half": obj['first_half'],
+        "second_half": obj['second_half'],
+        "first_page": obj['first_page'],
+        "last_page": obj['last_page'],
+        "current": obj['current'],
+        }
     )
 
 
@@ -109,6 +78,52 @@ def congresista(request, congresista_slug):
             "Quizá el nombre está incorrecto."
             ]
         return render(request, "pdl/congresista.html", {"msg": msg})
+
+
+def do_pagination(request, all_items):
+    paginator = Paginator(all_items, 20)
+
+    page = request.GET.get('page')
+
+    if page is not None:
+        cur = int(page)
+    else:
+        cur = 1
+
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        items = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        items = paginator.page(paginator.num_pages)
+
+    pretty_items = []
+    for i in items.object_list:
+        pretty_items.append(prettify_item(i))
+
+    if cur > 20:
+        first_half = range(cur - 10, cur)
+        # is current less than last page?
+        if cur < paginator.page_range[-1] - 10:
+            second_half = range(cur+1, cur + 10)
+        else:
+            second_half = range(cur+1, paginator.page_range[-1])
+    else:
+        first_half = range(1, cur)
+        second_half = range(cur+1, 21)
+
+    obj = {
+        'items': items,
+        "pretty_items": pretty_items,
+        "first_half": first_half,
+        "second_half": second_half,
+        "first_page": paginator.page_range[0],
+        "last_page": paginator.page_range[-1],
+        "current": cur,
+        }
+    return obj
 
 
 def find_in_db(query):
