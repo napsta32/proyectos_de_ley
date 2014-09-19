@@ -66,21 +66,36 @@ def congresista(request, congresista_slug):
         return redirect('/')
 
     congresista_name = find_slug_in_db(congresista_slug)
-
     if congresista_name is not None:
-        results = find_congresista_in_db(congresista_name)
-        return render(request, "pdl/congresista.html", {"results":
-                                                        results, "congresista":
-                                                            congresista_name})
+        all_items = Proyecto.objects.filter(
+                congresistas__icontains=congresista_name).order_by('-codigo')
+        obj = do_pagination(request, all_items)
+        return render(request, "pdl/congresista.html", {
+            "items": obj['items'],
+            "pretty_items": obj['pretty_items'],
+            "first_half": obj['first_half'],
+            "second_half": obj['second_half'],
+            "first_page": obj['first_page'],
+            "last_page": obj['last_page'],
+            "current": obj['current'],
+            "congresista": congresista_name,
+            "slug": congresista_slug.replace("/", ""),
+            }
+        )
     else:
         msg = [
             "No se pudo encontrar el congresista.",
             "Quizá el nombre está incorrecto."
-            ]
+        ]
         return render(request, "pdl/congresista.html", {"msg": msg})
 
 
 def do_pagination(request, all_items):
+    """
+    :param request: contains the current page requested by user
+    :param all_items:
+    :return: dict containing paginated items and pagination bar
+    """
     paginator = Paginator(all_items, 20)
 
     page = request.GET.get('page')
@@ -112,7 +127,10 @@ def do_pagination(request, all_items):
             second_half = range(cur+1, paginator.page_range[-1])
     else:
         first_half = range(1, cur)
-        second_half = range(cur+1, 21)
+        if paginator.page_range[-1] > 20:
+            second_half = range(cur+1, 21)
+        else:
+            second_half = range(cur+1, paginator.page_range[-1]+1)
 
     obj = {
         'items': items,

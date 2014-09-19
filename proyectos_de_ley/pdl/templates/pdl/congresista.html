@@ -12,7 +12,7 @@ Proyectos de ley emitidos por el Congreso de la República del Perú
 
 <div id="contenido" class="container">
 
-  {% for i in results %}
+  {% for i in pretty_items %}
   <hr>
      {{ i|safe }}
   {% endfor %}
@@ -25,16 +25,7 @@ Proyectos de ley emitidos por el Congreso de la República del Perú
 </div>
 
 
-{% if results %}
-    <div class="container" style="text-align: center;">
-      <div id="page-selection" class="container">
-          <ul class="pagination pagination-mg">
-              <li>{{ pages }}</li>
-          </ul>
-      </div>
-    </div>
-{% endif %}
-
+{% include "pdl/pagination.html" %}
 
 {% endblock %}
 
