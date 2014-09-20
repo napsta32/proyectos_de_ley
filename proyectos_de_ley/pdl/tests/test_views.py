@@ -178,10 +178,16 @@ class SimpleTest(TestCase):
         self.assertTrue(b'Proyectos de Ley' in response.content)
 
         # user gives pagination more than 20
+        entries = []
+        j = 1
         for i in self.dummy_items:
-            b = Proyecto(**i)
-            b.save()
+            i['id'] = j
+            entries.append(Proyecto(**i))
+            j += 1
+        Proyecto.objects.bulk_create(entries)
+        response = c.get('/?page=21')
         self.assertFalse(b'/?page=10' in response.content)
+        self.assertTrue(b'/?page=22' in response.content)
 
     def test_congresista_view_pagination(self):
         entries = []
@@ -191,9 +197,6 @@ class SimpleTest(TestCase):
             entries.append(Proyecto(**i))
             j += 1
         Proyecto.objects.bulk_create(entries)
-
-        for i in Proyecto.objects.all():
-            print(i.codigo)
 
         c = Client()
         response = c.get('/congresista/dammert_ego_aguirre/?page=2')

@@ -218,7 +218,10 @@ class Command(BaseCommand):
         :param string: "08/28/2014"
         :return: date(2014, 08, 28)
         """
-        mydate = datetime.date(datetime.strptime(string, '%m/%d/%Y'))
+        try:
+            mydate = datetime.date(datetime.strptime(string, '%m/%d/%Y'))
+        except ValueError:
+            mydate = datetime.date(datetime.strptime(string, '%d/%m/%Y'))
         return mydate
 
     def gather_all_metadata(self, obj):
