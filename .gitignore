@@ -9,6 +9,7 @@ __pycache__
 htmlcov
 .coverage
 dist
+build
 proyectos_de_ley.egg*
 
 *json
