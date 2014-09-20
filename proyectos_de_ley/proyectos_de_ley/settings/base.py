@@ -98,3 +98,5 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 )
 SITE_ID = 1
+
+SECRET_KEY = "hola"
