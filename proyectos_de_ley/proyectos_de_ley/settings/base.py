@@ -32,8 +32,6 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'django.contrib.staticfiles',
-
-    # 'endless_pagination',
     'pdl',
 )
 
@@ -78,13 +76,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-SECRET_KEY = "hola"
 # ENDLESS_PAGINATION_DEFAULT_CALLABLE_ARROWS = True
 # for pagination
 # ENDLESS_PAGINATION_PER_PAGE = 20
-# TEMPLATE_CONTEXT_PROCESSORS += (
-    # 'django.core.context_processors.request',
-# )
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'django.core.context_processors.request',
+)
 
 TEMPLATE_DIRS = (
     'pdl/templates/pdl',

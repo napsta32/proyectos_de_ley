@@ -163,6 +163,26 @@ class SimpleTest(TestCase):
         response = c.get('/congresista/dammert_ego_aguirre/')
         self.assertTrue(b'Dammert Ego Aguirre' in response.content)
 
+    def test_do_pagination(self):
+        # get first page for not giving integer as page number
+        c = Client()
+        response = c.get('/?page=bad_page_number')
+        self.assertTrue(b'Proyectos de Ley' in response.content)
+
+        # user gives empty page
+        response = c.get('/?page=')
+        self.assertTrue(b'Proyectos de Ley' in response.content)
+
+        # user gives empty page
+        response = c.get('/?page=100')
+        self.assertTrue(b'Proyectos de Ley' in response.content)
+
+        # user gives pagination more than 20
+        for i in self.dummy_items:
+            b = Proyecto(**i)
+            b.save()
+        self.assertFalse(b'/?page=10' in response.content)
+
     def test_congresista_view_pagination(self):
         entries = []
         j = 1
@@ -230,25 +250,6 @@ class SimpleTest(TestCase):
         slug = 'dammert_ego_aguirreaaaaaaaa'
         result = views.find_slug_in_db(slug)
         self.assertEqual(None, result)
-
-    def test_find_congresista_in_db1(self):
-        item = self.dummy_items[0]
-        # save it to test database
-        b = Proyecto(**item)
-        b.save()
-        nombre = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
-        result = views.find_congresista_in_db(nombre)
-        self.assertTrue('03774/2014-CR' in result[0])
-
-    def test_find_congresista_in_db2(self):
-        item = self.dummy_items[0]
-        # save it to test database
-        b = Proyecto(**item)
-        b.save()
-        nombre = 'Pachecho, Yoni'
-        result = views.find_congresista_in_db(nombre)
-        expected = 'No se encontraron resultados.'
-        self.assertEqual(expected, result)
 
     def test_search1(self):
         """Search attempt is redirected to index."""

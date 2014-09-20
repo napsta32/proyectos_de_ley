@@ -100,19 +100,17 @@ def do_pagination(request, all_items):
 
     page = request.GET.get('page')
 
-    if page is not None:
-        cur = int(page)
-    else:
-        cur = 1
-
     try:
         items = paginator.page(page)
+        cur = int(page)
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
         items = paginator.page(1)
+        cur = 1
     except EmptyPage:
         # If page is out of range (e.g. 9999), deliver last page of results.
         items = paginator.page(paginator.num_pages)
+        cur = 1
 
     pretty_items = []
     for i in items.object_list:
@@ -159,18 +157,6 @@ def find_in_db(query):
         results = []
         for i in items:
             results.append(prettify_item_small(i))
-    else:
-        results = "No se encontraron resultados."
-    return results
-
-
-def find_congresista_in_db(congresista_name):
-    items = Proyecto.objects.filter(
-        congresistas__icontains=congresista_name).order_by('-codigo')
-    if len(items) > 0:
-        results = []
-        for i in items:
-            results.append(prettify_item(i))
     else:
         results = "No se encontraron resultados."
     return results

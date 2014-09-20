@@ -1,5 +1,5 @@
 coverage:
-	coverage run --source=. manage.py test -v 2 pdl --setting=proyectos_de_ley.settings.base
+	coverage run --source=. manage.py test -v 2 pdl --setting=proyectos_de_ley.settings.local
 	coverage report -m
 	coverage html
 
