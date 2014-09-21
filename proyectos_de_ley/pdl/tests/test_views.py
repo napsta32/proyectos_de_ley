@@ -274,4 +274,5 @@ class SimpleTest(TestCase):
         b.save()
         response = c.get('/search/?q=' + query)
         self.assertTrue(b'Propone establecer los lineamientos para la' in
-                         response.content)
+                        response.content
+                        )
