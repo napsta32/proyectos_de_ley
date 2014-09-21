@@ -63,7 +63,6 @@ def search(request):
         else:
             all_items = results
             obj = do_pagination(request, all_items, search=True)
-            print(obj)
             return render(request, "pdl/search.html", {
                 "items": obj['items'],
                 "pretty_items": obj['pretty_items'],
