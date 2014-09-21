@@ -209,20 +209,15 @@ class SimpleTest(TestCase):
         self.assertEqual(expected, result)
 
     def test_find_in_db(self):
-        this_folder = os.path.abspath(os.path.dirname(__file__))
-        prettified_file = os.path.join(this_folder,
-                                       'prettified_03774_small.txt')
-        with open(prettified_file, "r") as f:
-            prettified_item = f.read()
+        # save item to test database
         item = self.dummy_items[0]
-
-        # save it to test database
         b = Proyecto(**item)
         b.save()
+
         # now get it as QuerySet object
         items = views.find_in_db(query='03774')
         result = items[0]
-        self.assertEqual(prettified_item, result)
+        self.assertEqual('03774', result.codigo)
 
         # find elements not in our database
         result = views.find_in_db(query='037741111111111111111111111111111')
@@ -268,8 +263,15 @@ class SimpleTest(TestCase):
         self.assertEqual(302, response.status_code)
 
     def test_search3(self):
-        """Search attempt is redirected to index."""
         query = "propone"
         c = Client()
         response = c.get('/search/?q=' + query)
         self.assertEqual(200, response.status_code)
+
+        # save item to test database
+        item = self.dummy_items[0]
+        b = Proyecto(**item)
+        b.save()
+        response = c.get('/search/?q=' + query)
+        self.assertTrue(b'Propone establecer los lineamientos para la' in
+                         response.content)

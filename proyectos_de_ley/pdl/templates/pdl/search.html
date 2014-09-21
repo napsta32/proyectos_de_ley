@@ -11,12 +11,15 @@ Proyectos de ley emitidos por el Congreso de la República del Perú | About
   {% if results == 'No se encontraron resultados.' %}
     <h2>{{ results }}</h2>
   {% else %}
-    {% for i in results %}
+    {% for i in pretty_items %}
       {{ i|safe }}
     {% endfor %}
   {% endif %}
 </div>
+
+{% include "pdl/pagination_search.html" %}
 {% endblock %}
+
 
 
 {% block highlight_keyword %}

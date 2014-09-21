@@ -56,8 +56,25 @@ def search(request):
             return redirect("/")
         else:
             results = find_in_db(query)
-        return render(request, "pdl/search.html", {"results": results,
-                                                   "keyword": query})
+
+        if results == "No se encontraron resultados.":
+            return render(request, "pdl/search.html", {"results": results,
+                                                       "keyword": query})
+        else:
+            all_items = results
+            obj = do_pagination(request, all_items, search=True)
+            print(obj)
+            return render(request, "pdl/search.html", {
+                "items": obj['items'],
+                "pretty_items": obj['pretty_items'],
+                "first_half": obj['first_half'],
+                "second_half": obj['second_half'],
+                "first_page": obj['first_page'],
+                "last_page": obj['last_page'],
+                "current": obj['current'],
+                "keyword": query,
+                }
+            )
     return redirect("/")
 
 
@@ -90,13 +107,19 @@ def congresista(request, congresista_slug):
         return render(request, "pdl/congresista.html", {"msg": msg})
 
 
-def do_pagination(request, all_items):
+def do_pagination(request, all_items, search=False):
     """
     :param request: contains the current page requested by user
     :param all_items:
+    :param search: if search is False items will be prettified in long form.
+           if search is True then items will be prettified as small items
+           for search results.
     :return: dict containing paginated items and pagination bar
     """
-    paginator = Paginator(all_items, 20)
+    if search is False:
+        paginator = Paginator(all_items, 20)
+    else:
+        paginator = Paginator(all_items, 40)
 
     page = request.GET.get('page')
 
@@ -114,7 +137,10 @@ def do_pagination(request, all_items):
 
     pretty_items = []
     for i in items.object_list:
-        pretty_items.append(prettify_item(i))
+        if search is False:
+            pretty_items.append(prettify_item(i))
+        else:
+            pretty_items.append(prettify_item_small(i))
 
     if cur > 20:
         first_half = range(cur - 10, cur)
@@ -143,6 +169,12 @@ def do_pagination(request, all_items):
 
 
 def find_in_db(query):
+    """
+    Finds items according to user search.
+
+    :param query: user's keyword
+    :return: QuerySet object with items or string if no results were found.
+    """
     items = Proyecto.objects.filter(
         Q(short_url__icontains=query) |
         Q(codigo__icontains=query) |
@@ -154,9 +186,7 @@ def find_in_db(query):
         Q(congresistas__icontains=query),
     ).order_by('-codigo')
     if len(items) > 0:
-        results = []
-        for i in items:
-            results.append(prettify_item_small(i))
+        results = items
     else:
         results = "No se encontraron resultados."
     return results
