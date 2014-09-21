@@ -18,3 +18,10 @@
     sudo chown www-data:www-data -R *
 - set the scraper as a cronjob:
     - sudo su -c "crontab -e" www-data
+
+- mod_rewrite no funciona con Django, use PREPEND_WWW = True in settings 
+  file
+- use ALLOWED_HOSTS = [
+    '.example.com',
+    '.example.com.',
+    ]
