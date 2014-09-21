@@ -17,7 +17,9 @@ Proyectos de ley emitidos por el Congreso de la República del Perú | About
   {% endif %}
 </div>
 
-{% include "pdl/pagination_search.html" %}
+    {% if current %}
+      {% include "pdl/pagination_search.html" %}
+    {% endif %}
 {% endblock %}
 
 
