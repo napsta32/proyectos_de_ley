@@ -29,6 +29,16 @@ class Proyecto(models.Model):
     numero_de_ley = models.CharField(max_length=200, blank=True, default='')
 
 
+class Seguimientos(models.Model):
+    """Keep records regarding each project (seguimiento). This info is shown
+    in the ``seguimiento_page``. For example: http://bit.ly/1uSXA5X
+    It has a many-to-one relationship with model ``Proyecto`` a foreign key.
+    """
+    fecha = models.DateField(blank=True)
+    evento = models.TextField(blank=True)
+    proyecto = models.ForeignKey(Proyecto)
+
+
 class Slug(models.Model):
     """A translation table between a Congresista name and a slug to be used
     as hiperlink."""
