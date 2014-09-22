@@ -149,20 +149,31 @@ class Command(BaseCommand):
 
         this_metadata = dict()
         for item in project_soup.find_all("input"):
-            if item['name'] == "SumIni":
-                this_metadata['titulo'] = item['value']
-            if item['name'] == "CodIni_web_1":
-                this_metadata['numero_proyecto'] = item['value']
-            # if item['name'] == "DesGrupParla":
-                # metadata['grupo_parlamentario'] = item['value']
-            # if item['name'] == "NombreDeLaComision":
-                # metadata['comision'] = item['value']
-            if item['name'] == "NomCongre":
-                this_metadata['congresistas'] = self.parse_names(item['value'])
             if item['name'] == "CodIni":
                 this_metadata['codigo'] = item['value']
+            if item['name'] == "CodIni_web_1":
+                this_metadata['numero_proyecto'] = item['value']
             if item['name'] == "fechapre":
                 this_metadata['fecha_presentacion'] = item['value']
+            if item['name'] == "DesPropo":
+                this_metadata['proponente'] = item['value']
+            if item['name'] == "DesGrupParla":
+                this_metadata['grupo_parlamentario'] = item['value']
+            if item['name'] == "SumIni":
+                this_metadata['titulo'] = item['value']
+            if item['name'] == "NomCongre":
+                this_metadata['congresistas'] = self.parse_names(item['value'])
+            if item['name'] == "CodIniSecu":
+                this_metadata['iniciativas_agrupadas'] = item['value']
+            if item['name'] == "NumLey":
+                this_metadata['numero_de_ley'] = item['value']
+            if item['name'] == "TitLey":
+                this_metadata['titulo_de_ley'] = item['value']
+            if item['name'] == "NombreDeLaComision":
+                this_metadata['nombre_comision'] = item['value']
+
+            # if item['name'] == "NombreDeLaComision":
+                # metadata['comision'] = item['value']
         expediente = 'http://www2.congreso.gob.pe/sicr/tradocestproc' \
                      '/Expvirt_2011.nsf/visbusqptramdoc/'
         expediente += this_metadata['codigo'] + '?opendocument'

@@ -178,6 +178,12 @@ class ScrapperTest(TestCase):
                        'doc02_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0/'
                        'dbc9030966aac60905257d4a007b75d9/$FILE/PL037740509'
                        '14.pdf',
+            'grupo_parlamentario': u'Acción Popular-Frente Amplio',
+            'iniciativas_agrupadas': '',
+            'nombre_comision': '',
+            'numero_de_ley': '',
+            'proponente': 'Congreso',
+            'titulo_de_ley': '',
         }
         self.assertEqual(expected, result)
 
@@ -253,6 +259,22 @@ class ScrapperTest(TestCase):
                                 'seguimiento_02764.html',
             'codigo': '02764',
             'fecha_presentacion': date(2013, 10, 10),
+            'grupo_parlamentario': 'Grupo Parlamentario Fuerza Popular',
+            'iniciativas_agrupadas': '00154, 00353, 00368, 00484, 00486, '
+                                     '00501, 00656, 01233, 01489, 01597, '
+                                     '01617, 01760, 01790, 01796, 01818, '
+                                     '01876, 01890, 01894, 01922, 01953, '
+                                     '01972, 02008, 02009, 02019, 02028, '
+                                     '02060, 02077, 02078, 02082, 02086, '
+                                     '02170, 02178, 02184, 02199, 02217, '
+                                     '02220, 02239, 02267, 02268, 02269, '
+                                     '02270, 02271, 02273, 02287, 02304, '
+                                     '02305, 02363, 02472, 02534, 02737, '
+                                     '02807, 02979, 03505, 03506, 03067, '
+                                     '03020',
+            'nombre_comision': u'Comisión de Educación  Juventud y Deporte',
+            'numero_de_ley': u'Ley Nº: 30220',
+            'proponente': 'Congreso',
             'expediente': 'http://www2.congreso.gob.pe/sicr/tradocestproc/'
                           'Expvirt_2011.nsf/visbusqptramdoc/02764?opendocu'
                           'ment',
@@ -288,6 +310,8 @@ class ScrapperTest(TestCase):
                             'Valqui Matos, Nestor Antonio; Iberico Nuñez, '
                             'Luis',
             'short_url': '4zhube',
+            'titulo': 'Propone Ley Universitaria',
+            'titulo_de_ley': 'LEY UNIVERSITARIA',
         }
         result = self.scrapper_cmd.gather_all_metadata(obj)
         self.assertEqual(expected, result)

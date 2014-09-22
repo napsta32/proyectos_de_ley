@@ -19,6 +19,15 @@ class Proyecto(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     time_edited = models.DateTimeField(auto_now=True)
 
+    # > v1.1.1
+    proponente = models.CharField(max_length=250, blank=True, default='')
+    grupo_parlamentario = models.CharField(max_length=250, blank=True,
+                                           default='')
+    iniciativas_agrupadas = models.TextField(blank=True, default='')
+    nombre_comision = models.CharField(max_length=250, blank=True, default='')
+    titulo_de_ley = models.TextField(blank=True, default='')
+    numero_de_ley = models.CharField(max_length=200, blank=True, default='')
+
 
 class Slug(models.Model):
     """A translation table between a Congresista name and a slug to be used
