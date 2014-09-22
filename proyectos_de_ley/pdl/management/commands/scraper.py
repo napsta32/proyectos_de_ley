@@ -172,11 +172,12 @@ class Command(BaseCommand):
             if item['name'] == "NombreDeLaComision":
                 this_metadata['nombre_comision'] = item['value']
 
-            # if item['name'] == "NombreDeLaComision":
-                # metadata['comision'] = item['value']
-        expediente = 'http://www2.congreso.gob.pe/sicr/tradocestproc' \
-                     '/Expvirt_2011.nsf/visbusqptramdoc/'
-        expediente += this_metadata['codigo'] + '?opendocument'
+        exp = 'http://www2.congreso.gob.pe/sicr/tradocestproc' \
+              '/Expvirt_2011.nsf/visbusqptramdoc/'
+        expediente = "%s%s%s" % (exp,
+                                 this_metadata['codigo'],
+                                 '?opendocument',
+                                 )
         this_metadata['expediente'] = expediente
         this_metadata['pdf_url'] = self.extract_pdf_url(
             expediente,
