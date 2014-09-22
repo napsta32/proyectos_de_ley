@@ -201,6 +201,42 @@ class Command(BaseCommand):
         # Algunos proyectos de ley no tienen link hacia PDFs
         return ''
 
+    def get_seguimientos(self, soup):
+        """Parses a ``seguimiento_page`` as BeautifulSoup objetct and returns
+        a list of events extracted from the ``Seguimiento:`` section.
+
+        :param: BeautifulSoup object
+        :return: list of tuples (date object, event)
+        """
+        for i in soup.find_all(width='112'):
+            if i.text == 'Seguimiento:':
+                events = i.next_sibling.text
+
+        if not events:
+            return ''
+
+        events_list = events.split("\n")
+
+        # avoid dots when appending to list, it is more efficient:
+        # http://bit.ly/1sVevk6
+        new_list = []
+        append = new_list.append
+        for i in events_list:
+            append(self.convert_line_to_date_event_tuple(i))
+        return new_list
+
+    def convert_line_to_date_event_tuple(self, i):
+        """
+        :param i: string line for each event of Seguimiento
+        :return: a tuple (date object, event string)
+        """
+        i_strip = i.strip()
+        res = re.search('^([0-9]{2}/[0-9]{2}/[0-9]{4})\s+(.+)', i_strip)
+        if res:
+            d = datetime.strptime(res.groups()[0], '%d/%m/%Y')
+            event = re.sub('\s+', ' ', res.groups()[1])
+            return(datetime.date(d), event)
+
     def parse_names(self, string):
         """
         :param string: Person names separated by commas.

@@ -438,3 +438,18 @@ class ScrapperTest(TestCase):
 
         self.assertEqual('slug already in database',
                          self.scrapper_cmd.save_slug(obj))
+
+    def test_get_seguimientos(self):
+        html_folder = os.path.abspath(os.path.dirname(__file__))
+        html_file = os.path.join(html_folder, "02764.html")
+        with codecs.open(html_file, 'r', 'latin-1') as f:
+            soup = BeautifulSoup(f.read())
+        cmd = Command()
+        result = cmd.get_seguimientos(soup)
+        expected = [
+            (date(2013, 10, 14), 'Decretado a... Educación, Juventud y '
+                                 'Deporte'),
+            (date(2014, 7, 9), u'Publicado - Ley Nº 30220'),
+        ]
+        self.assertEqual(expected[0], result[0])
+        self.assertEqual(expected[1], result[-1])
