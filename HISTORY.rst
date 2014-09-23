@@ -1,7 +1,8 @@
 History
 =======
 
-* Scrapping more metadata from seguimiento_page.
+* Scrapping more metadata from seguimiento_page. Killed bug to get PDF url
+when the filename includes funny characters.
 * v1.1.1 (2014-09-22) Favicon. Don't show navigation bar if there are no
   results.
 * v1.1.0 (2014-09-21) Pagination for search results (40 items per page).
