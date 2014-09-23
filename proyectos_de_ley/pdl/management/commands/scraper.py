@@ -190,10 +190,14 @@ class Command(BaseCommand):
         """
         Try to get the URL for PDF of project from the "expediente" page.
         Such page might have many PDFs. Try to get the right one by looking
-        for the code in the PDF URL address."""
+        for the code in the PDF URL address.
+
+        Some PDF filenames might have funny characters:
+            - P´L03812220914.pdf
+        """
         pdf_soup = self.get(expediente)
 
-        pattern = re.compile("/PL" + str(codigo) + "[0-9]+\.pdf$")
+        pattern = re.compile("\$FILE/.+" + str(codigo) + "[0-9]+\.pdf$")
         for i in pdf_soup.find_all("a"):
             if re.search(pattern, i['href']):
                 my_pdf_link = str(i['href'])

@@ -220,6 +220,17 @@ class ScrapperTest(TestCase):
         expected = ''
         self.assertEqual(expected, result)
 
+    def test_extract_pdf_url3(self):
+        """Test when the PDF url has funny characters, such as accent `."""
+        expediente = 'http://aniversarioperu.me/utero/test_pdl/expediente_' \
+                     '03812.html'
+        codigo = '03812'
+        result = self.scrapper_cmd.extract_pdf_url(expediente, codigo)
+        expected = 'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/Contdoc0' \
+                   '2_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0/c8b343011' \
+                   'd269ae505257d5b007914a8/$FILE/P%C2%B4L03812220914.pdf'
+        self.assertEqual(expected, result)
+
     def test_parse_names(self):
         congresistas = "Dammert Ego Aguirre  Manuel Enrique Ernesto,Lescano" \
                        " Ancieta  Yonhy,Merino De Lama  Manuel,Guevara " \
