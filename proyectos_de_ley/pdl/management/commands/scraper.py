@@ -14,6 +14,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from pdl.models import Proyecto
 from pdl.models import Slug
+from pdl.models import Seguimientos
 from pdl.views import convert_name_to_slug
 
 
@@ -244,7 +245,7 @@ class Command(BaseCommand):
         :param codigo: codigo for Proyecto
         :return:
         """
-        proyecto = Proyecto.objects.filter(codigo=codigo)
+        proyecto = Proyecto.objects.filter(codigo=codigo)[0]
         seguimientos_to_save = []
         append = seguimientos_to_save.append
 
@@ -260,8 +261,6 @@ class Command(BaseCommand):
                 b = Seguimientos(fecha=i[0], evento=i[1], proyecto=proyecto)
                 append(b)
         Seguimientos.objects.bulk_create(seguimientos_to_save)
-
-
 
     def convert_line_to_date_event_tuple(self, i):
         """

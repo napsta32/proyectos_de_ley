@@ -11,6 +11,7 @@ from django.test import TestCase
 from pdl.management.commands.scraper import Command
 from pdl.models import Proyecto
 from pdl.models import Slug
+from pdl.models import Seguimientos
 
 
 class ScrapperTest(TestCase):
@@ -471,3 +472,35 @@ class ScrapperTest(TestCase):
         result = cmd.get_seguimientos(soup)
         expected = ''
         self.assertEqual(expected, result)
+
+    def test_save_seguimientos(self):
+        obj = {
+            'numero_proyecto': '03774/2014-CR', 'titulo': 'hola',
+            'codigo': '03774',
+            'fecha_presentacion': datetime.now(),
+            }
+        b = Proyecto(**obj)
+        b.save()
+
+        seguimientos = [
+            (date(2014, 9, 1), "Evento1"),
+            (date(2014, 9, 2), "Evento2"),
+        ]
+        cmd = Command()
+        cmd.save_seguimientos(seguimientos, obj['codigo'])
+
+        # saved seguimientos
+        expected = seguimientos
+        results = [(i.fecha, i.evento) for i in Seguimientos.objects.all()]
+        self.assertEqual(expected, results)
+
+        # try to save again
+        cmd.save_seguimientos(seguimientos, obj['codigo'])
+        results = [(i.fecha, i.evento) for i in Seguimientos.objects.all()]
+        self.assertEqual(expected, results)
+
+        # add one more seguimiento
+        seguimientos.append((date(2014, 9, 3), "Evento3"))
+        cmd.save_seguimientos(seguimientos, obj['codigo'])
+        results = [(i.fecha, i.evento) for i in Seguimientos.objects.all()]
+        self.assertEqual(seguimientos, results)
