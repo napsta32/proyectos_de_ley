@@ -464,3 +464,10 @@ class ScrapperTest(TestCase):
         ]
         self.assertEqual(expected[0], result[0])
         self.assertEqual(expected[1], result[-1])
+
+        html_file = os.path.join(html_folder, "02764_sin_seguimientos.html")
+        with codecs.open(html_file, 'r', 'latin-1') as f:
+            soup = BeautifulSoup(f.read())
+        result = cmd.get_seguimientos(soup)
+        expected = ''
+        self.assertEqual(expected, result)

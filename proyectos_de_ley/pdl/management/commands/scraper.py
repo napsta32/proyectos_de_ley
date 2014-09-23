@@ -71,6 +71,7 @@ class Command(BaseCommand):
 
         if 'debug' in options and options['debug'] is not True:
             # Do scrapping
+            # ============
             for url in self.urls:
                 print(">> TOR: ", self.tor)
                 soup = self.get(url)
@@ -85,6 +86,12 @@ class Command(BaseCommand):
                         print("Saved %s" % obj['codigo'])
                     else:
                         print("\t" + obj)
+
+                    print("Working on seguimientos")
+                    seguimientos_soup = self.get(obj['seguimiento_page'])
+                    seguimientos = self.get_seguimientos(seguimientos_soup)
+                    if seguimientos != '':
+                        self.save_seguimientos(seguimientos, obj['codigo'])
 
                     if 'test' in options and options['test'] is True:
                         break
@@ -216,7 +223,7 @@ class Command(BaseCommand):
             if i.text == 'Seguimiento:':
                 events = i.next_sibling.text
 
-        if not events:
+        if not events or events.strip() == '':
             return ''
 
         events_list = events.split("\n")
@@ -228,6 +235,33 @@ class Command(BaseCommand):
         for i in events_list:
             append(self.convert_line_to_date_event_tuple(i))
         return new_list
+
+    def save_seguimientos(self, seguimientos, codigo):
+        """
+        Try to save a list of tuples to Seguimientos model if they don't
+        exist already.
+        :param seguimientos: list of tuples (date, event)
+        :param codigo: codigo for Proyecto
+        :return:
+        """
+        proyecto = Proyecto.objects.filter(codigo=codigo)
+        seguimientos_to_save = []
+        append = seguimientos_to_save.append
+
+        for i in seguimientos:
+            try:
+                Seguimientos.objects.get(
+                    fecha=i[0],
+                    evento=i[1],
+                    proyecto=proyecto,
+                )
+            except Seguimientos.DoesNotExist:
+                # not in database
+                b = Seguimientos(fecha=i[0], evento=i[1], proyecto=proyecto)
+                append(b)
+        Seguimientos.objects.bulk_create(seguimientos_to_save)
+
+
 
     def convert_line_to_date_event_tuple(self, i):
         """
