@@ -214,7 +214,7 @@ class Command(BaseCommand):
         return ''
 
     def get_seguimientos(self, soup):
-        """Parses a ``seguimiento_page`` as BeautifulSoup objetct and returns
+        """Parses a ``seguimiento_page`` as BeautifulSoup object and returns
         a list of events extracted from the ``Seguimiento:`` section.
 
         :param: BeautifulSoup object

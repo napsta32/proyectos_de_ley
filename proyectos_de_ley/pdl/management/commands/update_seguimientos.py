@@ -21,6 +21,7 @@ class Command(ScraperCommand):
     )
     def handle(self, *args, **options):
         self.tor = False
+        self.mysocket = ""
 
         proyectos = Proyecto.objects.all()
         for i in proyectos:
