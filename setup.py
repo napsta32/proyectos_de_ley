@@ -11,7 +11,7 @@ except ImportError:
     from distutils.core import setup
 
 import proyectos_de_ley
-version = '1.1.1'
+version = '1.2.0'
 
 setup(
     name='proyectos_de_ley',
