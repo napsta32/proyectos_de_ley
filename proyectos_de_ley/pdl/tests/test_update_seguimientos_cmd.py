@@ -1,5 +1,9 @@
 # -*- encoding: utf-8 -*-
+import codecs
 from datetime import date
+import os
+
+from bs4 import BeautifulSoup
 
 from django.test import TestCase
 
@@ -40,3 +44,28 @@ class USeguimientosTest(TestCase):
         self.cmd.handle(self, *args, **options)
         seguimientos = Seguimientos.objects.all()
         self.assertGreater(len(seguimientos), 1)
+
+    def test_is_law(self):
+        codigo = '00002'
+        # save an item to our test database
+        item = {
+            'codigo': '00002',
+            'seguimiento_page': 'dummy',
+            'fecha_presentacion': date.today(),
+        }
+        b = Proyecto(**item)
+        b.save()
+
+        this_folder = os.path.abspath(os.path.dirname(__file__))
+        html_folder = os.path.join(this_folder, 'update_seguimientos')
+        html_file = os.path.join(html_folder, codigo + '.html')
+        with codecs.open(html_file, 'r', 'latin-1') as f:
+            soup = BeautifulSoup(f.read())
+
+        # save its seguimientos
+        events = self.cmd.get_seguimientos(soup)
+        self.cmd.save_seguimientos(events, codigo)
+
+        # check if it is law so that we don't need to update it
+        result = self.cmd.is_law(codigo)
+        self.assertEqual(True, result)

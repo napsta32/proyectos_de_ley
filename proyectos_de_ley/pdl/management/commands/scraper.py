@@ -220,6 +220,7 @@ class Command(BaseCommand):
         :param: BeautifulSoup object
         :return: list of tuples (date object, event)
         """
+        events = ''
         for i in soup.find_all(width='112'):
             if i.text == 'Seguimiento:':
                 events = i.next_sibling.text
