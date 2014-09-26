@@ -32,12 +32,17 @@ def get_secret(setting, secrets=secrets):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_secret("SECRET_KEY")
 
-# Database needed for ``pdf`` app
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+# Database
+# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'leyes_sqlite3.db'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pdl',
+        'USER': get_secret("DB_USER"),
+        'PASSWORD': get_secret("DB_PASS"),
+        'HOST': 'localhost',
+        'PORT': '5433',
     }
 }
 
