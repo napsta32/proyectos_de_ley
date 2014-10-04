@@ -234,7 +234,7 @@ def prettify_item(item):
 
     if item.pdf_url != '':
         out += "<a class='btn btn-lg btn-primary'"
-        out += " href='" + item.pdf_url + "' role='button'>PDF</a>\n"
+        out += " href='" + str(item.pdf_url) + "' role='button'>PDF</a>\n"
     else:
         out += "<a class='btn btn-lg btn-primary disabled'"
         out += " href='#' role='button'>Sin PDF</a>\n"
