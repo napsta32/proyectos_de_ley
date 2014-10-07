@@ -51,8 +51,12 @@ WSGI_APPLICATION = 'proyectos_de_ley.wsgi.application'
 
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'pdl',
+    }
+}
 
 LANGUAGE_CODE = 'en-us'
 
