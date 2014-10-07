@@ -260,19 +260,19 @@ def prettify_item_small(item):
     out += item.codigo
     out += "</a>\n "
     out += item.titulo
-    if item.pdf_url != '':
+    if item.pdf_url != '' and item.pdf_url is not None:
         out += '\n <span class="glyphicon glyphicon-cloud-download"></span>'
         out += ' <a href="' + item.pdf_url + '">PDF</a>'
     else:
         out += ' [sin PDF]'
 
-    if item.expediente != '':
+    if item.expediente != '' and item.expediente is not None:
         out += '\n <span class="glyphicon glyphicon-link"></span>'
         out += ' <a href="' + item.expediente + '">Expediente</a>'
     else:
         out += ' [sin Expediente]'
 
-    if item.seguimiento_page != '':
+    if item.seguimiento_page != '' and item.seguimiento_page is not None:
         out += '\n <span class="glyphicon glyphicon-link"></span>'
         out += ' <a href="' + item.seguimiento_page + '">Seguimiento</a>'
     else:
