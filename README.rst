@@ -47,7 +47,7 @@ Plantilla HTML
 * Esos campos se usan para introducir en contenido en la plantilla y generar
   los archivos HTML.
 
-.. |Build Status| image:: https://travis-ci.org/aniversarioperu/proyectos_de_ley.svg?branch=master
-   :target: https://travis-ci.org/aniversarioperu/proyectos_de_ley
-.. |Cover alls| image:: https://coveralls.io/repos/aniversarioperu/proyectos_de_ley/badge.png
-   :target: https://coveralls.io/r/aniversarioperu/proyectos_de_ley
+.. |Build Status| image:: https://travis-ci.org/proyectosdeley/proyectos_de_ley.svg?branch=master
+   :target: https://travis-ci.org/proyectosdeley/proyectos_de_ley
+.. |Cover alls| image:: https://coveralls.io/repos/proyectosdeley/proyectos_de_ley/badge.png
+   :target: https://coveralls.io/r/proyectosdeley/proyectos_de_ley
