@@ -249,7 +249,7 @@ def prettify_item(item):
 
     if item.seguimiento_page != '':
         out += "<a class='btn btn-lg btn-primary'"
-        out += " href='" + item.seguimiento_page
+        out += " href='/p/" + item.short_url + "/seguimiento"
         out += "' role='button'>Seguimiento</a>"
     return out
 

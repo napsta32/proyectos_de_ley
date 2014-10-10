@@ -3,6 +3,7 @@ from django.contrib.sitemaps.views import sitemap
 
 from pdl.feeds import LatestEntriesFeed
 from pdl.sitemaps import ProyectoSitemap, CongresistaSitemap
+from seguimientos import views as seg_views
 # from django.contrib import admin
 
 sitemaps = {
@@ -12,9 +13,9 @@ sitemaps = {
 
 urlpatterns = patterns(
     '',
-    # Examples:
     url(r'^', include('pdl.urls', namespace='pdl')),
     url(r'^p/', include('pdl.urls', namespace='pdl-proyecto')),
+    url(r'^p/(?P<short_url>[0-9a-z]+/seguimiento/)', seg_views.index),
     url(r'^rss.xml$', LatestEntriesFeed(), name='pdl-rss'),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
