@@ -1,0 +1,30 @@
+{% extends "pdl/base.html" %}
+
+{% block title %}
+        Proyecto de ley | Seguimiento
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  <h1 id="proyectos_de_ley">Proyecto de Ley</h1>
+</div>
+
+<div id="contenido" class="container">
+  {% for i in pretty_items %}
+    <div>
+      <hr>
+      {{ i|safe }}
+    </div>
+  {% empty %}
+    <h2>Aún no hay registros en nuestra base de datos.</h2>
+  {% endfor %}
+</div>
+
+
+
+{% include "pdl/pagination.html" %}
+
+{% endblock %}
+
+
