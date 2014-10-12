@@ -14,7 +14,7 @@
 {{ item.titulo }}
 
 
-{% if item.iniciativas_agrupadas != None %}
+{% if item.iniciativas_agrupadas|length > 1 %}
   {{ item.iniciativas_agrupadas }}
 {% endif %}
 </div>
@@ -23,6 +23,6 @@
 
 
 {% block additional_javascript %}
-{% load staticfiles %}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.12/d3.min.js" charset="utf-8"></script>
 {% endblock additional_javascript %}
 
