@@ -12,12 +12,10 @@ sitemaps = {
     'congresista': CongresistaSitemap,
     }
 
-router = routers.DefaultRouter()
-router.register(r'users', seg_views.UserViewSet)
-
 urlpatterns = patterns(
     '',
-    url(r'^api', include(router.urls)),
+    # api for AJAX get request
+    url(r'^iniciativa', include(router.urls)),
     url(r'^', include('pdl.urls', namespace='pdl')),
     url(r'^p/', include('pdl.urls', namespace='pdl-proyecto')),
     url(r'^p/(?P<short_url>[0-9a-z]+/seguimiento/)', seg_views.index),
