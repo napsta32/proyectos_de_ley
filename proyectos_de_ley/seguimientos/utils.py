@@ -6,7 +6,10 @@ def get_proyecto_from_short_url(short_url):
     :param short_url:
     :return: Proyecto model object
     """
-    res = Proyecto.objects.get(short_url=short_url)
-    print(short_url)
-    return res
+    item = Proyecto.objects.get(short_url=short_url)
+    if '{' in item.iniciativas_agrupadas:
+        iniciativas = item.iniciativas_agrupadas.replace("{", "")
+        iniciativas = iniciativas.replace("}", "")
+        item.iniciativas_agrupadas = iniciativas.split(",")
+    return item
 
