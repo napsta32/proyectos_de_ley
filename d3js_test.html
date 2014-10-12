@@ -59,6 +59,7 @@ d3.json("miserables.json", function(error, graph) {
       .call(force.drag);
 
   var texto = elem
+      .append("svg:a").attr("xlink:href", function(d){return d.url;})
       .append("svg:text").text(function(d) { return d.name; });
 
 
