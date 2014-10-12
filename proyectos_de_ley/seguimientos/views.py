@@ -1,13 +1,18 @@
 # -*- encoding: utf-8 -*-
 import re
 
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from rest_framework import viewsets
 
 from . import utils
 from pdl.models import Proyecto
-from .serializers import UserSerializer
+from .serializers import IniciativasSerializer
 
 
 # Create your views here.
@@ -16,9 +21,25 @@ def index(request, short_url):
     item = utils.get_proyecto_from_short_url(short_url)
     return render(request, "seguimientos/index.html", {"item": item})
 
-class UserViewSet(viewsets.ModelViewSet):
+class JSONResponse(HttpResponse):
     """
-    Returns JSON object of iniciativas as required by AJAX get.
+    An HttpResponse that renders its content into JSON.
     """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    def __init__(self, data, **kwargs):
+        content = JSONRenderer().render(data)
+        super(JSONResponse, self).__init__(content, **kwargs)
+
+@csrf_exempt
+def iniciativa_list(request, short_url):
+    """List all iniciativas for proyecto."""
+    try:
+        item = utils.get_proyecto_from_short_url(short_url=short_url)
+        new_item = {'short_url': item.short_url,
+                    'iniciativas_agrupadas': item.iniciativas_agrupadas}
+        print(new_item)
+    except Proyecto.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = IniciativasSerializer(new_item)
+        return JSONResponse(serializer.data)
