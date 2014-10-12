@@ -34,12 +34,11 @@ def iniciativa_list(request, short_url):
     """List all iniciativas for proyecto."""
     try:
         item = utils.get_proyecto_from_short_url(short_url=short_url)
-        new_item = {'short_url': item.short_url,
-                    'iniciativas_agrupadas': item.iniciativas_agrupadas}
-        print(new_item)
+        new_item = utils.prepare_json_for_d3(item)
     except Proyecto.DoesNotExist:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
         serializer = IniciativasSerializer(new_item)
+        print(serializer.data)
         return JSONResponse(serializer.data)
