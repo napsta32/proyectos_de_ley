@@ -15,14 +15,13 @@ sitemaps = {
 urlpatterns = patterns(
     '',
     # api for AJAX get request
-    url(r'^iniciativa', include(router.urls)),
     url(r'^', include('pdl.urls', namespace='pdl')),
     url(r'^p/', include('pdl.urls', namespace='pdl-proyecto')),
     url(r'^p/(?P<short_url>[0-9a-z]+/seguimiento/)', seg_views.index),
     url(r'^rss.xml$', LatestEntriesFeed(), name='pdl-rss'),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
-    url(r'^api-auth/', include('rest_framework.urls',
-                              namespace='rest_framework'))
+
+    url(r'^api/iniciativas', include('seguimientos.urls')),
     # url(r'^admin/', include(admin.site.urls)),
 )
