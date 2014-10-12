@@ -1,0 +1,32 @@
+{
+  "nodes":[
+    {"name":"Myriel","group":1, "url": "http://www.google.com"},
+    {"name":"Napoleon","group":1, "url":"http://www.google.com"},
+    {"name":"Mlle.Baptistine","group":1, "url":"http://www.google.com"},
+    {"name":"Mme.Magloire","group":1, "url":"http://www.google.com"},
+    {"name":"CountessdeLo","group":1, "url":"http://www.google.com"},
+    {"name":"Geborand","group":1, "url":"http://www.google.com"},
+    {"name":"Champtercier","group":1, "url":"http://www.google.com"},
+    {"name":"Cravatte","group":1, "url":"http://www.google.com"},
+    {"name":"Count","group":1, "url":"http://www.google.com"},
+    {"name":"OldMan","group":1, "url":"http://www.google.com"},
+    {"name":"Labarre","group":2, "url":"http://www.google.com"},
+    {"name":"Valjean","group":2, "url":"http://www.google.com"},
+    {"name":"Marguerite","group":3, "url":"http://www.google.com"}
+  ],
+  "links":[
+    {"source":1,"target":0,"value":1},
+    {"source":2,"target":0,"value":8},
+    {"source":3,"target":0,"value":10},
+    {"source":3,"target":2,"value":6},
+    {"source":4,"target":0,"value":1},
+    {"source":5,"target":0,"value":1},
+    {"source":6,"target":0,"value":1},
+    {"source":7,"target":0,"value":1},
+    {"source":8,"target":0,"value":2},
+    {"source":9,"target":0,"value":1},
+    {"source":11,"target":10,"value":1},
+    {"source":11,"target":3,"value":3},
+    {"source":11,"target":2,"value":3}
+  ]
+}
