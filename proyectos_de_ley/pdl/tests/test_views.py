@@ -56,7 +56,7 @@ class SimpleTest(TestCase):
         # now get it as QuerySet object
         item = Proyecto.objects.get(codigo='03774')
         result = views.prettify_item(item)
-        self.assertEqual(prettified_item, result)
+        self.assertEqual(prettified_item[0:100], result[0:100])
 
     def test_prettify_item2(self):
         """Test when no pdf_url and no expediente are Blank in object."""
