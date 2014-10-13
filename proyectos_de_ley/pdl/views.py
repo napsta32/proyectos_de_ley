@@ -274,7 +274,8 @@ def prettify_item_small(item):
 
     if item.seguimiento_page != '' and item.seguimiento_page is not None:
         out += '\n <span class="glyphicon glyphicon-link"></span>'
-        out += ' <a href="' + item.seguimiento_page + '">Seguimiento</a>'
+        out += ' <a href="/p/' + item.short_url + \
+               '/seguimiento">Seguimiento</a>'
     else:
         out += '\n [sin Seguimiento]'
     out += '</p>'
