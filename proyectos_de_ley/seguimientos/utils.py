@@ -18,7 +18,8 @@ def prepare_json_for_d3(item):
     append = nodes.append
     j = 1
     for i in item.iniciativas_agrupadas:
-        node = {"name": i, "url": "/p/" + i}
+        queryset = Proyecto.objects.get(codigo=i)
+        node = {"name": i, "url": "/p/" + queryset.short_url}
         append(node)
         j += 1
 
