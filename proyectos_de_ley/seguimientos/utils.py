@@ -7,7 +7,6 @@ def get_proyecto_from_short_url(short_url):
     :return: Proyecto model object
     """
     item = Proyecto.objects.get(short_url=short_url)
-    print(item.iniciativas_agrupadas)
     if item.iniciativas_agrupadas is not None and '{' in \
             item.iniciativas_agrupadas:
         iniciativas = item.iniciativas_agrupadas.replace("{", "")
