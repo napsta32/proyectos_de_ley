@@ -37,10 +37,6 @@
 
 {% if item.iniciativas_agrupadas|length > 1 %}
   <h2>Iniciativas agrupadas</h2>
-{% endif %}
-</div>
-
-
 <script>
 var width = 960,
     height = 500;
@@ -104,4 +100,8 @@ d3.json("/api/iniciativas/{{ item.short_url }}", function(error, graph) {
   });
 });
 </script>
+{% endif %}
+</div>
+
+
 {% endblock content %}
