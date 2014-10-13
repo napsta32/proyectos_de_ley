@@ -14,11 +14,11 @@ def get_proyecto_from_short_url(short_url):
     return item
 
 def prepare_json_for_d3(item):
-    nodes = [{"name": item.codigo, "group": 1, "url": "/p/"}]
+    nodes = [{"name": item.codigo, "url": "/p/"}]
     append = nodes.append
     j = 1
     for i in item.iniciativas_agrupadas:
-        node = {"name": i, "group": 1, "url": "/p/" + i}
+        node = {"name": i, "url": "/p/" + i}
         append(node)
         j += 1
 
