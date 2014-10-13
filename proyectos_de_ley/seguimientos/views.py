@@ -40,5 +40,4 @@ def iniciativa_list(request, short_url):
 
     if request.method == 'GET':
         serializer = IniciativasSerializer(new_item)
-        print(serializer.data)
         return JSONResponse(serializer.data)
