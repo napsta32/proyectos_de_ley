@@ -32,8 +32,10 @@ class LatestEntriesFeed(Feed):
     def item_description(self, item):
         out = item.titulo + '<br /><br />Autores: '
         out += item.congresistas + '<br /><br />'
-        out += '<a href="' + item.pdf_url + '">PDF</a> '
-        out += '<a href="' + item.expediente + '">Expediente</a>'
+        if item.pdf_url is not None:
+            out += '<a href="' + item.pdf_url + '">PDF</a> '
+        if item.expediente is not None:
+            out += '<a href="' + item.expediente + '">Expediente</a>'
         return out
 
     def item_link(self, item):
@@ -46,5 +48,8 @@ class LatestEntriesFeed(Feed):
             time_object = datetime.datetime.strptime(item.time_created, "%Y-%m-%d %H:%M:%S.%f")
         except ValueError:
             time_object = datetime.datetime.strptime(item.time_created, "%Y-%m-%d %H:%M:%S")
+        except TypeError:
+            # This exception is only for our test that wants str not date obj
+            time_object = item.time_created
 
         return time_object
