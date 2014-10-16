@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+import datetime
+
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Rss201rev2Feed
 
@@ -37,4 +39,11 @@ class LatestEntriesFeed(Feed):
         return '/p/' + item.short_url
 
     def item_pubdate(self, item):
-        return item.time_created
+        # TODO make sure scrapy saves a datetime object into our database
+        # so we can avoid this exception catching
+        try:
+            time_object = datetime.datetime.strptime(item.time_created, "%Y-%m-%d %H:%M:%S.%f")
+        except ValueError:
+            time_object = datetime.datetime.strptime(item.time_created, "%Y-%m-%d %H:%M:%S")
+
+        return time_object
