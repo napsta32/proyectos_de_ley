@@ -14,7 +14,7 @@ class CorrectMimeTypeFeed(Rss201rev2Feed):
 class LatestEntriesFeed(Feed):
     title = 'Proyectos de ley emitidos por el Congreso de la República del' \
             ' Perú'
-    link = '/rss.xml'
+    link = 'http://www.proyectosdeley.pe/rss.xml'
     description = 'proyectosdeley.pe es un intento de transparentar el Cong' \
                   'reso y poner al alcance de la mayor cantidad de personas' \
                   'los proyectos de ley presentados y discutidos en el parl' \
@@ -36,7 +36,7 @@ class LatestEntriesFeed(Feed):
         return out
 
     def item_link(self, item):
-        return '/p/' + item.short_url
+        return 'http://www.proyectosdeley.pe/p/' + item.short_url
 
     def item_pubdate(self, item):
         # TODO make sure scrapy saves a datetime object into our database
