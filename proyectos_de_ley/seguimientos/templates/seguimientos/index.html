@@ -32,23 +32,46 @@
 </div>
 
 <div id="contenido" class="container">
-{{ item.titulo }}
 
 
-{% if item.iniciativas_agrupadas|length > 1 %}
   <div class="container">
     <div class="row">
       <div class="col-lg-7 col-md-8 col-sm-11">
         <div class="panel panel-default">
-          <div class="panel-heading"><h4>Iniciativas agrupadas</h4></div>
+          <div class="panel-heading"><b>Título</b></div>
+          <div class="panel-body">
+            {{ item.titulo }}
+          </div>
+        </div>
+      </div><!-- col -->
+    </div><!-- row -->
+
+    {% if item.congresistas_with_links != None %}
+    <div class="row">
+      <div class="col-lg-7 col-md-8 col-sm-11">
+        <div class="panel panel-default">
+          <div class="panel-heading"><b>Autores</b></div>
+          <div class="panel-body">
+            {{ item.congresistas_with_links|safe }}
+          </div>
+        </div>
+      </div><!-- col -->
+    </div><!-- row -->
+    {% endif %}
+
+    {% if item.iniciativas_agrupadas|length > 1 %}
+    <div class="row">
+      <div class="col-lg-7 col-md-8 col-sm-11">
+        <div class="panel panel-default">
+          <div class="panel-heading"><b>Iniciativas agrupadas</b></div>
           <div class="panel-body">
             <div id="iniciativas"></div>
           </div>
         </div>
       </div><!-- col -->
     </div><!-- row -->
+    {% endif %}
   </div><!-- container -->
-{% endif %}
 </div>
 
 

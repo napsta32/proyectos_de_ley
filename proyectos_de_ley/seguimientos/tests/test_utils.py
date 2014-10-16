@@ -41,9 +41,7 @@ class SimpleTestSeguimientos(TestCase):
         item.titulo = "Propone Ley Universitaria"
         item.iniciativas_agrupadas = ['02764']
 
-        expected = {'links': [{'target': 0, 'value': 1, 'source': 1}],
-                    'nodes': [{'name': '02764', 'url': '/p/'},
-                              {'name': '02764', 'url': '/p/4zhube'}]}
+        expected = {'nodes': [{'codigo': '02764', 'url': '/p/4zhube'}]}
         result = utils.prepare_json_for_d3(item)
         self.assertEqual(expected, result)
 
