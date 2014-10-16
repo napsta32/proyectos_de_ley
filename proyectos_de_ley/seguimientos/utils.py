@@ -20,12 +20,12 @@ def prepare_json_for_d3(item):
     j = 1
     for i in item.iniciativas_agrupadas:
         queryset = Proyecto.objects.get(codigo=i)
-        node = {"name": i, "url": "/p/" + queryset.short_url}
+        node = {"codigo": i, "url": "/p/" + queryset.short_url}
         append(node)
         j += 1
 
     # sort nodes by value (codigo)
-    sorted_nodes_by_value = sorted(nodes, key=lambda k: k['name'])
+    sorted_nodes_by_value = sorted(nodes, key=lambda k: k['codigo'])
     data_json = {"nodes": sorted_nodes_by_value}
     return data_json
 
