@@ -4,11 +4,8 @@ import re
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
 
-from django.contrib.auth.models import User
 from django.shortcuts import render
-from rest_framework import viewsets
 
 from . import utils
 from pdl.models import Proyecto
@@ -21,6 +18,7 @@ def index(request, short_url):
     item = utils.get_proyecto_from_short_url(short_url)
     return render(request, "seguimientos/index.html", {"item": item})
 
+
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
@@ -28,6 +26,7 @@ class JSONResponse(HttpResponse):
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
         super(JSONResponse, self).__init__(content, **kwargs)
+
 
 @csrf_exempt
 def iniciativa_list(request, short_url):

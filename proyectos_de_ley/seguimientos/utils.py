@@ -14,6 +14,7 @@ def get_proyecto_from_short_url(short_url):
         item.iniciativas_agrupadas = iniciativas.split(",")
     return item
 
+
 def prepare_json_for_d3(item):
     nodes = []
     append = nodes.append
