@@ -3,6 +3,7 @@ import datetime
 from django.contrib.sitemaps import Sitemap
 
 from pdl.models import Proyecto, Slug
+from pdl.utils import convert_string_to_time
 
 
 class ProyectoSitemap(Sitemap):
@@ -13,7 +14,8 @@ class ProyectoSitemap(Sitemap):
         return Proyecto.objects.order_by('-codigo')
 
     def lastmod(self, item):
-        return item.time_created
+        time_object = convert_string_to_time(item.time_created)
+        return time_object
 
     def location(self, item):
         loc = '/p/' + item.short_url + '/'

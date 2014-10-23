@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
-import datetime
-
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Rss201rev2Feed
 
 from pdl.models import Proyecto
+from pdl.utils import convert_string_to_time
 
 
 class CorrectMimeTypeFeed(Rss201rev2Feed):
@@ -42,14 +41,5 @@ class LatestEntriesFeed(Feed):
         return 'http://www.proyectosdeley.pe/p/' + item.short_url
 
     def item_pubdate(self, item):
-        # TODO make sure scrapy saves a datetime object into our database
-        # so we can avoid this exception catching
-        try:
-            time_object = datetime.datetime.strptime(item.time_created, "%Y-%m-%d %H:%M:%S.%f")
-        except ValueError:
-            time_object = datetime.datetime.strptime(item.time_created, "%Y-%m-%d %H:%M:%S")
-        except TypeError:
-            # This exception is only for our test that wants str not date obj
-            time_object = item.time_created
-
+        time_object = convert_string_to_time(item.time_created)
         return time_object
