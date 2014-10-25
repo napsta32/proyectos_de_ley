@@ -7,7 +7,7 @@
 
 {% block additional_css %}
 <style>
-#g1, #g2 {
+#g1, #g2, #g3 {
     width:100px; height:80px;
     display: inline-block;
     margin: 1em;
@@ -34,6 +34,7 @@
 
     <div id="g1" style="width:200px; height:160px"></div>
     <div id="g2" style="width:200px; height:160px"></div>
+    <div id="g3" style="width:200px; height:160px"></div>
 
   </div><!-- container -->
 </div>
@@ -63,6 +64,15 @@
     min: 0,
     max: 100,
     title: "% sin iniciativas\n agrupadas"
+  });
+
+  var g = new JustGage({
+    id: "g3",
+    value: {{ percentage_without_seguimientos }},
+    label: "{{ without_seguimientos }} proyectos",
+    min: 0,
+    max: 100,
+    title: "% sin seguimiento"
   });
 </script>
 {% endblock additional_javascript %}
