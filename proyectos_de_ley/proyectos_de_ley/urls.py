@@ -16,6 +16,7 @@ urlpatterns = patterns(
     '',
     # api for AJAX get request
     url(r'^', include('pdl.urls', namespace='pdl')),
+    url(r'^stats', include('stats.urls', namespace='stats')),
     url(r'^p/', include('pdl.urls', namespace='pdl-proyecto')),
     url(r'^p/(?P<short_url>[0-9a-z]+/seguimiento/)', seg_views.index),
     url(r'^rss.xml$', LatestEntriesFeed(), name='pdl-rss'),
