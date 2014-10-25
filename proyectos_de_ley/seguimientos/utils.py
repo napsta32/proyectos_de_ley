@@ -10,7 +10,7 @@ def get_proyecto_from_short_url(short_url):
     :return: Proyecto model object
     """
     item = Proyecto.objects.get(short_url=short_url)
-    if item.iniciativas_agrupadas is not None and\
+    if item.iniciativas_agrupadas is not None and \
             item.iniciativas_agrupadas != '' and '{' in \
             item.iniciativas_agrupadas:
         iniciativas = item.iniciativas_agrupadas.replace("{", "")
@@ -18,6 +18,7 @@ def get_proyecto_from_short_url(short_url):
         item.iniciativas_agrupadas = iniciativas.split(",")
     item.congresistas_with_links = hiperlink_congre(item.congresistas)
     item.fecha_presentacion = convert_string_to_time(item.fecha_presentacion)
+    item.numero_congresistas = len(item.congresistas.split(","))
     return item
 
 
