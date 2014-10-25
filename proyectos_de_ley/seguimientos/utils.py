@@ -1,6 +1,7 @@
 import unicodedata
 
 from pdl.models import Proyecto
+from pdl.utils import convert_string_to_time
 
 
 def get_proyecto_from_short_url(short_url):
@@ -16,6 +17,7 @@ def get_proyecto_from_short_url(short_url):
         iniciativas = iniciativas.replace("}", "")
         item.iniciativas_agrupadas = iniciativas.split(",")
     item.congresistas_with_links = hiperlink_congre(item.congresistas)
+    item.fecha_presentacion = convert_string_to_time(item.fecha_presentacion)
     return item
 
 

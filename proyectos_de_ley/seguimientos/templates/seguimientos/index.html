@@ -26,9 +26,11 @@
 {% endblock %}
 
 
+{% load humanize %}
 {% block content %}
 <div class="container">
   <h1 id="proyectos_de_ley">Proyecto de Ley {{ item.codigo }}</h1>
+  <p>Presentado: {{ item.fecha_presentacion|naturalday }}</p>
 </div>
 
 <div id="contenido" class="container">
@@ -71,6 +73,46 @@
       </div><!-- col -->
     </div><!-- row -->
     {% endif %}
+
+    {% if item.proponente != None %}
+    <div class="row">
+      <div class="col-lg-7 col-md-8 col-sm-11">
+        <div class="panel panel-default">
+          <div class="panel-heading"><b>Proponente</b></div>
+          <div class="panel-body">
+            {{ item.proponente|safe }}
+          </div>
+        </div>
+      </div><!-- col -->
+    </div><!-- row -->
+    {% endif %}
+
+    {% if item.proponente != None %}
+    <div class="row">
+      <div class="col-lg-7 col-md-8 col-sm-11">
+        <div class="panel panel-default">
+          <div class="panel-heading"><b>Grupo parlamentario</b></div>
+          <div class="panel-body">
+            {{ item.grupo_parlamentario|safe }}
+          </div>
+        </div>
+      </div><!-- col -->
+    </div><!-- row -->
+    {% endif %}
+
+    {% if item.nombre_comision != None %}
+    <div class="row">
+      <div class="col-lg-7 col-md-8 col-sm-11">
+        <div class="panel panel-default">
+          <div class="panel-heading"><b>Nombre de comisión</b></div>
+          <div class="panel-body">
+            {{ item.nombre_comision|safe }}
+          </div>
+        </div>
+      </div><!-- col -->
+    </div><!-- row -->
+    {% endif %}
+
   </div><!-- container -->
 </div>
 

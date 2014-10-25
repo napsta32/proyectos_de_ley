@@ -31,8 +31,7 @@ def index(request):
                    'without_pdf_url': without_pdf_url,
                    'percentage_without_pdf_url': percentage_without_pdf_url,
                    'without_iniciativas': without_iniciativas,
-                   'percentage_without_iniciativas':
-                       percentage_without_iniciativas,
+                   'percentage_without_iniciativas': percentage_without_iniciativas,
                    'without_seguimientos': without_seguimientos,
                    'percentage_without_seguimientos':  percentage_without_seguimientos,
                    }
