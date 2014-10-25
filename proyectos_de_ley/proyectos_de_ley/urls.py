@@ -15,6 +15,7 @@ sitemaps = {
 urlpatterns = patterns(
     '',
     # api for AJAX get request
+    url(r'^stats/', include('stats.urls', namespace='stats')),
     url(r'^', include('pdl.urls', namespace='pdl')),
     url(r'^p/', include('pdl.urls', namespace='pdl-proyecto')),
     url(r'^p/(?P<short_url>[0-9a-z]+/seguimiento/)', seg_views.index),
