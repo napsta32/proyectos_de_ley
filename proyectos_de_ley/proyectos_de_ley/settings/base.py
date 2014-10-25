@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'seguimientos',
     'stats',
     'rest_framework',
+    'stats',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,0 +1,78 @@
+{% extends "pdl/base.html" %}
+
+
+{% block additional_head_javascript %}
+{% endblock additional_head_javascript %}
+
+
+{% block additional_css %}
+<style>
+#g1, #g2, #g3 {
+    width:100px; height:80px;
+    display: inline-block;
+    margin: 1em;
+}
+</style>
+{% endblock %}
+
+
+{% block title %}
+        Proyecto de ley | Estadísticas de la base de datos
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  <h1 id="proyectos_de_ley">Datos indexados en nuestra base de datos</h1>
+  <hr>
+  <h3>Número total de proyectos de ley:
+    <a href="/">{{ numero_de_proyectos }}</a></h3>
+</div>
+
+<div id="contenido" class="container">
+  <div class="container">
+
+    <div id="g1" style="width:200px; height:160px"></div>
+    <div id="g2" style="width:200px; height:160px"></div>
+    <div id="g3" style="width:200px; height:160px"></div>
+
+  </div><!-- container -->
+</div>
+
+
+{% endblock content %}
+
+{% block additional_javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/raphael.2.1.0.min.js' %}"></script>
+<script src="{% static 'js/justgage.1.0.1.min.js' %}"></script>
+
+<script>
+  var g = new JustGage({
+    id: "g1",
+    value: {{ percentage_without_pdf_url }},
+    label: "{{ without_pdf_url }} proyectos",
+    min: 0,
+    max: 100,
+    title: "% sin PDF link"
+  });
+
+  var g = new JustGage({
+    id: "g2",
+    value: {{ percentage_without_iniciativas }},
+    label: "{{ without_iniciativas }} proyectos",
+    min: 0,
+    max: 100,
+    title: "% sin iniciativas\n agrupadas"
+  });
+
+  var g = new JustGage({
+    id: "g3",
+    value: {{ percentage_without_seguimientos }},
+    label: "{{ without_seguimientos }} proyectos",
+    min: 0,
+    max: 100,
+    title: "% sin seguimiento"
+  });
+</script>
+{% endblock additional_javascript %}
