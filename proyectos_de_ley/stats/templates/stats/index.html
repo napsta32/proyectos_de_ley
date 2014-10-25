@@ -1,1 +1,51 @@
-hola
+{% extends "pdl/base.html" %}
+
+
+{% block additional_head_javascript %}
+{% endblock additional_head_javascript %}
+
+
+{% block additional_css %}
+{% endblock %}
+
+
+{% block title %}
+        Proyecto de ley | Estadísticas de la base de datos
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  <h1 id="proyectos_de_ley">Datos indexados en nuestra base de datos</h1>
+  <hr>
+  <h3>Número total de proyectos de ley:
+    <a href="/">{{ numero_de_proyectos }}</a></h3>
+</div>
+
+<div id="contenido" class="container">
+  <div class="container">
+
+    <div id="without_pdf_url" style="width:200px; height:160px"></div>
+
+  </div><!-- container -->
+</div>
+
+
+{% endblock content %}
+
+{% block additional_javascript %}
+{% load staticfiles %}
+<script src="{% static 'js/raphael.2.1.0.min.js' %}"></script>
+<script src="{% static 'js/justgage.1.0.1.min.js' %}"></script>
+
+<script>
+  var g = new JustGage({
+    id: "without_pdf_url",
+    value: {{ percentage_without_pdf_url }},
+    label: "{{ without_pdf_url }} proyectos",
+    min: 0,
+    max: 100,
+    title: "% sin PDF link"
+  });
+</script>
+{% endblock additional_javascript %}
