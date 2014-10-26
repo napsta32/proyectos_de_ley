@@ -26,6 +26,13 @@ def index(request):
     percentage_without_seguimientos = round(
         (without_seguimientos*100)/numero_de_proyectos, 1)
 
+    are_law = Proyecto.objects.exclude(
+        titulo_de_ley__isnull=True).exclude(
+        titulo_de_ley__exact='').count()
+    are_not_law = numero_de_proyectos - are_law
+    percentage_are_not_law = round(
+        (are_not_law*100)/numero_de_proyectos, 1)
+
     return render(request, "stats/index.html",
                   {'numero_de_proyectos': numero_de_proyectos,
                    'without_pdf_url': without_pdf_url,
@@ -33,6 +40,8 @@ def index(request):
                    'without_iniciativas': without_iniciativas,
                    'percentage_without_iniciativas': percentage_without_iniciativas,
                    'without_seguimientos': without_seguimientos,
-                   'percentage_without_seguimientos':  percentage_without_seguimientos,
+                   'percentage_without_seguimientos': percentage_without_seguimientos,
+                   'are_not_law': are_not_law,
+                   'percentage_are_not_law': percentage_are_not_law,
                    }
     )

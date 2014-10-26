@@ -7,8 +7,8 @@
 
 {% block additional_css %}
 <style>
-#g1, #g2, #g3 {
-    width:200px; height:160px;
+#g1, #g2, #g3, #g4 {
+    width:240px; height:192px;
     display: inline-block;
     margin: 1em;
 }
@@ -17,13 +17,13 @@
 
 
 {% block title %}
-        Proyecto de ley | Estadísticas de la base de datos
+        Proyecto de ley | Estadísticas
 {% endblock %}
 
 {% load humanize %}
 {% block content %}
 <div class="container">
-  <h1 id="proyectos_de_ley">Datos indexados en nuestra base de datos</h1>
+  <h1 id="proyectos_de_ley">Situación de los proyectos de ley</h1>
   <hr>
   <h3>Número total de proyectos de ley:
     <a href="/">{{ numero_de_proyectos|intcomma }}</a></h3>
@@ -35,6 +35,7 @@
     <div id="g1"></div>
     <div id="g2"></div>
     <div id="g3"></div>
+    <div id="g4"></div>
 
   </div><!-- container -->
 </div>
@@ -54,6 +55,7 @@
     label: "{{ without_pdf_url|intcomma }} proyectos",
     min: 0,
     max: 100,
+    levelColorsGradient: false,
     title: "% sin PDF link"
   });
 
@@ -63,7 +65,8 @@
     label: "{{ without_iniciativas|intcomma }} proyectos",
     min: 0,
     max: 100,
-    title: "% sin iniciativas\n agrupadas"
+    levelColorsGradient: false,
+    title: "% proyectos sin fusionar"
   });
 
   var g = new JustGage({
@@ -72,7 +75,18 @@
     label: "{{ without_seguimientos|intcomma }} proyectos",
     min: 0,
     max: 100,
-    title: "% sin seguimiento"
+    levelColorsGradient: false,
+    title: "% sin tramitar"
+  });
+
+  var g = new JustGage({
+    id: "g4",
+    value: {{ percentage_are_not_law }},
+    label: "{{ are_not_law|intcomma }} proyectos",
+    min: 0,
+    max: 100,
+    levelColorsGradient: false,
+    title: "% proyectos que\naún no son ley"
   });
 </script>
 {% endblock additional_javascript %}
