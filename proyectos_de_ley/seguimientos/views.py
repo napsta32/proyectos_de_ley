@@ -52,11 +52,14 @@ def seguimientos_list(request, short_url):
     try:
         item = utils.get_proyecto_from_short_url(short_url=short_url)
         seguimientos = utils.get_seguimientos_from_proyecto_id(item.id)
-
+        print(item.fecha_presentacion)
+        seguimientos.append({
+            'headline': 'Fecha de presentación',
+            'startDate': utils.convert_date_to_string(item.fecha_presentacion).replace("-", ","),
+        })
         obj = MyObj()
 
         mydict = {}
-        mydict['headline'] = item.titulo
         mydict['type'] = 'default'
         mydict['text'] = "Proyecto No: " + str(item.numero_proyecto).replace("/", "_")
         mydict['date'] = seguimientos

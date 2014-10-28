@@ -1,3 +1,4 @@
+import datetime
 import unicodedata
 
 from pdl.models import Proyecto, Seguimientos
@@ -85,3 +86,8 @@ def convert_name_to_slug(name):
         slug = unicodedata.normalize('NFKD', slug).encode('ascii', 'ignore')
         slug = str(slug, encoding="utf-8")
         return slug + "/"
+
+
+def convert_date_to_string(dateobj):
+    fecha = datetime.datetime.strftime(dateobj, '%Y-%m-%d')
+    return fecha
