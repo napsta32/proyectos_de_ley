@@ -42,19 +42,30 @@ def iniciativa_list(request, short_url):
         return JSONResponse(serializer.data)
 
 
+class MyObj(object):
+    pass
+
+
 @csrf_exempt
 def seguimientos_list(request, short_url):
     """List all seguimientos for proyecto."""
     try:
         item = utils.get_proyecto_from_short_url(short_url=short_url)
         seguimientos = utils.get_seguimientos_from_proyecto_id(item.id)
-        item.date = seguimientos
-        item.headline = item.titulo
-        item.type = 'default'
-        item.text = "Proyecto No: " + str(item.numero_proyecto).replace("/", "_")
+
+        obj = MyObj()
+
+        mydict = {}
+        mydict['headline'] = item.titulo
+        mydict['type'] = 'default'
+        mydict['text'] = "Proyecto No: " + str(item.numero_proyecto).replace("/", "_")
+        mydict['date'] = seguimientos
+
+        obj.timeline = mydict
     except Proyecto.DoesNotExist:
         return HttpResponse(status=404)
 
     if request.method == 'GET':
-        serializer = SeguimientosSerializer(item)
+        serializer = SeguimientosSerializer(obj)
+        print(serializer.data)
         return JSONResponse(serializer.data)

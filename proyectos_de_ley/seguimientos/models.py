@@ -13,3 +13,4 @@ class SeguimientosJson(models.Model):
     date = models.TextField(blank=True)
     type = models.TextField(blank=True)
     text = models.TextField(blank=True)
+    timeline = models.TextField(blank=True)

@@ -7,16 +7,6 @@
 
 
 {% block additional_css %}
-<style>
-.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
-.link {
-  stroke: #999;
-  stroke-opacity: .6;
-}
-</style>
 {% endblock %}
 
 
@@ -33,100 +23,106 @@
   <p>Presentado: {{ item.fecha_presentacion|naturalday }}</p>
 </div>
 
-<div id="contenido" class="container">
 
 
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-7 col-md-8 col-sm-11">
-        <div class="panel panel-default">
-          <div class="panel-heading"><b>Título</b></div>
-          <div class="panel-body">
-            {{ item.titulo }}
-          </div>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-7 col-md-8 col-sm-11">
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Título</b></div>
+        <div class="panel-body">
+          {{ item.titulo }}
         </div>
-      </div><!-- col -->
-    </div><!-- row -->
+      </div>
+    </div><!-- col -->
+  </div><!-- row -->
 
-    {% if item.congresistas_with_links != None %}
-    <div class="row">
-      <div class="col-lg-7 col-md-8 col-sm-11">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <b>Autores</b>
-            <span class="badge">{{ item.numero_congresistas }}</span>
-          </div>
-          <div class="panel-body">
-            {{ item.congresistas_with_links|safe }}
-          </div>
+  <div class="row">
+    <div class="col-lg-7 col-md-8 col-sm-11">
+        <div id="my-timeline"></div>
+    </div><!-- col -->
+  </div><!-- row -->
+
+  {% if item.congresistas_with_links != None %}
+  <div class="row">
+    <div class="col-lg-7 col-md-8 col-sm-11">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <b>Autores</b>
+          <span class="badge">{{ item.numero_congresistas }}</span>
         </div>
-      </div><!-- col -->
-    </div><!-- row -->
-    {% endif %}
-
-    {% if item.iniciativas_agrupadas|length > 1 %}
-    <div class="row">
-      <div class="col-lg-7 col-md-8 col-sm-11">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <b>Iniciativas agrupadas</b>
-            <span class="badge">{{ item.iniciativas_agrupadas|length }}</span>
-          </div>
-          <div class="panel-body">
-            <div id="iniciativas"></div>
-          </div>
+        <div class="panel-body">
+          {{ item.congresistas_with_links|safe }}
         </div>
-      </div><!-- col -->
-    </div><!-- row -->
-    {% endif %}
+      </div>
+    </div><!-- col -->
+  </div><!-- row -->
+  {% endif %}
 
-    {% if item.proponente != None %}
-    <div class="row">
-      <div class="col-lg-7 col-md-8 col-sm-11">
-        <div class="panel panel-default">
-          <div class="panel-heading"><b>Proponente</b></div>
-          <div class="panel-body">
-            {{ item.proponente|safe }}
-          </div>
+  {% if item.iniciativas_agrupadas|length > 1 %}
+  <div class="row">
+    <div class="col-lg-7 col-md-8 col-sm-11">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <b>Iniciativas agrupadas</b>
+          <span class="badge">{{ item.iniciativas_agrupadas|length }}</span>
         </div>
-      </div><!-- col -->
-    </div><!-- row -->
-    {% endif %}
-
-    {% if item.proponente != None %}
-    <div class="row">
-      <div class="col-lg-7 col-md-8 col-sm-11">
-        <div class="panel panel-default">
-          <div class="panel-heading"><b>Grupo parlamentario</b></div>
-          <div class="panel-body">
-            {{ item.grupo_parlamentario|safe }}
-          </div>
+        <div class="panel-body">
+          <div id="iniciativas"></div>
         </div>
-      </div><!-- col -->
-    </div><!-- row -->
-    {% endif %}
+      </div>
+    </div><!-- col -->
+  </div><!-- row -->
+  {% endif %}
 
-    {% if item.nombre_comision != None and item.nombre_comision != '' %}
-    <div class="row">
-      <div class="col-lg-7 col-md-8 col-sm-11">
-        <div class="panel panel-default">
-          <div class="panel-heading"><b>Nombre de comisión</b></div>
-          <div class="panel-body">
-            {{ item.nombre_comision|safe }}
-          </div>
+  {% if item.proponente != None %}
+  <div class="row">
+    <div class="col-lg-7 col-md-8 col-sm-11">
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Proponente</b></div>
+        <div class="panel-body">
+          {{ item.proponente|safe }}
         </div>
-      </div><!-- col -->
-    </div><!-- row -->
-    {% endif %}
+      </div>
+    </div><!-- col -->
+  </div><!-- row -->
+  {% endif %}
 
-  </div><!-- container -->
-</div>
+  {% if item.proponente != None %}
+  <div class="row">
+    <div class="col-lg-7 col-md-8 col-sm-11">
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Grupo parlamentario</b></div>
+        <div class="panel-body">
+          {{ item.grupo_parlamentario|safe }}
+        </div>
+      </div>
+    </div><!-- col -->
+  </div><!-- row -->
+  {% endif %}
+
+  {% if item.nombre_comision != None and item.nombre_comision != '' %}
+  <div class="row">
+    <div class="col-lg-7 col-md-8 col-sm-11">
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Nombre de comisión</b></div>
+        <div class="panel-body">
+          {{ item.nombre_comision|safe }}
+        </div>
+      </div>
+    </div><!-- col -->
+  </div><!-- row -->
+  {% endif %}
+
+</div><!-- container -->
 
 
 {% endblock content %}
 
 
 {% block additional_javascript %}
+<script type="text/javascript" src="http://cdn.knightlab.com/libs/timeline/latest/js/storyjs-embed.js"></script>
+
 <script>
 $.getJSON("/api/iniciativas/{{ item.short_url }}", function(data) {
     var items = [];
@@ -136,4 +132,20 @@ $.getJSON("/api/iniciativas/{{ item.short_url }}", function(data) {
     $("#iniciativas").append(items.join(", "));
 });
 </script>
+
+<script>
+$(document).ready(function() {
+  $.getJSON("/api/seguimientos/{{ item.short_url }}", function(data) {
+    createStoryJS({
+        type:       'timeline',
+        width:      '100%',
+        height:     '300',
+        source:     data,
+        embed_id:   'my-timeline'
+    });
+  });
+});
+</script>
+<!-- END TimelineJS -->
+
 {% endblock additional_javascript %}

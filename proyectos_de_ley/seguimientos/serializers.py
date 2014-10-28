@@ -21,12 +21,12 @@ class IniciativasSerializer(serializers.ModelSerializer):
 class SeguimientosSerializer(serializers.ModelSerializer):
     class Meta:
         model = SeguimientosJson
-        fields = ('headline', 'date', 'type', 'text',)
+        fields = ('timeline',)
 
     def restore_object(self, attrs, instance=None):
         if instance:
             # Update existing instance
-            instance.headline = attrs.get('headline', instance.headline)
+            instance.timeline = attrs.get('timeline', instance.timeline)
             return instance
 
         return SeguimientosJson(**attrs)
