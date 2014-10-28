@@ -1,7 +1,7 @@
 from django.forms import widgets
 from rest_framework import serializers
 
-from seguimientos.models import Iniciativas
+from seguimientos.models import Iniciativas, SeguimientosJson
 
 
 class IniciativasSerializer(serializers.ModelSerializer):
@@ -16,3 +16,17 @@ class IniciativasSerializer(serializers.ModelSerializer):
             return instance
 
         return Iniciativas(**attrs)
+
+
+class SeguimientosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SeguimientosJson
+        fields = ('headline', 'date', 'type', 'text',)
+
+    def restore_object(self, attrs, instance=None):
+        if instance:
+            # Update existing instance
+            instance.headline = attrs.get('headline', instance.headline)
+            return instance
+
+        return SeguimientosJson(**attrs)

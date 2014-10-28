@@ -9,7 +9,7 @@ from django.shortcuts import render
 
 from . import utils
 from pdl.models import Proyecto
-from .serializers import IniciativasSerializer
+from .serializers import IniciativasSerializer, SeguimientosSerializer
 
 
 # Create your views here.
@@ -39,4 +39,22 @@ def iniciativa_list(request, short_url):
 
     if request.method == 'GET':
         serializer = IniciativasSerializer(new_item)
+        return JSONResponse(serializer.data)
+
+
+@csrf_exempt
+def seguimientos_list(request, short_url):
+    """List all seguimientos for proyecto."""
+    try:
+        item = utils.get_proyecto_from_short_url(short_url=short_url)
+        seguimientos = utils.get_seguimientos_from_proyecto_id(item.id)
+        item.date = seguimientos
+        item.headline = item.titulo
+        item.type = 'default'
+        item.text = "Proyecto No: " + str(item.numero_proyecto).replace("/", "_")
+    except Proyecto.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = SeguimientosSerializer(item)
         return JSONResponse(serializer.data)

@@ -1,6 +1,6 @@
 import unicodedata
 
-from pdl.models import Proyecto
+from pdl.models import Proyecto, Seguimientos
 from pdl.utils import convert_string_to_time
 
 
@@ -20,6 +20,18 @@ def get_proyecto_from_short_url(short_url):
     item.fecha_presentacion = convert_string_to_time(item.fecha_presentacion)
     item.numero_congresistas = len(item.congresistas.split(","))
     return item
+
+
+def get_seguimientos_from_proyecto_id(id):
+    res = Seguimientos.objects.all().filter(proyecto_id=id)
+    seguimientos = []
+    append = seguimientos.append
+    for i in res:
+        obj = {}
+        obj['startDate'] = i.fecha.replace("-", ",")
+        obj['headline'] = i.evento
+        append(obj)
+    return seguimientos
 
 
 def prepare_json_for_d3(item):
