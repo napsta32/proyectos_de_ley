@@ -1,3 +1,5 @@
+import datetime
+
 from django.test import TestCase
 
 from pdl.models import Proyecto, Seguimientos
@@ -60,3 +62,8 @@ class TestSeguimientos(TestCase):
         self.assertEqual(expected, result)
 
 
+    def test_convert_date_to_string(self):
+        fecha = datetime.datetime(2010, 10, 10)
+        expected = '2010-10-10'
+        result = utils.convert_date_to_string(fecha)
+        self.assertEqual(expected, result)
