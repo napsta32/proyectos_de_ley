@@ -16,3 +16,8 @@ class TestUtils(TestCase):
         expected = datetime.datetime(2014, 10, 10, 10, 20, 10, 230000)
         result = convert_string_to_time(string)
         self.assertEqual(expected, result)
+
+        string = "2014-10-10 10:20:10"
+        expected = datetime.datetime(2014, 10, 10, 10, 20, 10)
+        result = convert_string_to_time(string)
+        self.assertEqual(expected, result)
