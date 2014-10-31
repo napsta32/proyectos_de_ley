@@ -61,6 +61,12 @@ class TestSeguimientos(TestCase):
         result = utils.prepare_json_for_d3(item)
         self.assertEqual(expected, result)
 
+    def test_hiperlink_congre(self):
+        congresista = 'Gamarra Saldivar, Teofilo'
+        expected = "<a href='/congresista/gamarra_saldivar_teofilo/' title='ver todos sus proyectos'>Gamarra Saldivar, Teofilo</a>"
+        result = utils.hiperlink_congre(congresista)
+        self.assertEqual(expected, result)
+
     def test_convert_name_to_slug(self):
         congresista = "Gamarra Saldivar, Teofilo"
         expected = "gamarra_saldivar_teofilo/"
