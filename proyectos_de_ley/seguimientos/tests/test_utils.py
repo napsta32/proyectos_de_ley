@@ -61,6 +61,11 @@ class TestSeguimientos(TestCase):
         result = utils.prepare_json_for_d3(item)
         self.assertEqual(expected, result)
 
+    def test_convert_name_to_slug(self):
+        congresista = "Gamarra Saldivar, Teofilo"
+        expected = "gamarra_saldivar_teofilo/"
+        result = utils.convert_name_to_slug(congresista)
+        self.assertEqual(expected, result)
 
     def test_convert_date_to_string(self):
         fecha = datetime.datetime(2010, 10, 10)
