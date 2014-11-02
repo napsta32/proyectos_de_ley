@@ -29,7 +29,7 @@ def get_seguimientos_from_proyecto_id(id):
     append = seguimientos.append
     for i in res:
         obj = {}
-        obj['startDate'] = i.fecha.replace("-", ",")
+        obj['startDate'] = str(i.fecha).replace("-", ",")
         obj['headline'] = i.evento
         append(obj)
     return seguimientos
