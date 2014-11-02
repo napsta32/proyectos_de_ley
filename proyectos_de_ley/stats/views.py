@@ -21,7 +21,7 @@ def index(request):
     percentage_without_iniciativas = round(
         (without_iniciativas*100)/numero_de_proyectos, 1)
 
-    with_seguimientos = Seguimientos.objects.distinct('proyecto_id').count()
+    with_seguimientos = Seguimientos.objects.values_list('proyecto_id', flat=True).distinct().count()
     without_seguimientos = numero_de_proyectos - with_seguimientos
     percentage_without_seguimientos = round(
         (without_seguimientos*100)/numero_de_proyectos, 1)
