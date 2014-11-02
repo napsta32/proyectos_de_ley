@@ -31,10 +31,15 @@ class LatestEntriesFeed(Feed):
     def item_description(self, item):
         out = item.titulo + '<br /><br />Autores: '
         out += item.congresistas + '<br /><br />'
+        out += '<a href="http://www.proyectosdeley.pe/p/' + item.short_url + '/">'
+        out += 'http://www.proyectosdeley.pe/p/' + item.short_url + '</a>'
+        out += '<br /><br />'
         if item.pdf_url is not None:
             out += '<a href="' + item.pdf_url + '">PDF</a> '
         if item.expediente is not None:
             out += '<a href="' + item.expediente + '">Expediente</a>'
+        out += ' <a href="http://www.proyectosdeley.pe/p/' + item.short_url
+        out += '/seguimiento/">Seguimiento</a>'
         return out
 
     def item_link(self, item):
