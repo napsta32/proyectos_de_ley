@@ -8,7 +8,7 @@ Proyectos de Ley del Congreso
 Configuración
 -------------
 
-The steps below will get you up and running with a local development environment. We assume you have the following installed:
+Esta aplicación se basa en el siguiente *software*:
 
 * pip
 * virtualenv
@@ -28,15 +28,13 @@ del folder que contiene el proyecto de Django::
     $ python yourapp/manage.py runserver --settings=yourapp.settings.local
 
 
-Comandos de mantenimiento
--------------------------
-* El comando **``python manage.py scrape``** se encarga de cosechar la
-  información del servidor del congreso y almacernarla en una base de datos
-  local. Toda la información cosechada se almancena en una base de datos
-  SQLite3. Django se encarga de servir las páginas y motor de búsqueda.
-* El comando **``python manage.py update_seguimientos``** trata de actualizar
-  nuevos eventos para cada uno de los proyectos almacenados en la base de
-  datos. Ejecutar este comando una vez a la semana.
+Obteniendo información
+----------------------
+Toda la info se obtiene desde las páginas web del Congreso mediante el uso de
+un *scraper* basado en el *framework* Scrapy. El *scraper* se encuentra en
+este repositorio_.
+
+.. _repositorio: https://github.com/proyectosdeley/proyectos_de_ley_scraper
 
 Plantilla HTML
 --------------
