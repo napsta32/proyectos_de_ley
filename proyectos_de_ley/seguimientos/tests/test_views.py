@@ -42,3 +42,8 @@ class TestViews(TestCase):
         as_dict = json.loads(as_string)
         self.assertEqual('Proyecto No: 00586_2011-CR',
                          as_dict['timeline']['text'])
+
+    def test_api_iniciativas(self):
+        c = Client()
+        response = c.get('/api/iniciativas/4huj5x', follow=True)
+        self.assertEqual(200, response.status_code)
