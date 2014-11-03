@@ -30,7 +30,12 @@ class TestViews(TestCase):
             }
         )
 
-    def test_index(self):
+    def test_index_view(self):
+        c = Client()
+        response = c.get('/p/4huj5x/seguimiento/')
+        self.assertEqual(200, response.status_code)
+
+    def test_api_seguimientos(self):
         c = Client()
         response = c.get('/api/seguimientos/4huj5x', follow=True)
         as_string = response.content.decode("utf-8")
