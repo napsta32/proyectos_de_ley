@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, url
 
-from . import views
+from .forms import SearchAdvancedForm
+from .views import SearchWizard
 
 
 urlpatterns = patterns(
     '',
-    url(r'^$', views.index, name='index'),
+    url(r'^$', SearchWizard.as_view([SearchAdvancedForm])),
 )
