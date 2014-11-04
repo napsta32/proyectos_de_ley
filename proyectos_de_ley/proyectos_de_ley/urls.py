@@ -25,5 +25,7 @@ urlpatterns = patterns(
         name='django.contrib.sitemaps.views.sitemap'),
 
     url(r'^api/', include('seguimientos.urls')),
+
+    url(r'^search-advanced/', include('search_advanced.urls')),
     # url(r'^admin/', include(admin.site.urls)),
 )

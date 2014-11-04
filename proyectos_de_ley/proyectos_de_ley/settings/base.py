@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'pdl',
     'seguimientos',
     'stats',
+    'search_advanced',
     'rest_framework',
 )
 
