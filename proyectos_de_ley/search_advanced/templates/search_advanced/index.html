@@ -6,12 +6,16 @@
 
 
 {% block additional_css %}
-{% endblock %}
+{% load staticfiles %}
+<link type="text/css" href="{% static 'css/jquery-ui.min.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'css/jquery-ui.structure.min.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'css/jquery-ui.theme.min.css' %}" rel="stylesheet" />
+{% endblock additional_css %}
 
 
 {% block title %}
         Proyecto de ley | Búsqueda avanzada
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
 <div class="container">
@@ -21,11 +25,18 @@
   </form>
 </div>
 
-
-
 {% endblock content %}
+
+
 
 {% block additional_javascript %}
 {% load staticfiles %}
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+
+<script>
+  $(document).ready(function() {
+    $('.datepicker').datepicker();
+  });
+</script>
 
 {% endblock additional_javascript %}
