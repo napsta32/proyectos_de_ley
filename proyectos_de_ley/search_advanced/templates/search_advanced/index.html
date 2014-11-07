@@ -15,8 +15,8 @@
 
 {% block content %}
 <div class="container">
-  <form method="get" action="/results/" class="navbar-form pull-right">
-    <input type="text" id="searchBox" class="input-medium search-query" name="q" placeholder="Search">
+  <form method="get" action="/search-advanced/" class="navbar-form pull-right">
+    {{ form.as_p }} 
     <input type="submit" class="btn" value="Search" >
   </form>
 </div>
