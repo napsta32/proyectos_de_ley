@@ -14,7 +14,7 @@ def index(request):
         if form.is_valid():
             date_from = form.cleaned_data['date_from']
             date_to = form.cleaned_data['date_to']
-            queryset = Proyecto.objects.filter(fecha_presentacion__range=[date_from, date_to])
+            queryset = Proyecto.objects.filter(fecha_presentacion__range=[date_from, date_to]).order_by('-codigo')
 
             obj = do_pagination(request, queryset, search=True)
             print(obj)
@@ -33,5 +33,10 @@ def index(request):
             )
 
 def convert_date(fecha):
-    return datetime.date.strftime(fecha, '%m/%d/%Y')
+    try:
+        nueva_fecha = datetime.date.strftime(fecha, '%m/%d/%Y')
+        return nueva_fecha
+    except TypeError:
+        return None
+
 
