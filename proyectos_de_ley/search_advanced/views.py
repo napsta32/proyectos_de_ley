@@ -7,7 +7,9 @@ from django.views.generic import CreateView
 
 def index(request):
     if request.method == 'GET':
-        form = forms.SearchAdvancedForm()
-        print(form)
+        form = forms.SearchAdvancedForm(request.GET)
+        if form.is_valid():
+            print(form)
+
         return render(request, 'search_advanced/index.html',
             {'form': form,})
