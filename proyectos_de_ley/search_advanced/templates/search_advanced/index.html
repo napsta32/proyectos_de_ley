@@ -19,8 +19,15 @@
 
 {% block content %}
 <div class="container">
-  <form method="get" action="/search-advanced/" class="navbar-form pull-right">
-    {{ form.as_p }} 
+  <form method="get" action="/search-advanced/" class="form-inline" role="form">
+    {{ form.non_field_errors }}
+
+    <div class="form-group">
+      {{ form.date_from.errors }} 
+      <label for="id_date_from">Fecha inicio:</label>
+      {{ form.date_from }}
+    </div>
+
     <input type="submit" class="btn" value="Search" >
   </form>
 </div>
