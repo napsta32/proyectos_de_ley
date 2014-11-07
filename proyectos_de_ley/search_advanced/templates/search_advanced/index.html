@@ -25,6 +25,20 @@
   </form>
 </div>
 
+<div id="contenido" class="container">
+  <h1>Resultados de búsqueda:</h1>
+  {% if results == 'No se encontraron resultados.' %}
+    <h2>{{ results }}</h2>
+  {% else %}
+    {% for i in pretty_items %}
+      {{ i|safe }}
+    {% endfor %}
+  {% endif %}
+</div>
+
+    {% if last_page > 2 %}
+      {% include "search_advanced/pagination_search.html" %}
+    {% endif %}
 {% endblock content %}
 
 
