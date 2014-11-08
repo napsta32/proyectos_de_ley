@@ -86,7 +86,9 @@ rss icon by: http://glyphicons.com/
             <li><a href="#contact">Contact</a></li>
             -->
             <li class="divider-vertical"></li>
-            <li><a href="/rss.xml"><img width="24px" height="24px" src="{% static 'img/g_rss.png' %}"/></a></li>
+            <li><a title="RSS feed" href="/rss.xml"><img alt="RSS feed" width="24px" height="24px" src="{% static 'img/g_rss.png' %}"/></a></li>
+            <li><a title="Estadísticas" href="/stats/"><img alt="Estadísticas" width="26px" height="25px" src="{% static 'img/g_statistics.png' %}"/></a>
+            </li>
           </ul>
           <form action="{% url 'pdl:search' %}"
                 method="get" class="navbar-form navbar-right" role="search">
