@@ -1,6 +1,11 @@
 History
 =======
 
+* v1.4.0 (2014-11-08) Advanced search by *fecha presentación*. Stats. Improved
+  RSS feed. Now we have our own `Seguimiento` page. Many more additional fields
+  are scrapped (*seguimientos*, *iniciativas agrupadas*). Better scrapping of
+  PDF urls. The scrapping functions have been moved to another project:
+  `proyectos_de_ley_scraper`. Added version to footer of pages.
 * v1.2.0 (2014-09-24) Scrapping more metadata from seguimiento_page. Killed
   bug to get PDF url when the filename includes funny characters. Custom
   command to update  `seguimiento` events for each project in our database.
