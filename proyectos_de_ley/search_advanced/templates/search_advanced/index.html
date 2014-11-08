@@ -19,21 +19,39 @@
 
 {% block content %}
 <div class="container">
-  <form method="get" action="/search-advanced/" class="form-inline" role="form">
-    {{ form.non_field_errors }}
-
-    <div class="form-group">
-      {{ form.date_from.errors }} 
-      <label class="sr-only" for="id_date_from">Fecha inicio:</label>
-      {{ form.date_from }}
-
-      {{ form.date_to.errors }} 
-      <label class="sr-only" for="id_date_from_to">Fecha fin:</label>
-      {{ form.date_to }}
+  {% if not items %}
+  <div class="row">
+    <div class="col-xs-12">
+      <h1 class="text-center">Búsqueda avanzada</h1>
     </div>
+  </div>
+  {% endif %}
 
-    <input type="submit" class="btn" value="Search" >
-  </form>
+
+  <div class="row">
+    <div class="col-lg-3">
+      <h4>Por fecha de presentación</h4>
+    </div>
+    <div class="col-lg-9">
+      <form method="get" action="/search-advanced/" class="form-inline" role="form">
+        {{ form.non_field_errors }}
+
+        <div class="form-group">
+          {{ form.date_from.errors }} 
+          <label class="sr-only" for="id_date_from">Fecha inicio:</label>
+          {{ form.date_from }}
+
+          {{ form.date_to.errors }} 
+          <label class="sr-only" for="id_date_from_to">Fecha fin:</label>
+          {{ form.date_to }}
+          <input type="submit" class="btn" value="Search" >
+        </div>
+      </form>
+    </div><!-- col -->
+
+  </div><!-- row -->
+
+
 </div>
 
 {% if items %}
