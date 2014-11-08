@@ -24,8 +24,12 @@
 
     <div class="form-group">
       {{ form.date_from.errors }} 
-      <label for="id_date_from">Fecha inicio:</label>
+      <label class="sr-only" for="id_date_from">Fecha inicio:</label>
       {{ form.date_from }}
+
+      {{ form.date_to.errors }} 
+      <label class="sr-only" for="id_date_from_to">Fecha fin:</label>
+      {{ form.date_to }}
     </div>
 
     <input type="submit" class="btn" value="Search" >

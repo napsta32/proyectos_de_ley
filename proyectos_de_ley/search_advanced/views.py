@@ -17,7 +17,6 @@ def index(request):
             queryset = Proyecto.objects.filter(fecha_presentacion__range=[date_from, date_to]).order_by('-codigo')
 
             obj = do_pagination(request, queryset, search=True)
-            print(obj)
             return render(request, "search_advanced/index.html", {
                 "items": obj['items'],
                 "pretty_items": obj['pretty_items'],
