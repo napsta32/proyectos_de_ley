@@ -17,9 +17,11 @@ class SearchAdvancedForm(forms.Form):
         widget=DateInput1(),
         label="Fecha inicio",
         required=False,
+        error_messages={'invalid': 'Ingrese fecha válida'},
     )
     date_to = forms.DateField(
         widget=DateInput2(),
         label="Fecha fin",
         required=False,
+        error_messages={'invalid': 'Ingrese fecha válida'},
     )

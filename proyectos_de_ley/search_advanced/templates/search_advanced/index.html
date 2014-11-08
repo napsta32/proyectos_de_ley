@@ -36,12 +36,30 @@
       <form method="get" action="/search-advanced/" class="form-inline" role="form">
         {{ form.non_field_errors }}
 
-        <div class="form-group">
-          {{ form.date_from.errors }} 
+
+        {% if form.date_from.errors %}
+          <div class="form-group has-error">
+        {% else %}
+          <div class="form-group">
+        {% endif %}
+
+          {% for err in form.date_from.errors %}
+            <span class="error_message">{{ err }}</span>
+          {% endfor %}
+
           <label class="sr-only" for="id_date_from">Fecha inicio:</label>
           {{ form.date_from }}
+        </div>
 
-          {{ form.date_to.errors }} 
+
+        {% if form.date_to.errors %}
+          <div class="form-group has-error">
+        {% else %}
+            <div class="form-group">
+        {% endif %}
+          {% for err in form.date_to.errors %}
+          <span class="error_message">{{ err }}</span>
+          {% endfor %}
           <label class="sr-only" for="id_date_from_to">Fecha fin:</label>
           {{ form.date_to }}
           <button type="submit" class="btn btn-info" id="search_button">

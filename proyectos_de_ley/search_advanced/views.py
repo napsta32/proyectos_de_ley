@@ -9,6 +9,7 @@ from pdl.utils import convert_date_to_string
 
 
 def index(request):
+    # TODO: server error (500) when date input is wrong (need to check on site)
     if request.method == 'GET':
         form = forms.SearchAdvancedForm(request.GET)
         if form.is_valid():
@@ -30,3 +31,7 @@ def index(request):
                 "date_to": convert_date_to_string(date_to),
                 }
             )
+        else:
+            return render(request, "search_advanced/index.html", {
+                "form": form,
+            })
