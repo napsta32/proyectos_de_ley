@@ -1,6 +1,7 @@
 History
 =======
 
+* v1.4.X (xyz) Add verification for datepickers in search-advanced.
 * v1.4.0 (2014-11-08) Advanced search by *fecha presentación*. Stats. Improved
   RSS feed. Now we have our own `Seguimiento` page. Many more additional fields
   are scrapped (*seguimientos*, *iniciativas agrupadas*). Better scrapping of
