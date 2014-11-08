@@ -30,6 +30,3 @@ def index(request):
                 "date_to": convert_date_to_string(date_to),
                 }
             )
-
-
-

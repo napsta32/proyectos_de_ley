@@ -24,14 +24,16 @@ class TestSeguimientos(TestCase):
         })
         proyecto.save()
 
-        seguimiento1 = {'fecha': '2013-10-14',
-             'evento': 'Decretado a... Educación, Juventud y Deporte',
-             'proyecto': proyecto,
-            }
-        seguimiento2 =  {'fecha': '2013-10-15',
-             'evento': 'En comisión Educación, Juventud y Deporte',
-             'proyecto': proyecto,
-             }
+        seguimiento1 = {
+            'fecha': '2013-10-14',
+            'evento': 'Decretado a... Educación, Juventud y Deporte',
+            'proyecto': proyecto,
+        }
+        seguimiento2 = {
+            'fecha': '2013-10-15',
+            'evento': 'En comisión Educación, Juventud y Deporte',
+            'proyecto': proyecto,
+        }
         b = Seguimientos(**seguimiento1)
         b.save()
         b = Seguimientos(**seguimiento2)

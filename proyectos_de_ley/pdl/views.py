@@ -144,15 +144,15 @@ def do_pagination(request, all_items, search=False):
         first_half = range(cur - 10, cur)
         # is current less than last page?
         if cur < paginator.page_range[-1] - 10:
-            second_half = range(cur+1, cur + 10)
+            second_half = range(cur + 1, cur + 10)
         else:
-            second_half = range(cur+1, paginator.page_range[-1])
+            second_half = range(cur + 1, paginator.page_range[-1])
     else:
         first_half = range(1, cur)
         if paginator.page_range[-1] > 20:
-            second_half = range(cur+1, 21)
+            second_half = range(cur + 1, 21)
         else:
-            second_half = range(cur+1, paginator.page_range[-1]+1)
+            second_half = range(cur + 1, paginator.page_range[-1] + 1)
 
     obj = {
         'items': items,

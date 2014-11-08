@@ -1,12 +1,14 @@
 import datetime
 import re
 
+
 def convert_date_to_string(fecha):
     try:
         nueva_fecha = datetime.date.strftime(fecha, '%m/%d/%Y')
         return nueva_fecha
     except TypeError:
         return None
+
 
 def convert_string_to_time(string):
     if isinstance(string, str):

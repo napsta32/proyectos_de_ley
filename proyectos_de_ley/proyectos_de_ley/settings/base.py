@@ -54,8 +54,6 @@ ROOT_URLCONF = 'proyectos_de_ley.urls'
 
 WSGI_APPLICATION = 'proyectos_de_ley.wsgi.application'
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
