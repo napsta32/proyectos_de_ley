@@ -23,4 +23,3 @@ class SearchAdvancedForm(forms.Form):
         label="Fecha fin",
         required=False,
     )
-

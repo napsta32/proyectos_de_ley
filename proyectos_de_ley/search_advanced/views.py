@@ -31,11 +31,10 @@ def index(request):
                 }
             )
 
+
 def convert_date(fecha):
     try:
         nueva_fecha = datetime.date.strftime(fecha, '%m/%d/%Y')
         return nueva_fecha
     except TypeError:
         return None
-
-
