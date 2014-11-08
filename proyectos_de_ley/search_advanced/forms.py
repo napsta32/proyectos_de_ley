@@ -6,9 +6,9 @@ from django.core.exceptions import ValidationError
 from pdl.models import Proyecto
 
 
-DateInput1 = partial(forms.DateInput, {'class': 'datepicker',
+DateInput1 = partial(forms.DateInput, {'class': 'datepicker form-control',
                                        'placeholder': 'Fecha inicio'})
-DateInput2 = partial(forms.DateInput, {'class': 'datepicker',
+DateInput2 = partial(forms.DateInput, {'class': 'datepicker form-control',
                                        'placeholder': 'Fecha fin'})
 
 
