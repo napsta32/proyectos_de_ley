@@ -2,7 +2,7 @@ import datetime
 
 from django.test import TestCase
 
-from pdl.utils import convert_string_to_time
+from pdl.utils import convert_string_to_time, convert_date_to_string
 
 
 class TestUtils(TestCase):
@@ -22,3 +22,12 @@ class TestUtils(TestCase):
         result = convert_string_to_time(string)
         self.assertEqual(expected, result)
 
+    def test_convert_date(self):
+        date = datetime.date(2014, 10, 28)
+        result = convert_date_to_string(date)
+        expected = '10/28/2014'
+        self.assertEqual(expected, result)
+
+        date = "2014-10-28"
+        result = convert_date_to_string(date)
+        self.assertIsNone(result)

@@ -1,6 +1,6 @@
 coverage:
 	rm -rf htmlcov
-	coverage run --source=. manage.py test -v 2 pdl seguimientos stats --setting=proyectos_de_ley.settings.base
+	coverage run --source=. manage.py test -v 2 pdl search_advanced seguimientos stats --setting=proyectos_de_ley.settings.base
 	coverage report -m
 	coverage html
 

@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 import datetime
 
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from . import forms
 from pdl.models import Proyecto
 from pdl.views import do_pagination
-from django.views.generic import CreateView
+from pdl.utils import convert_date_to_string
 
 
 def index(request):
@@ -26,15 +26,10 @@ def index(request):
                 "last_page": obj['last_page'],
                 "current": obj['current'],
                 "form": form,
-                "date_from": convert_date(date_from),
-                "date_to": convert_date(date_to),
+                "date_from": convert_date_to_string(date_from),
+                "date_to": convert_date_to_string(date_to),
                 }
             )
 
 
-def convert_date(fecha):
-    try:
-        nueva_fecha = datetime.date.strftime(fecha, '%m/%d/%Y')
-        return nueva_fecha
-    except TypeError:
-        return None
+
