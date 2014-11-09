@@ -4,6 +4,11 @@
 Proyectos de Ley del Congreso
 =============================
 
+`http://proyectosdeley.pe` es un intento de transparentar el Congreso y poner al alcance de la mayor cantidad de personas los proyectos de ley presentados y discutidos en el parlamento. La información mostrada es tomada directamente de la página web del Congreso.
+
+Esta página ha sido desarrollada en forma independiente por la ONG Hiperderecho, una organización civil peruana sin fines de lucro dedicada a investigar, facilitar el entendimiento público y promover el respeto de los derechos y libertades en entornos digitales.
+
+`http://proyectosdeley.pe`
 
 Configuración
 -------------
