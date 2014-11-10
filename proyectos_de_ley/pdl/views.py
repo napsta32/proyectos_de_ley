@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+from functools import reduce
 import unicodedata
 
 from django.shortcuts import render
@@ -8,6 +9,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from pdl.models import Proyecto
 from pdl.models import Slug
+from pdl.utils import Timer
 
 
 def index(request):
@@ -167,22 +169,6 @@ def do_pagination(request, all_items, search=False):
         }
     return obj
 
-import time
-
-class Timer(object):
-    def __init__(self, verbose=False):
-        self.verbose = verbose
-
-    def __enter__(self):
-        self.start = time.time()
-        return self
-
-    def __exit__(self, *args):
-        self.end = time.time()
-        self.secs = self.end - self.start
-        self.msecs = self.secs * 1000  # millisecs
-        if self.verbose:
-            print('elapsed time: %f ms' % self.msecs)
 
 def find_in_db(query):
     """
@@ -191,16 +177,17 @@ def find_in_db(query):
     :param query: user's keyword
     :return: QuerySet object with items or string if no results were found.
     """
+    keywords = query.split(" ")
     with Timer() as t:
         items = Proyecto.objects.filter(
-            Q(short_url__icontains=query) |
-            Q(codigo__icontains=query) |
-            Q(numero_proyecto__icontains=query) |
-            Q(titulo__icontains=query) |
-            Q(pdf_url__icontains=query) |
-            Q(expediente__icontains=query) |
-            Q(seguimiento_page__icontains=query) |
-            Q(congresistas__icontains=query),
+            reduce(lambda x, y: x | y, [Q(short_url__icontains=word) for word in keywords]) |
+            reduce(lambda x, y: x | y, [Q(codigo__icontains=word) for word in keywords]) |
+            reduce(lambda x, y: x | y, [Q(numero_proyecto__icontains=word) for word in keywords]) |
+            reduce(lambda x, y: x | y, [Q(titulo__icontains=word) for word in keywords]) |
+            reduce(lambda x, y: x | y, [Q(expediente__icontains=word) for word in keywords]) |
+            reduce(lambda x, y: x | y, [Q(congresistas__icontains=word) for word in keywords]),
+            # Q(pdf_url__icontains=query) |
+            # Q(seguimiento_page__icontains=query),
         ).order_by('-codigo')
     print("=> elasped lpop: %s s" % t.secs)
     if len(items) > 0:
