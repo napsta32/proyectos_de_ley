@@ -48,6 +48,8 @@ def about(request):
 
 
 def search(request):
+    # TODO: include seguimientos in search fields so that input can be Ley
+    # Number and output the proyecto that originated such law.
     if 'q' in request.GET:
         query = request.GET['q']
         query = sanitize(query)

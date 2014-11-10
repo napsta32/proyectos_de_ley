@@ -9,7 +9,6 @@ from pdl.utils import convert_date_to_string
 
 
 def index(request):
-    # TODO: server error (500) when date input is wrong (need to check on site)
     if request.method == 'GET':
         form = forms.SearchAdvancedForm(request.GET)
         if form.is_valid():
