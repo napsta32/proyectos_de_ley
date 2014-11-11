@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 from functools import reduce
+from itertools import chain
 import unicodedata
 
 from django.shortcuts import render
@@ -8,6 +9,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from pdl.models import Proyecto
+from pdl.models import Seguimientos
 from pdl.models import Slug
 from pdl.utils import Timer
 
@@ -179,7 +181,7 @@ def find_in_db(query):
     """
     keywords = query.split(" ")
     with Timer() as t:
-        items = Proyecto.objects.filter(
+        proyecto_items = Proyecto.objects.filter(
             reduce(lambda x, y: x | y, [Q(short_url__icontains=word) for word in keywords]) |
             reduce(lambda x, y: x | y, [Q(codigo__icontains=word) for word in keywords]) |
             reduce(lambda x, y: x | y, [Q(numero_proyecto__icontains=word) for word in keywords]) |
@@ -189,7 +191,20 @@ def find_in_db(query):
             # Q(pdf_url__icontains=query) |
             # Q(seguimiento_page__icontains=query),
         ).order_by('-codigo')
-    print("=> elasped lpop: %s s" % t.secs)
+    # print("=> elasped lpop: %s s" % t.secs)
+
+    seguimientos = Seguimientos.objects.filter(
+        reduce(lambda x, y: x & y, [Q(evento__icontains=word) for word in keywords]),
+    ).distinct('proyecto')
+
+    if seguimientos:
+        proyectos_id = [i.proyecto_id for i in seguimientos]
+        more_items = Proyecto.objects.filter(
+            reduce(lambda x, y: x | y, [Q(id__exact=id) for id in proyectos_id]),
+        )
+        items = sorted(chain.from_iterable([proyecto_items, more_items]), key=lambda instance: instance.codigo)
+    else:
+        items = proyecto_items
 
     if len(items) > 0:
         results = items
