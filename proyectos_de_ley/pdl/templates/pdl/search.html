@@ -26,6 +26,6 @@ Proyectos de ley emitidos por el Congreso de la República del Perú | About
 
 {% block highlight_keyword %}
 <script>
-    $("#contenido").highlight('{{ keyword }}');
+    $("#contenido").highlight({{ keyword|safe }});
 </script>
 {% endblock %}

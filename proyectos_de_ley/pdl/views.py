@@ -52,8 +52,6 @@ def about(request):
 
 
 def search(request):
-    # TODO: include seguimientos in search fields so that input can be Ley
-    # Number and output the proyecto that originated such law.
     if 'q' in request.GET:
         query = request.GET['q']
         query = sanitize(query)
@@ -76,7 +74,7 @@ def search(request):
                 "first_page": obj['first_page'],
                 "last_page": obj['last_page'],
                 "current": obj['current'],
-                "keyword": query,
+                "keyword": query.split(" "),
                 }
             )
     return redirect("/")
