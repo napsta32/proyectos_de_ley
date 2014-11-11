@@ -1,7 +1,11 @@
 History
 =======
 
-* v1.4.X (xyz) Add verification for datepickers in search-advanced.
+* v1.4.1 (2014-11-11) Improved general search engine, also events in
+  `seguimientos` are queried. Autofocus on search box when page loads. Better
+  highlighting of keywords. Check errors in datefield widget (advanced search).
+  Show error fields in datefield widget. Resize advanced search according to
+  screen sizes. Add link to production site.
 * v1.4.0 (2014-11-08) Advanced search by *fecha presentación*. Stats. Improved
   RSS feed. Now we have our own `Seguimiento` page. Many more additional fields
   are scrapped (*seguimientos*, *iniciativas agrupadas*). Better scrapping of
