@@ -193,7 +193,8 @@ def find_in_db(query):
 
     seguimientos = Seguimientos.objects.filter(
         reduce(lambda x, y: x & y, [Q(evento__icontains=word) for word in keywords]),
-    ).distinct('proyecto')
+    )
+    seguimientos = set(seguimientos)
 
     if seguimientos:
         proyectos_id = [i.proyecto_id for i in seguimientos]
