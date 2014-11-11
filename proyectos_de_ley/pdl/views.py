@@ -184,8 +184,8 @@ def find_in_db(query):
             reduce(lambda x, y: x | y, [Q(codigo__icontains=word) for word in keywords]) |
             reduce(lambda x, y: x | y, [Q(numero_proyecto__icontains=word) for word in keywords]) |
             reduce(lambda x, y: x & y, [Q(titulo__icontains=word) for word in keywords]) |
-            reduce(lambda x, y: x | y, [Q(expediente__icontains=word) for word in keywords]) |
-            reduce(lambda x, y: x | y, [Q(congresistas__icontains=word) for word in keywords]),
+            reduce(lambda x, y: x & y, [Q(congresistas__icontains=word) for word in keywords]),
+            # reduce(lambda x, y: x | y, [Q(expediente__icontains=word) for word in keywords]) |
             # Q(pdf_url__icontains=query) |
             # Q(seguimiento_page__icontains=query),
         ).order_by('-codigo')
