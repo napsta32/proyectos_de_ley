@@ -177,6 +177,7 @@ def find_in_db(query):
     :param query: user's keyword
     :return: QuerySet object with items or string if no results were found.
     """
+    #TODO, remove trailing + from keywords before doing searches
     keywords = query.split(" ")
     with Timer() as t:
         proyecto_items = Proyecto.objects.filter(
