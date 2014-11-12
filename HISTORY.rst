@@ -1,6 +1,7 @@
 History
 =======
 
+* v1.4.X (2014-XX-XX) Only accept as search keywords strings with len > 2.
 * v1.4.1 (2014-11-11) Improved general search engine, also events in
   `seguimientos` are queried. Autofocus on search box when page loads. Better
   highlighting of keywords. Check errors in datefield widget (advanced search).

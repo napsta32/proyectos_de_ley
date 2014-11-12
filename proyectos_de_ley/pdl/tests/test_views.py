@@ -203,7 +203,7 @@ class SimpleTest(TestCase):
         self.assertTrue(b'endless_page_link' in response.content)
 
     def test_sanitize(self):
-        mystring = "'/\\*%"
+        mystring = "'/\\*% a e "
         expected = ''
         result = views.sanitize(mystring)
         self.assertEqual(expected, result)

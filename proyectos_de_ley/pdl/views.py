@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 from functools import reduce
 from itertools import chain
+import re
 import unicodedata
 
 from django.shortcuts import render
@@ -177,8 +178,7 @@ def find_in_db(query):
     :param query: user's keyword
     :return: QuerySet object with items or string if no results were found.
     """
-    #TODO, remove trailing + from keywords before doing searches
-    keywords = query.split(" ")
+    keywords = query.strip().split(" ")
     with Timer() as t:
         proyecto_items = Proyecto.objects.filter(
             reduce(lambda x, y: x | y, [Q(short_url__icontains=word) for word in keywords]) |
@@ -235,7 +235,14 @@ def sanitize(s):
     s = s.replace("=", "")
     s = s.replace("*", "")
     s = s.replace("%", "")
-    return s
+    new_s = []
+    append = new_s.append
+    for i in s.split(" "):
+        if len(i.strip()) > 2:
+            append(i)
+    new_s = " ".join(new_s)
+    new_s = re.sub("\s+", " ", new_s)
+    return new_s
 
 
 def get_last_items():
