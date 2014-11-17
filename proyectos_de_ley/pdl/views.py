@@ -76,6 +76,7 @@ def search(request):
                 "last_page": obj['last_page'],
                 "current": obj['current'],
                 "keyword": query.split(" "),
+                "pagination_keyword": query,
                 }
             )
     return redirect("/")
@@ -202,7 +203,8 @@ def find_in_db(query):
         more_items = Proyecto.objects.filter(
             reduce(lambda x, y: x | y, [Q(id__exact=id) for id in proyectos_id]),
         )
-        items = sorted(chain.from_iterable([proyecto_items, more_items]), key=lambda instance: instance.codigo)
+        items = sorted(chain.from_iterable([proyecto_items, more_items]), key=lambda instance: instance.codigo,
+                       reverse=True)
     else:
         items = proyecto_items
 
