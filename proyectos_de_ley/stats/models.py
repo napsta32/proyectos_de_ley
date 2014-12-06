@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
+class ComisionCount(models.Model):
+    count = models.IntegerField()
+    comision = models.CharField(max_length=250)
