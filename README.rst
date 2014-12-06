@@ -41,6 +41,14 @@ este repositorio_.
 
 .. _repositorio: https://github.com/proyectosdeley/proyectos_de_ley_scraper
 
+Custom commands
+---------------
+
+Para generar una tabla resúmen del número de proyectos que ha quedado estancado
+en cada comisión del Congreso::
+
+    > python manage.py create_table_comisiones --settings=proyectos_de_ley.settings.local
+
 Plantilla HTML
 --------------
 * El archivo ``base.html`` funciona como plantilla para crear las páginas HTML.
