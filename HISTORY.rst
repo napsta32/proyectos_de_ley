@@ -4,6 +4,7 @@ History
 * v1.4.X (2014-XX-XX) Only accept as search keywords strings with len > 2. Sort
   simple search result by codigo desc. Fix bug on pagination links. Keywords
   were shown with brackets. Search box of simple search show user's query.
+  Added links to PDF and Expediente in Seguimientos page.
 * v1.4.1 (2014-11-11) Improved general search engine, also events in
   `seguimientos` are queried. Autofocus on search box when page loads. Better
   highlighting of keywords. Check errors in datefield widget (advanced search).

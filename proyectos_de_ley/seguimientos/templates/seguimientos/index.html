@@ -35,7 +35,31 @@
         </div>
       </div>
     </div><!-- col -->
+
+    <div class="col-lg-5 col-md-4 hidden-sm hidden-xs">
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Enlaces externos</b></div>
+        <div class="panel-body">
+          {% if item.pdf_url != ''%}
+          <a class='btn btn-lg btn-primary'
+             href="{{ item.pdf_url }}" role='button'>PDF</a>
+          {% else %}
+          <a class='btn btn-lg btn-primary disabled'
+             href="#" role='button'>Sin PDF</a>
+          {% endif %}
+
+          {% if item.expediente != ''%}
+          <a class='btn btn-lg btn-primary'
+             href="{{ item.expediente }}" role='button'>EXPEDIENTE</a>
+          {% else %}
+          <a class='btn btn-lg btn-primary disabled'
+             href="#" role='button'>Sin EXPEDIENTE</a>
+          {% endif %}
+        </div>
+      </div>
+    </div><!-- col -->
   </div><!-- row -->
+
 
   <div class="row">
     <div class="col-lg-7 col-md-8 col-sm-11">
@@ -113,6 +137,32 @@
     </div><!-- col -->
   </div><!-- row -->
   {% endif %}
+
+  <div class="row">
+    <div class="col-xs-11 visible-sm visible-xs">
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Enlaces externos</b></div>
+        <div class="panel-body">
+          {% if item.pdf_url != ''%}
+            <a class='btn btn-lg btn-primary'
+              href="{{ item.pdf_url }}" role='button'>PDF</a>
+          {% else %}
+          <a class='btn btn-lg btn-primary disabled'
+             href="#" role='button'>Sin PDF</a>
+          {% endif %}
+
+          {% if item.expediente != ''%}
+          <a class='btn btn-lg btn-primary'
+             href="{{ item.expediente }}" role='button'>EXPEDIENTE</a>
+          {% else %}
+          <a class='btn btn-lg btn-primary disabled'
+             href="#" role='button'>Sin EXPEDIENTE</a>
+          {% endif %}
+        </div>
+      </div>
+    </div><!-- col -->
+  </div><!-- row -->
+
 
 </div><!-- container -->
 

@@ -20,6 +20,7 @@ def get_proyecto_from_short_url(short_url):
     item.congresistas_with_links = hiperlink_congre(item.congresistas)
     item.fecha_presentacion = convert_string_to_time(item.fecha_presentacion)
     item.numero_congresistas = len(item.congresistas.split(","))
+    print(item.pdf_url)
     return item
 
 
