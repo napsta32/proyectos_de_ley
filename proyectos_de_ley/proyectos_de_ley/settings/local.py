@@ -10,7 +10,7 @@ from unipath import Path
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = True
-
+INSTALLED_APPS += ('debug_toolbar',)
 
 BASE_DIR = Path(__file__).absolute().ancestor(3)
 SECRETS_FILE = os.path.join(BASE_DIR.ancestor(1), 'config.json')
