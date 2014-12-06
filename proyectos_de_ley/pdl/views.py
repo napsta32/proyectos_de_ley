@@ -27,8 +27,7 @@ def index(request):
         "first_page": obj['first_page'],
         "last_page": obj['last_page'],
         "current": obj['current'],
-        }
-    )
+    })
 
 
 def proyecto(request, short_url):
@@ -63,7 +62,7 @@ def search(request):
 
         if results == "No se encontraron resultados.":
             return render(request, "pdl/search.html", {"results": results,
-                                                       "keyword": query})
+                                                       "query": query})
         else:
             all_items = results
             obj = do_pagination(request, all_items, search=True)
@@ -75,10 +74,10 @@ def search(request):
                 "first_page": obj['first_page'],
                 "last_page": obj['last_page'],
                 "current": obj['current'],
-                "keyword": query.split(" "),
+                "keywords": query.split(" "),
+                "query": query,
                 "pagination_keyword": query,
-                }
-            )
+            })
     return redirect("/")
 
 
@@ -101,8 +100,7 @@ def congresista(request, congresista_slug):
             "current": obj['current'],
             "congresista": congresista_name,
             "slug": congresista_slug.replace("/", ""),
-            }
-        )
+        })
     else:
         msg = [
             "No se pudo encontrar el congresista.",
@@ -168,7 +166,7 @@ def do_pagination(request, all_items, search=False):
         "first_page": paginator.page_range[0],
         "last_page": paginator.page_range[-1],
         "current": cur,
-        }
+    }
     return obj
 
 
