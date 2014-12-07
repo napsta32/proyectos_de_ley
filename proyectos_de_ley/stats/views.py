@@ -34,17 +34,14 @@ def index(request):
     percentage_are_not_law = round(
         (are_not_law * 100) / numero_de_proyectos, 1)
 
-    queryset = ComisionCount.objects.all()
-    comision_names = set()
-    comision_count = set()
-    for i in queryset:
-        comision_names.add(i.comision)
-        comision_count.add(i.count)
-    comision_names_str = "['" + "', '".join(comision_names) + "']"
-
+    queryset = ComisionCount.objects.all().order_by('-count')
+    comision_names_str = "['"
     comision_count_str = "["
-    for i in comision_count:
-        comision_count_str += str(i) + ", "
+    for i in queryset:
+        comision_names_str += str(i.comision) + "', '"
+        comision_count_str += str(i.count) + ", "
+
+    comision_names_str += "']"
     comision_count_str += "]"
 
     return render(request, "stats/index.html",
