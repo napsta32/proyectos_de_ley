@@ -3,7 +3,6 @@
 
 {% load staticfiles %}
 {% block additional_head_javascript %}
-    <script src='{% static "js/Chart.min.js" %}'></script>
 {% endblock additional_head_javascript %}
 
 
@@ -42,8 +41,7 @@
   </div><!-- container -->
 
   <div class="container">
-    <h4>Número de proyectos estancados en cada comisión del Congreso</h3>
-    <canvas id="comisiones_chart" width="600" height="300"></canvas>
+    <div id="comisiones_chart" style="width:350px; height:620px;"></div>
   </div>
 </div>
 
@@ -54,24 +52,42 @@
 {% load staticfiles %}
 <script src="{% static 'js/raphael.2.1.0.min.js' %}"></script>
 <script src="{% static 'js/justgage.1.0.1.min.js' %}"></script>
+<script src='{% static "js/highcharts.js" %}'></script>
 
 <script>
-  var ctx = document.getElementById("comisiones_chart").getContext("2d");
-  var data = {
-    labels: {{ comision_names|safe }},
-    datasets: [
+$(function () {
+    $('#comisiones_chart').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Proyectos en comisiones del Congreso'
+        },
+        xAxis: {
+            categories: {{ comision_names|safe }}
+        },
+        yAxis: {
+            title: {
+                text: 'Número de proyectos'
+            }
+        },
+        series: [
         {
-            label: "My firt dataset",
-            fillColor: "rgba(220,220,220,0.5)",
-            strokeColor: "rgba(220,220,220,0.8)",
-            highlightFill: "rgba(220,220,220,0.75)",
-            highlightStroke: "rgba(220,220,220,1)",
-            data: {{ comision_count|safe }}
-        }
-    ]
-  };
-  var comisiones_chart = new Chart(ctx).Bar(data);
+            name: '# de proyectos actualmente en cada comisión',
+            data: {{ comision_count }},
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'Verdana, sans-serif',
+                }
+            }
+        }]
+    });
+});
+</script>
 
+<script>
   var g = new JustGage({
     id: "g1",
     value: {{ percentage_without_pdf_url }},

@@ -40,6 +40,12 @@ def index(request):
     for i in queryset:
         comision_names.add(i.comision)
         comision_count.add(i.count)
+    comision_names_str = "['" + "', '".join(comision_names) + "']"
+
+    comision_count_str = "["
+    for i in comision_count:
+        comision_count_str += str(i) + ", "
+    comision_count_str += "]"
 
     return render(request, "stats/index.html",
                   {'numero_de_proyectos': numero_de_proyectos,
@@ -51,7 +57,7 @@ def index(request):
                    'percentage_without_seguimientos': percentage_without_seguimientos,
                    'are_not_law': are_not_law,
                    'percentage_are_not_law': percentage_are_not_law,
-                   'comision_names': list(comision_names),
-                   'comision_count': list(comision_count),
+                   'comision_names': comision_names_str,
+                   'comision_count': comision_count_str,
                    }
                   )
