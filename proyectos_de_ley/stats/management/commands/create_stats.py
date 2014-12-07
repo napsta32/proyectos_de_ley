@@ -1,3 +1,10 @@
+"""
+This command queries the pdl_seguimientos table to calculate some statictics
+for `/stats` page. These stat values go to tables for this app.
+
+* projects that are being accumulated in each `comisión`.
+* projects that were aproved without 2nd round of votes.
+"""
 import datetime
 import re
 
@@ -5,6 +12,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from pdl.models import Seguimientos
 from stats.models import ComisionCount
+from stats.models import Dispensed
 
 
 class Command(BaseCommand):
@@ -38,3 +46,23 @@ class Command(BaseCommand):
                 comision=k, count=v
             )
             print(obj, created)
+
+        # Get projects that did not go to 2da round of votes
+        self.get_dispensed_projects()
+
+    def get_dispensed_projects(self):
+        total_approved = Seguimientos.objects.filter(evento__icontains='aprobado').count()
+        total_dispensed = Seguimientos.objects.filter(evento__icontains='dispensado 2da').count()
+        dispensed_by_plenary = Seguimientos.objects.filter(
+                evento__icontains='dispensado 2da').filter(evento__icontains='pleno').count()
+        dispensed_by_spokesmen = Seguimientos.objects.filter(
+                evento__icontains='dispensado 2da').filter(evento__icontains='portavoces').count()
+        dispensed_others = total_dispensed - dispensed_by_plenary - dispensed_by_spokesmen
+
+        Dispensed.objects.update_or_create(
+            total_approved=total_approved,
+            total_dispensed=total_dispensed,
+            dispensed_by_plenary=dispensed_by_plenary,
+            dispensed_by_spokesmen=dispensed_by_spokesmen,
+            dispensed_others=dispensed_others,
+        )

@@ -3,6 +3,7 @@ from django.shortcuts import render
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
 from stats.models import ComisionCount
+from stats.models import Dispensed
 
 
 def index(request):
@@ -34,6 +35,7 @@ def index(request):
     percentage_are_not_law = round(
         (are_not_law * 100) / numero_de_proyectos, 1)
 
+    # Projects by comision count
     queryset = ComisionCount.objects.all().order_by('-count')
     comision_names_str = "['"
     comision_count_str = "["
@@ -43,6 +45,19 @@ def index(request):
 
     comision_names_str += "']"
     comision_count_str += "]"
+
+    # Projects dispensed of 2nd round of votes
+    res = Dispensed.objects.all()[0]
+    dispensed_values = "[" + str(res.total_approved) + ", " \
+                       + str(res.total_dispensed) + ", " \
+                       + str(res.dispensed_by_plenary) + ", " \
+                       + str(res.dispensed_by_spokesmen) + ", " \
+                       + str(res.dispensed_others) + "]"
+    dispensed_categories = "['TOTAL aprobados', 'TOTAL dispensados', " \
+                           "'Dispensados por acuerdo del pleno', " \
+                           "'Dispensados por junta portavoces', " \
+                           "'Otros proyectos dispensados']"
+    print(dispensed_categories)
 
     return render(request, "stats/index.html",
                   {'numero_de_proyectos': numero_de_proyectos,
@@ -56,5 +71,7 @@ def index(request):
                    'percentage_are_not_law': percentage_are_not_law,
                    'comision_names': comision_names_str,
                    'comision_count': comision_count_str,
+                   'dispensed_values': dispensed_values,
+                   'dispensed_categories': dispensed_categories,
                    }
                   )

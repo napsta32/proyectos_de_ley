@@ -41,8 +41,15 @@
   </div><!-- container -->
 
   <div class="container">
-    <div id="comisiones_chart" style="width:350px; height:620px;"></div>
-  </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div id="comisiones_chart" style="width:350px; height:620px;"></div>
+      </div>
+      <div class="col-md-4">
+        <div id="dispensed_chart" style="width:350px; height:400px;"></div>
+      </div>
+    </div><!-- row -->
+  </div><!-- container -->
 </div>
 
 
@@ -75,6 +82,39 @@ $(function () {
         {
             name: '# de proyectos actualmente en cada comisión',
             data: {{ comision_count }},
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'Verdana, sans-serif',
+                }
+            }
+        }]
+    });
+});
+</script>
+
+<script>
+$(function () {
+    $('#dispensed_chart').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Proyectos aprobados sin 2da votación'
+        },
+        xAxis: {
+            categories: {{ dispensed_categories|safe }}
+        },
+        yAxis: {
+            title: {
+                text: 'Número de proyectos'
+            }
+        },
+        series: [
+        {
+            name: '# de proyectos dispensados de 2da votación',
+            data: {{ dispensed_values }},
             dataLabels: {
                 enabled: true,
                 style: {
