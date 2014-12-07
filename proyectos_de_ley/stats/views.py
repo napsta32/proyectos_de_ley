@@ -53,7 +53,7 @@ def index(request):
                        + str(res.dispensed_by_plenary) + ", " \
                        + str(res.dispensed_by_spokesmen) + ", " \
                        + str(res.dispensed_others) + "]"
-    dispensed_categories = "['TOTAL aprobados', 'TOTAL dispensados', " \
+    dispensed_categories = "['TOTAL aprobados', 'TOTAL dispensados de 2da votación', " \
                            "'Dispensados por acuerdo del pleno', " \
                            "'Dispensados por junta portavoces', " \
                            "'Otros proyectos dispensados']"
