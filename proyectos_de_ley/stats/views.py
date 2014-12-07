@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
+from stats.models import ComisionCount
 
 
 def index(request):
@@ -33,6 +34,13 @@ def index(request):
     percentage_are_not_law = round(
         (are_not_law * 100) / numero_de_proyectos, 1)
 
+    queryset = ComisionCount.objects.all()
+    comision_names = set()
+    comision_count = set()
+    for i in queryset:
+        comision_names.add(i.comision)
+        comision_count.add(i.count)
+
     return render(request, "stats/index.html",
                   {'numero_de_proyectos': numero_de_proyectos,
                    'without_pdf_url': without_pdf_url,
@@ -43,5 +51,7 @@ def index(request):
                    'percentage_without_seguimientos': percentage_without_seguimientos,
                    'are_not_law': are_not_law,
                    'percentage_are_not_law': percentage_are_not_law,
+                   'comision_names': list(comision_names),
+                   'comision_count': list(comision_count),
                    }
                   )

@@ -18,9 +18,12 @@ class Command(BaseCommand):
         # There are 24 `comisiones` in total
         comisiones = set()
         for i in queryset:
-            res = re.match("(en\s+comisión(\s\w+,*)+)", i.evento, re.I)
+            # res = re.match("(en\s+comisión(\s\w+,*)+)", i.evento, re.I)
+            res = re.match("(en\s+comisión(\s\w+)+)", i.evento, re.I)
             if res:
-                comisiones.add(res.groups()[0])
+                this_comision = re.sub("En\s+comisión\s+", "", res.groups()[0])
+                this_comision = re.sub("\s+y\s+.+", "", this_comision)
+                comisiones.add(this_comision)
 
         queryset = Seguimientos.objects.order_by('proyecto_id', '-fecha').distinct('proyecto_id')
         comisiones_count = {}
@@ -34,3 +37,4 @@ class Command(BaseCommand):
             obj, created = ComisionCount.objects.update_or_create(
                 comision=k, count=v
             )
+            print(obj, created)
