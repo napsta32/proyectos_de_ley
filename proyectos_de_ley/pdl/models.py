@@ -39,6 +39,17 @@ class Seguimientos(models.Model):
     proyecto = models.ForeignKey(Proyecto)
 
 
+class Expedientes(models.Model):
+    """Keep records regarding events in Expediente page. This info is shown
+    in the ``seguimiento_page``. For example: http://bit.ly/1uSXA5X
+    It has a many-to-one relationship with model ``Proyecto`` a foreign key.
+    """
+    fecha = models.DateField(blank=True)
+    evento = models.TextField(blank=True)
+    pdf_url = models.URLField(blank=True)
+    proyecto = models.ForeignKey(Proyecto)
+
+
 class Slug(models.Model):
     """A translation table between a Congresista name and a slug to be used
     as hiperlink."""
