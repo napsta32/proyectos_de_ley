@@ -1,13 +1,14 @@
 History
 =======
 
-* v1.4.X (2014-XX-XX) Only accept as search keywords strings with len > 2. Sort
+* v1.5.0 (2014-12-10) Only accept as search keywords strings with len > 2. Sort
   simple search result by codigo desc. Fix bug on pagination links. Keywords
   were shown with brackets. Search box of simple search show user's query.
   Added links to PDF and Expediente in Seguimientos page. Added custom command
   in `stats` app: `create_stats` which should run once a day. Added charts to
   stats page: Number of projects in comisiones and Number of projects that
-  did not go to 2nd round of votes.
+  did not go to 2nd round of votes. New table expedients to keep events and
+  URLs from the `Expediente` page.
 * v1.4.1 (2014-11-11) Improved general search engine, also events in
   `seguimientos` are queried. Autofocus on search box when page loads. Better
   highlighting of keywords. Check errors in datefield widget (advanced search).
