@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Expedientes',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
                 ('fecha', models.DateField(blank=True)),
                 ('evento', models.TextField(blank=True)),
                 ('pdf_url', models.URLField(blank=True)),
