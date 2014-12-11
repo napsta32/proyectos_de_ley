@@ -16,6 +16,7 @@ from .serializers import IniciativasSerializer, SeguimientosSerializer
 def index(request, short_url):
     short_url = re.sub("/seguimiento/", "", short_url)
     item = utils.get_proyecto_from_short_url(short_url)
+    item.expediente_events = utils.get_events_from_expediente(item.id)
     return render(request, "seguimientos/index.html", {"item": item})
 
 
@@ -52,7 +53,6 @@ def seguimientos_list(request, short_url):
     try:
         item = utils.get_proyecto_from_short_url(short_url=short_url)
         seguimientos = utils.get_seguimientos_from_proyecto_id(item.id)
-        print(item.fecha_presentacion)
         seguimientos.append({
             'headline': 'Fecha de presentación',
             'startDate': utils.convert_date_to_string(item.fecha_presentacion).replace("-", ","),
@@ -70,5 +70,4 @@ def seguimientos_list(request, short_url):
 
     if request.method == 'GET':
         serializer = SeguimientosSerializer(obj)
-        print(serializer.data)
         return JSONResponse(serializer.data)

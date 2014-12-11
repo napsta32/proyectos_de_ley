@@ -1,7 +1,7 @@
 History
 =======
 
-* v1.5.0 (2014-12-10) Only accept as search keywords strings with len > 2. Sort
+* v1.5.0 (2014-12-11) Only accept as search keywords strings with len > 2. Sort
   simple search result by codigo desc. Fix bug on pagination links. Keywords
   were shown with brackets. Search box of simple search show user's query.
   Added links to PDF and Expediente in Seguimientos page. Added custom command

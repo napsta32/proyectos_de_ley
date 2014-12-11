@@ -28,15 +28,72 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-7 col-md-8 col-sm-11">
+
       <div class="panel panel-default">
         <div class="panel-heading"><b>Título</b></div>
         <div class="panel-body">
           {{ item.titulo }}
         </div>
-      </div>
+      </div><!-- panel -->
+
+      <div id="my-timeline"></div>
+
+      {% if item.congresistas_with_links != None %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <b>Autores</b>
+          <span class="badge">{{ item.numero_congresistas }}</span>
+        </div>
+        <div class="panel-body">
+          {{ item.congresistas_with_links|safe }}
+        </div>
+      </div><!-- panel -->
+      {% endif %}
+
+      {% if item.iniciativas_agrupadas|length > 1 %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <b>Iniciativas agrupadas</b>
+          <span class="badge">{{ item.iniciativas_agrupadas|length }}</span>
+        </div>
+        <div class="panel-body">
+          <div id="iniciativas"></div>
+        </div>
+      </div><!-- panel -->
+      {% endif %}
+
+      {% if item.proponente != None %}
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Proponente</b></div>
+        <div class="panel-body">
+          {{ item.proponente|safe }}
+        </div>
+      </div><!-- panel -->
+      {% endif %}
+
+      {% if item.proponente != None %}
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Grupo parlamentario</b></div>
+        <div class="panel-body">
+          {{ item.grupo_parlamentario|safe }}
+        </div>
+      </div><!-- panel -->
+      {% endif %}
+
+      {% if item.nombre_comision != None and item.nombre_comision != '' %}
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Nombre de comisión</b></div>
+        <div class="panel-body">
+          {{ item.nombre_comision|safe }}
+        </div>
+      </div><!-- panel -->
+      {% endif %}
+
     </div><!-- col -->
 
+
     <div class="col-lg-5 col-md-4 hidden-sm hidden-xs">
+
       <div class="panel panel-default">
         <div class="panel-heading"><b>Enlaces externos</b></div>
         <div class="panel-body">
@@ -56,90 +113,29 @@
              href="#" role='button'>Sin EXPEDIENTE</a>
           {% endif %}
         </div>
-      </div>
-    </div><!-- col -->
-  </div><!-- row -->
+      </div><!-- panel -->
 
-
-  <div class="row">
-    <div class="col-lg-7 col-md-8 col-sm-11">
-        <div id="my-timeline"></div>
-    </div><!-- col -->
-  </div><!-- row -->
-
-  {% if item.congresistas_with_links != None %}
-  <div class="row">
-    <div class="col-lg-7 col-md-8 col-sm-11">
       <div class="panel panel-default">
-        <div class="panel-heading">
-          <b>Autores</b>
-          <span class="badge">{{ item.numero_congresistas }}</span>
-        </div>
+        <div class="panel-heading"><b>Expediente.</b> Enlaces a PDF externos</div>
         <div class="panel-body">
-          {{ item.congresistas_with_links|safe }}
+          <ul class="list-group">
+            {% for i in item.expediente_events %}
+            <li class="list-group-item"><a href="{{ i.pdf_url }}">{{ i.fecha }}:</a> {{ i.evento }}</li>
+            {% endfor %}
+          </ul>
         </div>
-      </div>
-    </div><!-- col -->
-  </div><!-- row -->
-  {% endif %}
+      </div><!-- panel -->
 
-  {% if item.iniciativas_agrupadas|length > 1 %}
-  <div class="row">
-    <div class="col-lg-7 col-md-8 col-sm-11">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <b>Iniciativas agrupadas</b>
-          <span class="badge">{{ item.iniciativas_agrupadas|length }}</span>
-        </div>
-        <div class="panel-body">
-          <div id="iniciativas"></div>
-        </div>
-      </div>
     </div><!-- col -->
   </div><!-- row -->
-  {% endif %}
 
-  {% if item.proponente != None %}
-  <div class="row">
-    <div class="col-lg-7 col-md-8 col-sm-11">
-      <div class="panel panel-default">
-        <div class="panel-heading"><b>Proponente</b></div>
-        <div class="panel-body">
-          {{ item.proponente|safe }}
-        </div>
-      </div>
-    </div><!-- col -->
-  </div><!-- row -->
-  {% endif %}
 
-  {% if item.proponente != None %}
-  <div class="row">
-    <div class="col-lg-7 col-md-8 col-sm-11">
-      <div class="panel panel-default">
-        <div class="panel-heading"><b>Grupo parlamentario</b></div>
-        <div class="panel-body">
-          {{ item.grupo_parlamentario|safe }}
-        </div>
-      </div>
-    </div><!-- col -->
-  </div><!-- row -->
-  {% endif %}
 
-  {% if item.nombre_comision != None and item.nombre_comision != '' %}
-  <div class="row">
-    <div class="col-lg-7 col-md-8 col-sm-11">
-      <div class="panel panel-default">
-        <div class="panel-heading"><b>Nombre de comisión</b></div>
-        <div class="panel-body">
-          {{ item.nombre_comision|safe }}
-        </div>
-      </div>
-    </div><!-- col -->
-  </div><!-- row -->
-  {% endif %}
+
 
   <div class="row">
     <div class="col-xs-11 visible-sm visible-xs">
+
       <div class="panel panel-default">
         <div class="panel-heading"><b>Enlaces externos</b></div>
         <div class="panel-body">
@@ -159,7 +155,19 @@
              href="#" role='button'>Sin EXPEDIENTE</a>
           {% endif %}
         </div>
-      </div>
+      </div><!-- panel -->
+
+      <div class="panel panel-default">
+        <div class="panel-heading"><b>Expediente.</b> Enlaces a PDF externos</div>
+        <div class="panel-body">
+          <ul class="list-group">
+            {% for i in item.expediente_events %}
+              <li class="list-group-item"><a href="{{ i.pdf_url }}">{{ i.fecha }}:</a> {{ i.evento }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div><!-- panel -->
+
     </div><!-- col -->
   </div><!-- row -->
 
