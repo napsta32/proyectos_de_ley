@@ -52,6 +52,23 @@ class TestSeguimientos(TestCase):
         self.assertEqual(expected['iniciativas_agrupadas'],
                          result.iniciativas_agrupadas)
 
+    def test_get_proyecto_from_short_url_from_string(self):
+        proyecto = Proyecto(**{
+            "numero_proyecto": "02764/2013-CR",
+            "codigo": "02764",
+            "short_url": "4zhube",
+            "titulo": "Propone Ley Universitaria",
+            "iniciativas_agrupadas": '{01790,01800}',
+            "fecha_presentacion": "2010-10-10",
+            "time_created": datetime.date.today(),
+            "id": 1,
+        })
+        proyecto.save()
+        short_url = "4zhube"
+        expected = ['01790', '01800']
+        result = utils.get_proyecto_from_short_url(short_url)
+        self.assertEqual(expected, result.iniciativas_agrupadas)
+
     def test_prepare_json_for_d3(self):
         item = Object()
         item.numero_proyecto = "02764/2013-CR"
