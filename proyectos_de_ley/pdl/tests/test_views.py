@@ -9,7 +9,9 @@ from django.test import Client
 from django.test import TestCase
 
 from pdl import views
-from pdl.models import Proyecto, Slug
+from pdl.models import Proyecto
+from pdl.models import Slug
+from pdl.models import Seguimientos
 
 
 class SimpleTest(TestCase):
@@ -213,6 +215,9 @@ class SimpleTest(TestCase):
         item = self.dummy_items[0]
         b = Proyecto(**item)
         b.save()
+
+        s = Seguimientos(fecha='2012-10-13', evento='Evento1 03774', proyecto_id=3763)
+        s.save()
 
         # now get it as QuerySet object
         items = views.find_in_db(query='03774')
