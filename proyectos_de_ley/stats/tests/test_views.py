@@ -4,6 +4,7 @@ from django.test import TestCase, Client
 
 from pdl.models import Proyecto
 from stats.models import Dispensed
+from stats.models import ComisionCount
 
 
 class TestStatsViews(TestCase):
@@ -19,6 +20,10 @@ class TestStatsViews(TestCase):
             'dispensed_by_plenary': 23,
             'dispensed_by_spokesmen': 12,
             'dispensed_others': 11,
+        })
+        ComisionCount.objects.create(**{
+            'count': 7,
+            'comision': 'Justicia',
         })
 
     def test_index(self):
