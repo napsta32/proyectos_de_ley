@@ -1,6 +1,9 @@
 History
 =======
 
+* v1.5.1 (2014-12-16) Fixing create_stats custom command. The update_or_create
+  command was creating an extra set of items in the database instead of doing
+  an update. Fixed.
 * v1.5.0 (2014-12-11) Only accept as search keywords strings with len > 2. Sort
   simple search result by codigo desc. Fix bug on pagination links. Keywords
   were shown with brackets. Search box of simple search show user's query.
