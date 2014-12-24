@@ -33,7 +33,7 @@ class SimpleTest(TestCase):
         response = c.get('/')
         soup = BeautifulSoup(response.content)
         result = soup.find_all('h1')[0].get_text()
-        self.assertEqual('Proyectos de Ley', result)
+        self.assertEqual('Proyectos recientes', result)
 
     def test_get_last_items(self):
         for i in self.dummy_items:
