@@ -1,6 +1,7 @@
 History
 =======
 
+* v1.5.2 (2014-12-24) Adding respeto.pe logos and update "About" page.
 * v1.5.1 (2014-12-16) Fixing create_stats custom command. The update_or_create
   command was creating an extra set of items in the database instead of doing
   an update. Fixed.
