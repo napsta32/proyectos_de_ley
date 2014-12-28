@@ -61,7 +61,7 @@ class Command(BaseCommand):
             evento__icontains='dispensado 2da').filter(evento__icontains='pleno').count()
         dispensed_by_spokesmen = Seguimientos.objects.filter(
             evento__icontains='dispensado 2da').filter(evento__icontains='portavoces').count()
-        dispensed_others = total_dispensed - dispensed_by_plenary - dispensed_by_spokesmen + 10000
+        dispensed_others = total_dispensed - dispensed_by_plenary - dispensed_by_spokesmen
 
         Dispensed.objects.update_or_create(
             id=1, defaults={
