@@ -1,6 +1,7 @@
 History
 =======
 
+* v1.5.3 (2014-12-28) Stats: fixing bug for "otros proyectos dispensados".
 * v1.5.2 (2014-12-24) Adding respeto.pe logo, new proyectosdeley log and update
   "About" page.
 * v1.5.1 (2014-12-16) Fixing create_stats custom command. The update_or_create
