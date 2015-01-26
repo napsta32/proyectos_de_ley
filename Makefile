@@ -7,3 +7,10 @@ migrations:
 
 stats:
 	cd proyectos_de_ley; python ./manage.py create_stats --settings=proyectos_de_ley.settings.local
+
+coverage:
+	coverage run --source proyectos_de_ley proyectos_de_ley/manage.py test -v 2 pdl search_advanced \
+	    seguimientos stats --settings=proyectos_de_ley.settings.base
+	coverage report -m
+	coverage html
+

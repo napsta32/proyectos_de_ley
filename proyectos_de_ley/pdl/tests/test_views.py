@@ -12,6 +12,7 @@ from pdl import views
 from pdl.models import Proyecto
 from pdl.models import Slug
 from pdl.models import Seguimientos
+from stats.models import Dispensed
 
 
 class SimpleTest(TestCase):
@@ -27,6 +28,14 @@ class SimpleTest(TestCase):
         for i in dummy_slugs:
             b = Slug(**i)
             b.save()
+
+        Dispensed.objects.create(**{
+            'total_approved': 1444,
+            'total_dispensed': 864,
+            'dispensed_by_plenary': 23,
+            'dispensed_by_spokesmen': 12,
+            'dispensed_others': 11,
+        })
 
     def test_index(self):
         c = Client()
