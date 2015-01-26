@@ -14,3 +14,38 @@
     border-bottom-left-radius: 0px;
     border-top-left-radius: 0px;
 }
+
+.counters {
+  padding-top: 5px;
+  list-style-type: none;
+}
+
+.counters li {
+  border-right: 1px solid #ecf0f1;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 20px 0 0;
+  padding-right: 10px;
+  font-size: 13px;
+  box-sizing: border-box;
+  text-align: -webkit-match-parent;
+}
+
+.counters li:last-child {
+  border: none;
+  margin: 0;
+  padding-top: 60px;
+  margin-left: -76px;
+  font-size: 12px;
+}
+
+.counters li:nth-last-child(2) {
+  border: none;
+  margin: 0;
+}
+
+.counter-number {
+  display: block;
+  font-size: 28px;
+}
+

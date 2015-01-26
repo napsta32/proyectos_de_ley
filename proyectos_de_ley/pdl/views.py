@@ -13,11 +13,29 @@ from pdl.models import Proyecto
 from pdl.models import Seguimientos
 from pdl.models import Slug
 from pdl.utils import Timer
+from stats.models import Dispensed
 
 
 def index(request):
     all_items = Proyecto.objects.all().order_by('-codigo')
     obj = do_pagination(request, all_items)
+
+    # sin fusionar
+    numero_de_proyectos = len(all_items)
+    with_iniciativas = Proyecto.objects.exclude(
+        iniciativas_agrupadas__isnull=True).exclude(
+        iniciativas_agrupadas__exact='').count()
+    without_iniciativas = numero_de_proyectos - with_iniciativas
+
+    # no son ley
+    are_law = Proyecto.objects.exclude(
+        titulo_de_ley__isnull=True).exclude(
+        titulo_de_ley__exact='').count()
+    are_not_law = numero_de_proyectos - are_law
+
+    # total aprobados
+    res = Dispensed.objects.all()[0]
+    aprobados = res.total_approved
 
     return render(request, "pdl/index.html", {
         "items": obj['items'],
@@ -27,6 +45,11 @@ def index(request):
         "first_page": obj['first_page'],
         "last_page": obj['last_page'],
         "current": obj['current'],
+        # stats
+        "total": numero_de_proyectos,
+        "sin_fusionar": without_iniciativas,
+        "no_son_ley": are_not_law,
+        "aprobados": aprobados,
     })
 
 

@@ -1,4 +1,5 @@
 {% extends "pdl/base.html" %}
+{% load humanize %}
 
 {% block title %}
         Proyectos de ley emitidos por el Congreso de la República del Perú
@@ -7,7 +8,31 @@
 
 {% block content %}
 <div class="container">
-  <h1 id="proyectos_de_ley">Proyectos recientes</h1>
+  <div class="pull-left">
+    <h1 id="proyectos_de_ley">Proyectos recientes</h1>
+  </div>
+
+  <div class="pull-right hidden-xs">
+    <ul class="counters text-primary">
+      <li><b class="counter-number">{{ total|intcomma }}</b>
+        PROYECTOS
+      </li>
+      <li><b class="counter-number">{{ sin_fusionar|intcomma }}</b>
+        SIN FUSIONAR
+      </li>
+      <li><b class="counter-number">{{ no_son_ley|intcomma }}</b>
+        AÚN NO SON LEY
+      </li>
+      <li><b class="counter-number">{{ aprobados|intcomma }}</b>
+        APROBADOS
+      </li>
+      <li>
+        <a href="/stats/" title="ver más información">ver más</a>
+      </li>
+    </ul>
+  </div>
+
+
 </div>
 
 <div id="contenido" class="container">
