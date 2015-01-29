@@ -283,6 +283,9 @@ def prettify_item(item):
     out += "' title='Permalink'>"
     out += "<b>" + item.numero_proyecto + "</b></a></p>\n"
     out += "<h4>" + item.titulo + "</h4>\n"
+
+    if len(item.congresistas) > 0:
+        out += "Autores <span class='badge'>" + str(len(item.congresistas.split(";"))) + "</span>\n"
     out += "<p>" + hiperlink_congre(item.congresistas) + "</p>\n"
 
     if item.pdf_url != '':
