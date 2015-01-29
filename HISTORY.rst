@@ -1,6 +1,15 @@
 History
 =======
 
+vx.x.x (xxxx-xx-xx)
+~~~~~~~~~~~~~~~~~~~
+* Updated about page.
+* Timeline starts at end.
+* Pull proyectosdeley logo from morachimo domain.
+* Show stats in frontpage.
+* Fix title of stats page.
+* Added counter for number of authors of project in frontpage and project page.
+
 v1.5.3 (2014-12-28)
 ~~~~~~~~~~~~~~~~~~~
 Stats: fixing bug for "otros proyectos dispensados".
