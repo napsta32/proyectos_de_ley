@@ -10,7 +10,7 @@ except ImportError:
     from distutils.core import setup
 
 import proyectos_de_ley
-version = '1.5.3'
+version = '1.6.0'
 
 setup(
     name='proyectos_de_ley',
@@ -22,7 +22,7 @@ setup(
     ],
     include_package_data=True,
     install_requires=[
-        'Django==1.7.0',
+        'Django==1.7.3',
     ],
     zip_safe=False,
     scripts=['proyectos_de_ley/manage.py'],

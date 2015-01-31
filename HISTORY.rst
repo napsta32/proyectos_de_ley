@@ -1,8 +1,9 @@
 History
 =======
 
-vx.x.x (xxxx-xx-xx)
+v1.6.0 (2015-01-31)
 ~~~~~~~~~~~~~~~~~~~
+* Fixed bug that showed number of authors + 1 in `seguimientos`.
 * Updated about page.
 * Timeline starts at end.
 * Pull proyectosdeley logo from morachimo domain.
