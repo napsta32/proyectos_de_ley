@@ -9,6 +9,7 @@ from django.test import Client
 from django.test import TestCase
 
 from pdl import views
+from pdl import utils
 from pdl.models import Proyecto
 from pdl.models import Slug
 from pdl.models import Seguimientos
@@ -50,7 +51,7 @@ class SimpleTest(TestCase):
             b.save()
 
         expected = '03774'
-        item = views.get_last_items()[0]
+        item = utils.get_last_items()[0]
         result = re.search("<b>([0-9]{5})/[0-9]{4}-CR</b>", item).groups()[0]
         self.assertEqual(expected, result)
 
@@ -101,22 +102,22 @@ class SimpleTest(TestCase):
         b.save()
         # now get it as QuerySet object
         item = Proyecto.objects.get(codigo='03774')
-        result = views.prettify_item_small(item)
+        result = utils.prettify_item_small(item)
         self.assertEqual(prettified_item, result)
 
         # no PDF
         item.pdf_url = ''
-        result = views.prettify_item_small(item)
+        result = utils.prettify_item_small(item)
         self.assertTrue('sin PDF' in result)
 
         # no expediente
         item.expediente = ''
-        result = views.prettify_item_small(item)
+        result = utils.prettify_item_small(item)
         self.assertTrue('sin Expediente' in result)
 
         # no seguimiento_page
         item.seguimiento_page = ''
-        result = views.prettify_item_small(item)
+        result = utils.prettify_item_small(item)
         self.assertTrue('sin Seguimiento' in result)
 
     def test_hiperlink_congre(self):
@@ -128,13 +129,13 @@ class SimpleTest(TestCase):
                    "Yonhy</a>"
         congresistas = "Dammert Ego Aguirre, Manuel Enrique Ernesto; " \
                        "Lescano Ancieta, Yonhy"
-        result = views.hiperlink_congre(congresistas)
+        result = utils.hiperlink_congre(congresistas)
         self.assertEqual(expected, result)
 
     def test_convert_name_to_slug(self):
         name = 'Eguren Neuenschwander, Juan Carlos'
         expected = 'eguren_neuenschwander_juan/'
-        result = views.convert_name_to_slug(name)
+        result = utils.convert_name_to_slug(name)
         self.assertEqual(expected, result)
 
     def test_proyecto_view(self):
@@ -247,20 +248,20 @@ class SimpleTest(TestCase):
         # now get it as QuerySet object
         slug = 'dammert_ego_aguirre'
         expected = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
-        result = views.find_slug_in_db(slug)
+        result = utils.find_slug_in_db(slug)
         self.assertEqual(expected, result)
 
         # find elements not in our database
         slug = 'dammert_ego_aguirre/'
-        result = views.find_slug_in_db(slug)
+        result = utils.find_slug_in_db(slug)
         self.assertEqual(expected, result)
 
         slug = 'dammert_ego_aguirre'
-        result = views.find_slug_in_db(slug)
+        result = utils.find_slug_in_db(slug)
         self.assertEqual(expected, result)
 
         slug = 'dammert_ego_aguirreaaaaaaaa'
-        result = views.find_slug_in_db(slug)
+        result = utils.find_slug_in_db(slug)
         self.assertEqual(None, result)
 
     def test_search1(self):

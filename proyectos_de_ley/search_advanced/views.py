@@ -1,10 +1,8 @@
 # -*- encoding: utf-8 -*-
-import datetime
-
 from django.shortcuts import render
 from . import forms
 from pdl.models import Proyecto
-from pdl.views import do_pagination
+from pdl.utils import do_pagination
 from pdl.utils import convert_date_to_string
 
 
@@ -28,7 +26,7 @@ def index(request):
                 "form": form,
                 "date_from": convert_date_to_string(date_from),
                 "date_to": convert_date_to_string(date_to),
-                }
+            }
             )
         else:
             return render(request, "search_advanced/index.html", {
