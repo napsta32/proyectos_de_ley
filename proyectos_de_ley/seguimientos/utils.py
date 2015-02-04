@@ -1,10 +1,10 @@
 import datetime
 import unicodedata
 
+import arrow
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
 from pdl.models import Expedientes
-from pdl.utils import convert_string_to_time
 
 
 def get_proyecto_from_short_url(short_url):
@@ -20,7 +20,7 @@ def get_proyecto_from_short_url(short_url):
         iniciativas = iniciativas.replace("}", "")
         item.iniciativas_agrupadas = iniciativas.split(",")
     item.congresistas_with_links = hiperlink_congre(item.congresistas)
-    item.fecha_presentacion = convert_string_to_time(item.fecha_presentacion)
+    item.fecha_presentacion = arrow.get(item.fecha_presentacion).format('DD MMMM, YYYY', locale='es_es')
     item.numero_congresistas = len(item.congresistas.split(";"))
     return item
 
@@ -34,7 +34,13 @@ def get_events_from_expediente(id):
     :return: list of events, which are key=>value dictionaries
     """
     events = Expedientes.objects.all().filter(proyecto=id).order_by('-fecha')
-    return events
+
+    events_with_human_date = []
+    append = events_with_human_date.append
+    for i in events:
+        i.fecha = arrow.get(i.fecha).format('DD MMM, YYYY', locale='es_es')
+        append(i)
+    return events_with_human_date
 
 
 def get_seguimientos_from_proyecto_id(id):
@@ -103,5 +109,8 @@ def convert_name_to_slug(name):
 
 
 def convert_date_to_string(dateobj):
-    fecha = datetime.datetime.strftime(dateobj, '%Y-%m-%d')
+    try:
+        fecha = datetime.datetime.strftime(dateobj, '%Y-%m-%d')
+    except TypeError:
+        return dateobj
     return fecha

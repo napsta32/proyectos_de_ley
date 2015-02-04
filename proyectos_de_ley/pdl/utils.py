@@ -5,6 +5,7 @@ import unicodedata
 from functools import reduce
 from itertools import chain
 
+import arrow
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
@@ -63,10 +64,13 @@ def convert_string_to_time(string):
 
 
 def prettify_item(item):
+    fecha_pres_humana = arrow.get(item.fecha_presentacion).format('DD MMMM, YYYY', locale='es_es')
     out = "<p>"
     out += "<a href='/p/" + str(item.short_url)
     out += "' title='Permalink'>"
-    out += "<b>" + item.numero_proyecto + "</b></a></p>\n"
+    out += "<b>" + item.numero_proyecto + "</b></a> "
+    out += "&nbsp;"
+    out += "<small>Presentado: " + fecha_pres_humana + "</small></p>\n"
     out += "<h4>" + item.titulo + "</h4>\n"
 
     if len(item.congresistas) > 0:

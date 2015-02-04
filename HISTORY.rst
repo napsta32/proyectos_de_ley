@@ -1,6 +1,11 @@
 History
 =======
 
+v1.7.0 (2015-02-04)
+~~~~~~~~~~~~~~~~~~~
+* Humanized dates using ``arrow``.
+* Added *legislatura*.
+
 v1.6.0 (2015-01-31)
 ~~~~~~~~~~~~~~~~~~~
 * Fixed bug that showed number of authors + 1 in `seguimientos`.
