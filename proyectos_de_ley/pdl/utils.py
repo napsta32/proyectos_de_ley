@@ -2,6 +2,17 @@ import datetime
 import re
 import time
 import unicodedata
+from functools import reduce
+from itertools import chain
+
+from django.db.models import Q
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
+
+from pdl.models import Proyecto
+from pdl.models import Seguimientos
+from pdl.models import Slug
 
 
 class Timer(object):
@@ -113,3 +124,176 @@ def convert_name_to_slug(name):
         slug = unicodedata.normalize('NFKD', slug).encode('ascii', 'ignore')
         slug = str(slug, encoding="utf-8")
         return slug + "/"
+
+
+def do_pagination(request, all_items, search=False):
+    """
+    :param request: contains the current page requested by user
+    :param all_items:
+    :param search: if search is False items will be prettified in long form.
+           if search is True then items will be prettified as small items
+           for search results.
+    :return: dict containing paginated items and pagination bar
+    """
+    if search is False:
+        paginator = Paginator(all_items, 20)
+    else:
+        paginator = Paginator(all_items, 40)
+
+    page = request.GET.get('page')
+
+    try:
+        items = paginator.page(page)
+        cur = int(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        items = paginator.page(1)
+        cur = 1
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        items = paginator.page(paginator.num_pages)
+        cur = 1
+
+    pretty_items = []
+    for i in items.object_list:
+        if search is False:
+            pretty_items.append(prettify_item(i))
+        else:
+            pretty_items.append(prettify_item_small(i))
+
+    if cur > 20:
+        first_half = range(cur - 10, cur)
+        # is current less than last page?
+        if cur < paginator.page_range[-1] - 10:
+            second_half = range(cur + 1, cur + 10)
+        else:
+            second_half = range(cur + 1, paginator.page_range[-1])
+    else:
+        first_half = range(1, cur)
+        if paginator.page_range[-1] > 20:
+            second_half = range(cur + 1, 21)
+        else:
+            second_half = range(cur + 1, paginator.page_range[-1] + 1)
+
+    obj = {
+        'items': items,
+        "pretty_items": pretty_items,
+        "first_half": first_half,
+        "second_half": second_half,
+        "first_page": paginator.page_range[0],
+        "last_page": paginator.page_range[-1],
+        "current": cur,
+    }
+    return obj
+
+
+def find_in_db(query):
+    """
+    Finds items according to user search.
+
+    :param query: user's keyword
+    :return: QuerySet object with items or string if no results were found.
+    """
+    keywords = query.strip().split(" ")
+    with Timer() as t:
+        proyecto_items = Proyecto.objects.filter(
+            reduce(lambda x, y: x | y, [Q(short_url__icontains=word) for word in keywords]) |
+            reduce(lambda x, y: x | y, [Q(codigo__icontains=word) for word in keywords]) |
+            reduce(lambda x, y: x | y, [Q(numero_proyecto__icontains=word) for word in keywords]) |
+            reduce(lambda x, y: x & y, [Q(titulo__icontains=word) for word in keywords]) |
+            reduce(lambda x, y: x & y, [Q(congresistas__icontains=word) for word in keywords]),
+            # reduce(lambda x, y: x | y, [Q(expediente__icontains=word) for word in keywords]) |
+            # Q(pdf_url__icontains=query) |
+            # Q(seguimiento_page__icontains=query),
+        ).order_by('-codigo')
+    # print("=> elasped lpop: %s s" % t.secs)
+
+    seguimientos = Seguimientos.objects.filter(
+        reduce(lambda x, y: x & y, [Q(evento__icontains=word) for word in keywords]),
+    )
+    seguimientos = set(seguimientos)
+
+    if seguimientos:
+        proyectos_id = [i.proyecto_id for i in seguimientos]
+        more_items = Proyecto.objects.filter(
+            reduce(lambda x, y: x | y, [Q(id__exact=id) for id in proyectos_id]),
+        )
+        items = sorted(chain.from_iterable([proyecto_items, more_items]), key=lambda instance: instance.codigo,
+                       reverse=True)
+    else:
+        items = proyecto_items
+
+    if len(items) > 0:
+        results = items
+    else:
+        results = "No se encontraron resultados."
+    return results
+
+
+def find_slug_in_db(congresista_slug):
+    try:
+        item = Slug.objects.get(slug=congresista_slug)
+        return item.nombre
+    except Slug.DoesNotExist:
+        try:
+            congresista_slug += '/'
+            item = Slug.objects.get(slug=congresista_slug)
+            return item.nombre
+        except Slug.DoesNotExist:
+            return None
+
+
+def sanitize(s):
+    s = s.replace("'", "")
+    s = s.replace('"', "")
+    s = s.replace("/", "")
+    s = s.replace("\\", "")
+    s = s.replace(";", "")
+    s = s.replace("=", "")
+    s = s.replace("*", "")
+    s = s.replace("%", "")
+    new_s = []
+    append = new_s.append
+    for i in s.split(" "):
+        if len(i.strip()) > 2:
+            append(i)
+    new_s = " ".join(new_s)
+    new_s = re.sub("\s+", " ", new_s)
+    return new_s
+
+
+def get_last_items():
+    """All items from the database are extracted as list of dictionaries."""
+    items = Proyecto.objects.all().order_by('-codigo')[:20]
+    pretty_items = []
+    for i in items:
+        pretty_items.append(prettify_item(i))
+    return pretty_items
+
+
+def prettify_item_small(item):
+    out = "<p><a href='/p/" + item.short_url
+    out += "' title='Permalink'>"
+    out += item.codigo
+    out += "</a>\n "
+    out += item.titulo
+    if item.pdf_url != '' and item.pdf_url is not None:
+        out += '\n <span class="glyphicon glyphicon-cloud-download"></span>'
+        out += ' <a href="' + item.pdf_url + '">PDF</a>'
+    else:
+        out += ' [sin PDF]'
+
+    if item.expediente != '' and item.expediente is not None:
+        out += '\n <span class="glyphicon glyphicon-link"></span>'
+        out += ' <a href="' + item.expediente + '">Expediente</a>'
+    else:
+        out += ' [sin Expediente]'
+
+    if item.seguimiento_page != '' and item.seguimiento_page is not None:
+        out += '\n <span class="glyphicon glyphicon-link"></span>'
+        out += ' <a href="/p/' + item.short_url + \
+               '/seguimiento">Seguimiento</a>'
+    else:
+        out += '\n [sin Seguimiento]'
+    out += '</p>'
+    return out
