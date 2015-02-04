@@ -9,6 +9,7 @@ from django.test import Client
 from django.test import TestCase
 
 from pdl import views
+from pdl import utils
 from pdl.models import Proyecto
 from pdl.models import Slug
 from pdl.models import Seguimientos
@@ -128,13 +129,13 @@ class SimpleTest(TestCase):
                    "Yonhy</a>"
         congresistas = "Dammert Ego Aguirre, Manuel Enrique Ernesto; " \
                        "Lescano Ancieta, Yonhy"
-        result = views.hiperlink_congre(congresistas)
+        result = utils.hiperlink_congre(congresistas)
         self.assertEqual(expected, result)
 
     def test_convert_name_to_slug(self):
         name = 'Eguren Neuenschwander, Juan Carlos'
         expected = 'eguren_neuenschwander_juan/'
-        result = views.convert_name_to_slug(name)
+        result = utils.convert_name_to_slug(name)
         self.assertEqual(expected, result)
 
     def test_proyecto_view(self):
