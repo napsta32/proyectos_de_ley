@@ -5,6 +5,7 @@ import arrow
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
 from pdl.models import Expedientes
+from pdl.utils import convert_string_to_time
 
 
 def get_proyecto_from_short_url(short_url):
@@ -20,7 +21,8 @@ def get_proyecto_from_short_url(short_url):
         iniciativas = iniciativas.replace("}", "")
         item.iniciativas_agrupadas = iniciativas.split(",")
     item.congresistas_with_links = hiperlink_congre(item.congresistas)
-    item.fecha_presentacion = arrow.get(item.fecha_presentacion).format('DD MMMM, YYYY', locale='es_es')
+    item.fecha_presentacion = convert_string_to_time(item.fecha_presentacion)
+    item.fecha_presentacion_human = arrow.get(item.fecha_presentacion).format('DD MMMM, YYYY', locale='es_es')
     item.numero_congresistas = len(item.congresistas.split(";"))
     return item
 
