@@ -35,7 +35,7 @@ def index(request):
             if form.cleaned_data['comision'].strip() != '':
                 comision = form.cleaned_data['comision']
                 if comision.lower() == 'ciencia':
-                    comision = 'Ciencia, Innovación y Tecnología'
+                    comision = 'Ciencia'
                 queryset = Seguimientos.objects.order_by('proyecto_id', '-fecha')
 
                 proyects_found = []
