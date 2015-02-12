@@ -12,6 +12,7 @@ def index(request):
     if request.method == 'GET':
         form = forms.SearchAdvancedForm(request.GET)
         if form.is_valid():
+            print(form.cleaned_data)
             if form.cleaned_data['date_from'] is not None:
                 date_from = form.cleaned_data['date_from']
                 date_to = form.cleaned_data['date_to']
@@ -31,7 +32,7 @@ def index(request):
                     "date_to": convert_date_to_string(date_to),
                 }
                 )
-            if form.cleaned_data['comision'] is not None:
+            if form.cleaned_data['comision'].strip() != '':
                 comision = form.cleaned_data['comision']
                 if comision.lower() == 'ciencia':
                     comision = 'Ciencia, Innovación y Tecnología'
@@ -56,8 +57,11 @@ def index(request):
                     "last_page": obj['last_page'],
                     "current": obj['current'],
                     "form": form,
-                }
-                )
+                })
+
+            return render(request, "search_advanced/index.html", {
+                "form": form,
+            })
 
         else:
             return render(request, "search_advanced/index.html", {
