@@ -31,7 +31,7 @@ def index(request):
                     "date_to": convert_date_to_string(date_to),
                 }
                 )
-            if 'comision' in form.cleaned_data:
+            if form.cleaned_data['comision'] is not None:
                 comision = form.cleaned_data['comision']
                 if comision.lower() == 'ciencia':
                     comision = 'Ciencia, Innovación y Tecnología'
