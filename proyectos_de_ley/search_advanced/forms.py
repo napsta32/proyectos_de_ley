@@ -1,9 +1,6 @@
 from functools import partial
 
 from django import forms
-from django.core.exceptions import ValidationError
-
-from pdl.models import Proyecto
 
 
 DateInput1 = partial(forms.DateInput, {'class': 'datepicker form-control',
@@ -24,4 +21,8 @@ class SearchAdvancedForm(forms.Form):
         label="Fecha fin",
         required=False,
         error_messages={'invalid': 'Ingrese fecha válida'},
+    )
+    comision = forms.CharField(
+        label='Comisión',
+        required=False,
     )
