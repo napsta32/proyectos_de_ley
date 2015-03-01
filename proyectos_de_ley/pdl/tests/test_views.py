@@ -271,23 +271,8 @@ class SimpleTest(TestCase):
         self.assertEqual(302, response.status_code)
 
     def test_search2(self):
-        """Search attempt is redirected to index."""
+        """Search attempt returns page with no result."""
         query = "'*;/"
         c = Client()
         response = c.get('/search/?q=' + query)
-        self.assertEqual(302, response.status_code)
-
-    def test_search3(self):
-        query = "propone"
-        c = Client()
-        response = c.get('/search/?q=' + query)
         self.assertEqual(200, response.status_code)
-
-        # save item to test database
-        item = self.dummy_items[0]
-        b = Proyecto(**item)
-        b.save()
-        response = c.get('/search/?q=' + query)
-        self.assertTrue(b'Propone establecer los lineamientos para la' in
-                        response.content
-                        )

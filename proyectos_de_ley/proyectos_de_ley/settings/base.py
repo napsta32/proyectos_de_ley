@@ -33,11 +33,14 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+
+    'haystack',
+    'rest_framework',
+
     'pdl',
     'seguimientos',
     'stats',
     'search_advanced',
-    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,4 +108,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
+}
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack',
+    },
 }
