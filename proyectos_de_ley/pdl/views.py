@@ -73,6 +73,9 @@ def about(request):
 
 @csrf_exempt
 def search(request):
+    if 'q' not in request.GET:
+        return redirect('/')
+
     query = request.GET['q']
     form = SimpleSearchForm(request.GET)
     all_items = form.search()

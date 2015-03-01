@@ -10,7 +10,7 @@ stats:
 
 coverage:
 	coverage run --source proyectos_de_ley proyectos_de_ley/manage.py test -v 2 pdl search_advanced \
-	    seguimientos stats --settings=proyectos_de_ley.settings.base
+	    seguimientos stats --settings=proyectos_de_ley.settings.testing
 	coverage report -m
 	coverage html
 

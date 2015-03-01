@@ -3,8 +3,11 @@ language: python
 python:
     - "3.3"
 
+services:
+    - elasticsearch
+
 install: pip install -r requirements/dev.txt 
 
-script: coverage run --source proyectos_de_ley proyectos_de_ley/manage.py test -v 2 pdl search_advanced seguimientos stats --settings=proyectos_de_ley.settings.base
+script: coverage run --source proyectos_de_ley proyectos_de_ley/manage.py test -v 2 pdl search_advanced seguimientos stats --settings=proyectos_de_ley.settings.testing
 
 after_success: coveralls

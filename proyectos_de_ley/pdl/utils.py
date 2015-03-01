@@ -6,6 +6,8 @@ from functools import reduce
 from itertools import chain
 
 import arrow
+
+from django.conf import settings
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
@@ -163,7 +165,11 @@ def do_pagination(request, all_items, search=False):
         if search is False:
             pretty_items.append(prettify_item(i))
         else:
-            pretty_items.append(prettify_item_small(i))
+            if settings.TESTING:
+                print(i.object)
+                pretty_items.append(prettify_item_small(i))
+            else:
+                pretty_items.append(prettify_item_small(i.object))
 
     if cur > 20:
         first_half = range(cur - 10, cur)
@@ -276,7 +282,6 @@ def get_last_items():
 
 
 def prettify_item_small(item):
-    item = item.object
     out = "<p><a href='/p/" + item.short_url
     out += "' title='Permalink'>"
     out += item.codigo

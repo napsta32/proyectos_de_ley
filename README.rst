@@ -32,6 +32,9 @@ del folder que contiene el proyecto de Django::
 
     $ python yourapp/manage.py runserver --settings=yourapp.settings.local
 
+Recastind DateField as DateTimeFiel::
+
+    alter table pdl_proyecto alter column fecha_presentacion TYPE timestamp using fecha_presentacion::timestamp;
 
 Obteniendo información
 ----------------------
