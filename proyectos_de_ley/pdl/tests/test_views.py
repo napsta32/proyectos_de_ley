@@ -276,18 +276,3 @@ class SimpleTest(TestCase):
         c = Client()
         response = c.get('/search/?q=' + query)
         self.assertEqual(200, response.status_code)
-
-    def test_search3(self):
-        query = "propone lineamientos"
-        c = Client()
-        response = c.get('/search/?q=' + query)
-        self.assertEqual(200, response.status_code)
-
-        # save item to test database
-        item = self.dummy_items[0]
-        b = Proyecto(**item)
-        b.save()
-        response = c.get('/search/?q=' + query)
-        self.assertTrue(b'Propone establecer los lineamientos para la' in
-                        response.content
-                        )

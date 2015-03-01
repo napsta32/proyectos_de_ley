@@ -166,7 +166,6 @@ def do_pagination(request, all_items, search=False):
             pretty_items.append(prettify_item(i))
         else:
             if settings.TESTING:
-                print(i.object)
                 pretty_items.append(prettify_item_small(i))
             else:
                 pretty_items.append(prettify_item_small(i.object))
