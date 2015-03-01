@@ -132,13 +132,15 @@ def convert_name_to_slug(name):
         return slug + "/"
 
 
-def do_pagination(request, all_items, search=False):
+def do_pagination(request, all_items, search=False, advanced_search=None):
     """
     :param request: contains the current page requested by user
     :param all_items:
     :param search: if search is False items will be prettified in long form.
            if search is True then items will be prettified as small items
            for search results.
+    :param advanced_search: True or None to point out that we come from the
+           advanced search page.
     :return: dict containing paginated items and pagination bar
     """
     if search is False:
@@ -166,6 +168,8 @@ def do_pagination(request, all_items, search=False):
             pretty_items.append(prettify_item(i))
         else:
             if settings.TESTING:
+                pretty_items.append(prettify_item_small(i))
+            elif advanced_search is True:
                 pretty_items.append(prettify_item_small(i))
             else:
                 pretty_items.append(prettify_item_small(i.object))

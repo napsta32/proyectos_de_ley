@@ -12,13 +12,12 @@ def index(request):
     if request.method == 'GET':
         form = forms.SearchAdvancedForm(request.GET)
         if form.is_valid():
-            print(form.cleaned_data)
             if form.cleaned_data['date_from'] is not None:
                 date_from = form.cleaned_data['date_from']
                 date_to = form.cleaned_data['date_to']
                 queryset = Proyecto.objects.filter(fecha_presentacion__range=[date_from, date_to]).order_by('-codigo')
 
-                obj = do_pagination(request, queryset, search=True)
+                obj = do_pagination(request, queryset, search=True, advanced_search=True)
                 return render(request, "search_advanced/index.html", {
                     "items": obj['items'],
                     "pretty_items": obj['pretty_items'],
