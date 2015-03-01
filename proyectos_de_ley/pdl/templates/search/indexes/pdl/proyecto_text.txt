@@ -2,7 +2,7 @@
 {{ object.numero_proyecto }}
 {{ object.short_url }}
 {{ object.congresistas }}
-{{ object.fecha_presentacion }}
+{{ object.titulo }}
 {{ object.titulo }}
 {{ object.proponente }}
 {{ object.grupo_parlamentario }}

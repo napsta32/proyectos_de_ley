@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from pdl.models import Proyecto
+from pdl.forms import SimpleSearchForm
 from .utils import prettify_item
 from .utils import sanitize
 from .utils import find_in_db
@@ -72,33 +73,23 @@ def about(request):
 
 @csrf_exempt
 def search(request):
-    if 'q' in request.GET:
-        query = request.GET['q']
-        query = sanitize(query)
-        if query.strip() == '':
-            return redirect("/")
-        else:
-            results = find_in_db(query)
+    query = request.GET['q']
+    form = SimpleSearchForm(request.GET)
+    all_items = form.search()
+    obj = do_pagination(request, all_items, search=True)
 
-        if results == "No se encontraron resultados.":
-            return render(request, "pdl/search.html", {"results": results,
-                                                       "query": query})
-        else:
-            all_items = results
-            obj = do_pagination(request, all_items, search=True)
-            return render(request, "pdl/search.html", {
-                "items": obj['items'],
-                "pretty_items": obj['pretty_items'],
-                "first_half": obj['first_half'],
-                "second_half": obj['second_half'],
-                "first_page": obj['first_page'],
-                "last_page": obj['last_page'],
-                "current": obj['current'],
-                "keywords": query.split(" "),
-                "query": query,
-                "pagination_keyword": query,
-            })
-    return redirect("/")
+    return render(request, "pdl/search.html", {
+        "items": obj['items'],
+        "pretty_items": obj['pretty_items'],
+        "first_half": obj['first_half'],
+        "second_half": obj['second_half'],
+        "first_page": obj['first_page'],
+        "last_page": obj['last_page'],
+        "current": obj['current'],
+        "keywords": query.split(" "),
+        "query": query,
+        "pagination_keyword": query,
+    })
 
 
 def congresista(request, congresista_slug):

@@ -14,3 +14,5 @@ coverage:
 	coverage report -m
 	coverage html
 
+rebuild_index:
+	python proyectos_de_ley/manage.py rebuild_index --noinput --settings=proyectos_de_ley.settings.local

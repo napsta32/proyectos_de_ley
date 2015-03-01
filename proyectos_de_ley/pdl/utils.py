@@ -276,6 +276,7 @@ def get_last_items():
 
 
 def prettify_item_small(item):
+    item = item.object
     out = "<p><a href='/p/" + item.short_url
     out += "' title='Permalink'>"
     out += item.codigo
