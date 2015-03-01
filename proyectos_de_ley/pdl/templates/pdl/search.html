@@ -7,8 +7,8 @@ Proyectos de ley emitidos por el Congreso de la República del Perú | About
 
 {% block content %}
 <div id="contenido" class="container">
-  {% if results == 'No se encontraron resultados.' %}
-    <h2>{{ results }}</h2>
+  {% if pretty_items|length < 1 %}
+    <h2>No se encontraron resultados.</h2>
   {% else %}
   <h1>Resultados de búsqueda:</h1>
     {% for i in pretty_items %}

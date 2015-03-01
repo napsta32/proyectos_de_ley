@@ -275,4 +275,4 @@ class SimpleTest(TestCase):
         query = "'*;/"
         c = Client()
         response = c.get('/search/?q=' + query)
-        self.assertEqual(200, response.status_code)
+        self.assertTrue('No se encontraron resultados' in str(response.content))
