@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.views.decorators.csrf import csrf_exempt
 
 from pdl.models import Proyecto
 from .utils import prettify_item
@@ -69,6 +70,7 @@ def about(request):
     return render(request, "pdl/about.html")
 
 
+@csrf_exempt
 def search(request):
     if 'q' in request.GET:
         query = request.GET['q']

@@ -1,0 +1,12 @@
+{{ object.codigo }}
+{{ object.numero_proyecto }}
+{{ object.short_url }}
+{{ object.congresistas }}
+{{ object.fecha_presentacion }}
+{{ object.titulo }}
+{{ object.proponente }}
+{{ object.grupo_parlamentario }}
+{{ object.iniciativas_agrupadas }}
+{{ object.nombre_comision }}
+{{ object.titulo_de_ley }}
+{{ object.numero_de_ley }}
