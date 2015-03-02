@@ -1,3 +1,4 @@
+import re
 import unicodedata
 
 from haystack import indexes
@@ -10,7 +11,9 @@ class ProyectoIndex(indexes.SearchIndex, indexes.Indexable):
     date = indexes.DateField(model_attr='fecha_presentacion', null=True)
 
     def prepare_text(self, obj):
-        data = [obj.codigo, obj.titulo]
+        codigo = obj.codigo
+        codigo_truncado = re.sub('^0+', '', codigo)
+        data = [codigo, codigo_truncado, obj.titulo]
         original = ' '.join(data)
         modified = unicodedata.normalize('NFD', original).encode('ascii', 'ignore')
         result = ' '.join([original, modified.decode(encoding='utf-8')])
