@@ -1,6 +1,10 @@
 History
 =======
 
+v2.0.0 (2015-xx-xx)
+~~~~~~~~~~~~~~~~~~~
+* Using haystack and elasticsearch.
+
 v1.7.0 (2015-02-04)
 ~~~~~~~~~~~~~~~~~~~
 * Humanized dates using ``arrow``.
