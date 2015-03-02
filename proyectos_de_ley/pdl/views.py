@@ -6,8 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 from pdl.models import Proyecto
 from pdl.forms import SimpleSearchForm
 from .utils import prettify_item
-from .utils import sanitize
-from .utils import find_in_db
 from .utils import do_pagination
 from .utils import find_slug_in_db
 from stats.models import Dispensed
