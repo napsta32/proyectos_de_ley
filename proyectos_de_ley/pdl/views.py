@@ -77,6 +77,9 @@ def search(request):
         return redirect('/')
 
     query = request.GET['q']
+    if query.strip() == '':
+        return redirect('/')
+
     form = SimpleSearchForm(request.GET)
     all_items = form.search()
     obj = do_pagination(request, all_items, search=True)
