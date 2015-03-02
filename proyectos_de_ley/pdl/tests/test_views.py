@@ -276,3 +276,9 @@ class SimpleTest(TestCase):
         c = Client()
         response = c.get('/search/?q=' + query)
         self.assertTrue('No se encontraron resultados' in str(response.content))
+
+    def test_search_empty_query(self):
+        query = " "
+        c = Client()
+        response = c.get('/search/?q=' + query)
+        self.assertEqual(302, response.status_code)
