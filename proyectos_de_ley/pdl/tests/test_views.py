@@ -214,30 +214,6 @@ class SimpleTest(TestCase):
         response = c.get('/congresista/dammert_ego_aguirre/?page=2')
         self.assertTrue(b'endless_page_link' in response.content)
 
-    def test_sanitize(self):
-        mystring = "'/\\*% a e "
-        expected = ''
-        result = views.sanitize(mystring)
-        self.assertEqual(expected, result)
-
-    def test_find_in_db(self):
-        # save item to test database
-        item = self.dummy_items[0]
-        b = Proyecto(**item)
-        b.save()
-
-        s = Seguimientos(fecha='2012-10-13', evento='Evento1 03774', proyecto_id=3763)
-        s.save()
-
-        # now get it as QuerySet object
-        items = views.find_in_db(query='03774')
-        result = items[0]
-        self.assertEqual('03774', result.codigo)
-
-        # find elements not in our database
-        result = views.find_in_db(query='037741111111111111111111111111111')
-        self.assertEqual("No se encontraron resultados.", result)
-
     def test_find_slug_in_db(self):
         item = self.dummy_items[0]
 

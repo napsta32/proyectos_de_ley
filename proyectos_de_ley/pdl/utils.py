@@ -200,49 +200,6 @@ def do_pagination(request, all_items, search=False, advanced_search=None):
     return obj
 
 
-def find_in_db(query):
-    """
-    Finds items according to user search.
-
-    :param query: user's keyword
-    :return: QuerySet object with items or string if no results were found.
-    """
-    keywords = query.strip().split(" ")
-    with Timer() as t:
-        proyecto_items = Proyecto.objects.filter(
-            reduce(lambda x, y: x | y, [Q(short_url__icontains=word) for word in keywords]) |
-            reduce(lambda x, y: x | y, [Q(codigo__icontains=word) for word in keywords]) |
-            reduce(lambda x, y: x | y, [Q(numero_proyecto__icontains=word) for word in keywords]) |
-            reduce(lambda x, y: x & y, [Q(titulo__icontains=word) for word in keywords]) |
-            reduce(lambda x, y: x & y, [Q(congresistas__icontains=word) for word in keywords]),
-            # reduce(lambda x, y: x | y, [Q(expediente__icontains=word) for word in keywords]) |
-            # Q(pdf_url__icontains=query) |
-            # Q(seguimiento_page__icontains=query),
-        ).order_by('-codigo')
-    # print("=> elasped lpop: %s s" % t.secs)
-
-    seguimientos = Seguimientos.objects.filter(
-        reduce(lambda x, y: x & y, [Q(evento__icontains=word) for word in keywords]),
-    )
-    seguimientos = set(seguimientos)
-
-    if seguimientos:
-        proyectos_id = [i.proyecto_id for i in seguimientos]
-        more_items = Proyecto.objects.filter(
-            reduce(lambda x, y: x | y, [Q(id__exact=id) for id in proyectos_id]),
-        )
-        items = sorted(chain.from_iterable([proyecto_items, more_items]), key=lambda instance: instance.codigo,
-                       reverse=True)
-    else:
-        items = proyecto_items
-
-    if len(items) > 0:
-        results = items
-    else:
-        results = "No se encontraron resultados."
-    return results
-
-
 def find_slug_in_db(congresista_slug):
     try:
         item = Slug.objects.get(slug=congresista_slug)
@@ -254,25 +211,6 @@ def find_slug_in_db(congresista_slug):
             return item.nombre
         except Slug.DoesNotExist:
             return None
-
-
-def sanitize(s):
-    s = s.replace("'", "")
-    s = s.replace('"', "")
-    s = s.replace("/", "")
-    s = s.replace("\\", "")
-    s = s.replace(";", "")
-    s = s.replace("=", "")
-    s = s.replace("*", "")
-    s = s.replace("%", "")
-    new_s = []
-    append = new_s.append
-    for i in s.split(" "):
-        if len(i.strip()) > 2:
-            append(i)
-    new_s = " ".join(new_s)
-    new_s = re.sub("\s+", " ", new_s)
-    return new_s
 
 
 def get_last_items():
