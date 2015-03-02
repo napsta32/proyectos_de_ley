@@ -3,7 +3,6 @@
 {{ object.short_url }}
 {{ object.congresistas }}
 {{ object.titulo }}
-{{ object.titulo }}
 {{ object.proponente }}
 {{ object.grupo_parlamentario }}
 {{ object.iniciativas_agrupadas }}
