@@ -6,6 +6,8 @@ v2.0.0 (2015-xx-xx)
 * Using haystack and elasticsearch.
 * Indexing ascii and accented chars for search fields by overriding
   the ``prepare_text`` function in Haystack.
+* Stats: chart "by commission" has links on the bars. Click them to see projects
+  stuck in each commission'
 
 v1.7.0 (2015-02-04)
 ~~~~~~~~~~~~~~~~~~~
