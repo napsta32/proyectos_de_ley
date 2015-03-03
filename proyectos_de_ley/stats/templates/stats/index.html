@@ -68,7 +68,10 @@ $(function () {
             type: 'bar'
         },
         title: {
-            text: 'Proyectos en comisiones'
+            text: 'Proyectos actualmente en comisiones'
+        },
+        subtitle: {
+            text: 'Hacer click sobre las barras para ver los proyectos'
         },
         xAxis: {
             categories: {{ comision_names|safe }}
@@ -83,6 +86,18 @@ $(function () {
         },
          tooltip: {
             pointFormat: '{point.y} proyectos'
+        },
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function () {
+                            location.href = '/search-advanced/?comision=' + this.category;
+                        }
+                    }
+                }
+            }
         },
         series: [
         {
