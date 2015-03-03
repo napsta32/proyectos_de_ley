@@ -46,7 +46,7 @@ def index(request):
                             proyects_found.append(Proyecto.objects.get(pk=i.proyecto_id))
                     this_proyecto_id = i.proyecto_id
 
-                obj = do_pagination(request, proyects_found, search=True)
+                obj = do_pagination(request, proyects_found, search=True, advanced_search=True)
                 return render(request, "search_advanced/index.html", {
                     "items": obj['items'],
                     "pretty_items": obj['pretty_items'],
