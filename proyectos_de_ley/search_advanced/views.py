@@ -35,7 +35,8 @@ def index(request):
                 comision = form.cleaned_data['comision']
                 if comision.lower() == 'ciencia':
                     comision = 'Ciencia'
-                queryset = Seguimientos.objects.order_by('proyecto_id', '-fecha')
+                queryset = Seguimientos.objects.order_by('-proyecto_id')
+                proyectos = Proyecto.objects.order_by('-codigo')
 
                 proyects_found = []
 
@@ -43,7 +44,10 @@ def index(request):
                 for i in queryset:
                     if i.proyecto_id != this_proyecto_id:
                         if comision in i.evento:
-                            proyects_found.append(Proyecto.objects.get(pk=i.proyecto_id))
+                            for proyecto in proyectos:
+                                if i.proyecto_id == proyecto.id:
+                                    proyects_found.append(proyecto)
+                                    continue
                     this_proyecto_id = i.proyecto_id
 
                 obj = do_pagination(request, proyects_found, search=True, advanced_search=True)
