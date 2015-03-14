@@ -143,7 +143,7 @@ def do_pagination(request, all_items, search=False, advanced_search=None):
            advanced search page.
     :return: dict containing paginated items and pagination bar
     """
-    if request.GET['comision'] != '':
+    if 'comision' in request.GET and request.GET['comision'] != '':
         comision = request.GET['comision']
     else:
         comision = False
