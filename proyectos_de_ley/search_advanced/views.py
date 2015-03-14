@@ -60,6 +60,7 @@ def index(request):
                     "last_page": obj['last_page'],
                     "current": obj['current'],
                     "form": form,
+                    "comision": obj['comision'],
                 })
 
             return render(request, "search_advanced/index.html", {

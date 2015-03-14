@@ -12,7 +12,6 @@ from pdl import views
 from pdl import utils
 from pdl.models import Proyecto
 from pdl.models import Slug
-from pdl.models import Seguimientos
 from stats.models import Dispensed
 
 

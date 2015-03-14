@@ -22,7 +22,35 @@ class SearchAdvancedForm(forms.Form):
         required=False,
         error_messages={'invalid': 'Ingrese fecha válida'},
     )
-    comision = forms.CharField(
+    comision = forms.ChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
         label='Comisión',
         required=False,
+        choices=[
+            ('---', '---'),
+            ('Agraria', 'Agraria'),
+            ('Ciencia', 'Ciencia'),
+            ('Comercio Exterior', 'Comercio Exterior'),
+            ('Constitución', 'Constitución'),
+            ('Cultura', 'Cultura'),
+            ('Defensa del Consumidor', 'Defensa del Consumidor'),
+            ('Defensa Nacional', 'Defensa Nacional'),
+            ('Descentralización', 'Descentralización'),
+            ('Economía', 'Economía'),
+            ('Educación', 'Educación'),
+            ('Energía', 'Energía'),
+            ('Fiscalización', 'Fiscalización'),
+            ('Inclusión Social', 'Inclusión Social'),
+            ('Inteligencia', 'Inteligencia'),
+            ('Justicia', 'Justicia'),
+            ('Mujer', 'Mujer'),
+            ('Presupuesto', 'Presupuesto'),
+            ('Producción Micro', 'Producción Micro'),
+            ('Pueblos Andinos', 'Pueblos Andinos'),
+            ('Relaciones Exteriores', 'Relaciones Exteriores'),
+            ('Salud', 'Salud'),
+            ('Trabajo', 'Trabajo'),
+            ('Transportes', 'Transportes'),
+            ('Vivienda', 'Vivienda'),
+        ]
     )

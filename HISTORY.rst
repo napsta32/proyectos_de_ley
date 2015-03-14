@@ -8,6 +8,7 @@ v2.0.0 (2015-xx-xx)
   the ``prepare_text`` function in Haystack.
 * Stats: chart "by commission" has links on the bars. Click them to see projects
   stuck in each commission'
+* Advanced search: now we can search projects by comission.
 
 v1.7.0 (2015-02-04)
 ~~~~~~~~~~~~~~~~~~~

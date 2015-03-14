@@ -143,6 +143,11 @@ def do_pagination(request, all_items, search=False, advanced_search=None):
            advanced search page.
     :return: dict containing paginated items and pagination bar
     """
+    if 'comision' in request.GET and request.GET['comision'] != '':
+        comision = request.GET['comision']
+    else:
+        comision = False
+
     if search is False:
         paginator = Paginator(all_items, 20)
     else:
@@ -196,6 +201,7 @@ def do_pagination(request, all_items, search=False, advanced_search=None):
         "first_page": paginator.page_range[0],
         "last_page": paginator.page_range[-1],
         "current": cur,
+        "comision": comision,
     }
     return obj
 
