@@ -23,10 +23,11 @@ class SearchAdvancedForm(forms.Form):
         error_messages={'invalid': 'Ingrese fecha válida'},
     )
     comision = forms.ChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
         label='Comisión',
         required=False,
         choices=[
-            ('', ''),
+            ('---', '---'),
             ('Agraria', 'Agraria'),
             ('Ciencia', 'Ciencia'),
             ('Comercio Exterior', 'Comercio Exterior'),
