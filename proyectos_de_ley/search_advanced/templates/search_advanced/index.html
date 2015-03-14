@@ -28,12 +28,12 @@
   {% endif %}
 
 
+<form method="get" action="/search-advanced/" class="form-inline" role="form">
   <div class="row">
     <div class="col-lg-3 col-md-4 col-sm-3">
       <h4>Por fecha de presentación</h4>
     </div>
     <div class="col-lg-9 col-md-7 col-xs-6">
-      <form method="get" action="/search-advanced/" class="form-inline" role="form">
         {{ form.non_field_errors }}
 
         {% if form.date_from.errors %}
@@ -71,10 +71,49 @@
               Buscar
           </button>
         </div>
-      </form>
     </div><!-- col -->
-
   </div><!-- row -->
+
+
+  <div class="row">
+    <div class="col-lg-3 col-md-4 col-sm-3">
+      <h4>Por comisiones</h4>
+    </div>
+
+    <div class="col-lg-9 col-md-7 col-xs-6">
+      {{ form.comision }} 
+      <div class="form-group">
+        <select class="form-control">
+          <option>------</option>
+          <option>Agraria</option>
+          <option>Ciencia</option>
+          <option>Comercio Exterior</option>
+          <option>Constitución</option>
+          <option>Cultura</option>
+          <option>Defensa del Consumidor</option>
+          <option>Defensa Nacional</option>
+          <option>Descentralización</option>
+          <option>Economía</option>
+          <option>Educación</option>
+          <option>Energía</option>
+          <option>Fiscalización</option>
+          <option>Inclusión Social</option>
+          <option>Inteligencia</option>
+          <option>Justicia</option>
+          <option>Mujer</option>
+          <option>Presupuesto</option>
+          <option>Producción Micro</option>
+          <option>Pueblos Andinos</option>
+          <option>Relaciones Exteriores</option>
+          <option>Salud</option>
+          <option>Trabajo</option>
+          <option>Transportes</option>
+          <option>Vivienda</option>
+        </select>
+      </div>
+    </div><!-- col -->
+  </div><!-- row -->
+</form>
 
 
 </div>

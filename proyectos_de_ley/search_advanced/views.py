@@ -12,6 +12,7 @@ def index(request):
     if request.method == 'GET':
         form = forms.SearchAdvancedForm(request.GET)
         if form.is_valid():
+            print(form.cleaned_data)
             if form.cleaned_data['date_from'] is not None:
                 date_from = form.cleaned_data['date_from']
                 date_to = form.cleaned_data['date_to']
