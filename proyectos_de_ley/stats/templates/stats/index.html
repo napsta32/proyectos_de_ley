@@ -157,32 +157,32 @@ $(function () {
 <script>
   var g = new JustGage({
     id: "g1",
-    value: {{ percentage_without_pdf_url }},
-    label: "{{ without_pdf_url|intcomma }} proyectos",
-    min: 0,
-    max: 100,
-    levelColorsGradient: false,
-    title: "% sin PDF link"
-  });
-
-  var g = new JustGage({
-    id: "g2",
-    value: {{ percentage_without_iniciativas }},
-    label: "{{ without_iniciativas|intcomma }} proyectos",
-    min: 0,
-    max: 100,
-    levelColorsGradient: false,
-    title: "% proyectos sin fusionar"
-  });
-
-  var g = new JustGage({
-    id: "g3",
     value: {{ percentage_without_seguimientos }},
     label: "{{ without_seguimientos|intcomma }} proyectos",
     min: 0,
     max: 100,
     levelColorsGradient: false,
     title: "% sin tramitar"
+  });
+
+  var g = new JustGage({
+    id: "g2",
+    value: {{ percentage_total_in_commissions }},
+    label: "{{ total_in_commissions|intcomma }} proyectos",
+    min: 0,
+    max: 100,
+    levelColorsGradient: false,
+    title: "% en comisión \nsin dictamen"
+  });
+
+  var g = new JustGage({
+    id: "g3",
+    value: {{ percentage_without_iniciativas }},
+    label: "{{ without_iniciativas|intcomma }} proyectos",
+    min: 0,
+    max: 100,
+    levelColorsGradient: false,
+    title: "% proyectos sin fusionar"
   });
 
   var g = new JustGage({

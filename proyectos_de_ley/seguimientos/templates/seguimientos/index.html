@@ -179,7 +179,8 @@
 
 
 {% block additional_javascript %}
-<script type="text/javascript" src="http://cdn.knightlab.com/libs/timeline/latest/js/storyjs-embed.js"></script>
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'js/storyjs-embed.js' %}"></script>
 
 <script>
 $.getJSON("/api/iniciativas/{{ item.short_url }}", function(data) {

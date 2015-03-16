@@ -6,6 +6,23 @@ from stats.models import ComisionCount
 from stats.models import Dispensed
 
 
+def dame_sin_tramitar(numero_de_proyectos):
+    with_seguimientos = Seguimientos.objects.values_list('proyecto_id',
+                                                         flat=True).distinct().count()
+    without_seguimientos = numero_de_proyectos - with_seguimientos
+    percentage_without_seguimientos = round(
+        (without_seguimientos * 100) / numero_de_proyectos, 1)
+    return percentage_without_seguimientos, without_seguimientos
+
+
+def dame_sin_dictamen(queryset, numero_de_proyectos):
+    count = 0
+    for i in queryset.values():
+        count += i['count']
+    percentage = round((count * 100) / numero_de_proyectos, 1)
+    return percentage, count
+
+
 def index(request):
     numero_de_proyectos = Proyecto.objects.all().count()
 
@@ -23,10 +40,9 @@ def index(request):
     percentage_without_iniciativas = round(
         (without_iniciativas * 100) / numero_de_proyectos, 1)
 
-    with_seguimientos = Seguimientos.objects.values_list('proyecto_id', flat=True).distinct().count()
-    without_seguimientos = numero_de_proyectos - with_seguimientos
-    percentage_without_seguimientos = round(
-        (without_seguimientos * 100) / numero_de_proyectos, 1)
+    # Sin Tramitar
+    percentage_without_seguimientos, without_seguimientos = dame_sin_tramitar(
+        numero_de_proyectos)
 
     are_law = Proyecto.objects.exclude(
         titulo_de_ley__isnull=True).exclude(
@@ -42,9 +58,11 @@ def index(request):
     for i in queryset:
         comision_names_str += str(i.comision) + "', '"
         comision_count_str += str(i.count) + ", "
-
     comision_names_str += "']"
     comision_count_str += "]"
+
+    # sin dictamen?
+    percentage_total_in_commissions, total_in_commissions = dame_sin_dictamen(queryset, numero_de_proyectos)
 
     # Projects dispensed of 2nd round of votes
     res = Dispensed.objects.all()[0]
@@ -57,16 +75,18 @@ def index(request):
                            "'Dispensados por acuerdo del pleno', " \
                            "'Dispensados por junta portavoces', " \
                            "'Otros proyectos dispensados']"
-    print(dispensed_categories)
 
     return render(request, "stats/index.html",
-                  {'numero_de_proyectos': numero_de_proyectos,
+                  {'percentage_without_seguimientos': percentage_without_seguimientos,
+                   'percentage_total_in_commissions': percentage_total_in_commissions,
+                   'total_in_commissions': total_in_commissions,
+
+                   'numero_de_proyectos': numero_de_proyectos,
                    'without_pdf_url': without_pdf_url,
                    'percentage_without_pdf_url': percentage_without_pdf_url,
                    'without_iniciativas': without_iniciativas,
                    'percentage_without_iniciativas': percentage_without_iniciativas,
                    'without_seguimientos': without_seguimientos,
-                   'percentage_without_seguimientos': percentage_without_seguimientos,
                    'are_not_law': are_not_law,
                    'percentage_are_not_law': percentage_are_not_law,
                    'comision_names': comision_names_str,
