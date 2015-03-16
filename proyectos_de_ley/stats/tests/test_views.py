@@ -5,6 +5,7 @@ from django.test import TestCase, Client
 from pdl.models import Proyecto
 from stats.models import Dispensed
 from stats.models import ComisionCount
+from stats import views
 
 
 class TestStatsViews(TestCase):
@@ -30,3 +31,9 @@ class TestStatsViews(TestCase):
         c = Client()
         response = c.get('/stats/')
         self.assertEqual(200, response.status_code)
+
+    def test_dame_sin_tramitar(self):
+        numero_de_proyectos = Proyecto.objects.all().count()
+        expected = (100.0, 1)
+        result = views.dame_sin_tramitar(numero_de_proyectos)
+        self.assertEqual(expected, result)

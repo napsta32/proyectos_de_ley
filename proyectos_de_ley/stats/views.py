@@ -6,6 +6,15 @@ from stats.models import ComisionCount
 from stats.models import Dispensed
 
 
+def dame_sin_tramitar(numero_de_proyectos):
+    with_seguimientos = Seguimientos.objects.values_list('proyecto_id',
+                                                         flat=True).distinct().count()
+    without_seguimientos = numero_de_proyectos - with_seguimientos
+    percentage_without_seguimientos = round(
+        (without_seguimientos * 100) / numero_de_proyectos, 1)
+    return percentage_without_seguimientos, without_seguimientos
+
+
 def index(request):
     numero_de_proyectos = Proyecto.objects.all().count()
 
@@ -23,10 +32,9 @@ def index(request):
     percentage_without_iniciativas = round(
         (without_iniciativas * 100) / numero_de_proyectos, 1)
 
-    with_seguimientos = Seguimientos.objects.values_list('proyecto_id', flat=True).distinct().count()
-    without_seguimientos = numero_de_proyectos - with_seguimientos
-    percentage_without_seguimientos = round(
-        (without_seguimientos * 100) / numero_de_proyectos, 1)
+    # Sin Tramitar
+    percentage_without_seguimientos, without_seguimientos = dame_sin_tramitar(
+        numero_de_proyectos)
 
     are_law = Proyecto.objects.exclude(
         titulo_de_ley__isnull=True).exclude(

@@ -157,6 +157,16 @@ $(function () {
 <script>
   var g = new JustGage({
     id: "g1",
+    value: {{ percentage_without_seguimientos }},
+    label: "{{ without_seguimientos|intcomma }} proyectos",
+    min: 0,
+    max: 100,
+    levelColorsGradient: false,
+    title: "% sin tramitar"
+  });
+
+  var g = new JustGage({
+    id: "g3",
     value: {{ percentage_without_pdf_url }},
     label: "{{ without_pdf_url|intcomma }} proyectos",
     min: 0,
@@ -173,16 +183,6 @@ $(function () {
     max: 100,
     levelColorsGradient: false,
     title: "% proyectos sin fusionar"
-  });
-
-  var g = new JustGage({
-    id: "g3",
-    value: {{ percentage_without_seguimientos }},
-    label: "{{ without_seguimientos|intcomma }} proyectos",
-    min: 0,
-    max: 100,
-    levelColorsGradient: false,
-    title: "% sin tramitar"
   });
 
   var g = new JustGage({
