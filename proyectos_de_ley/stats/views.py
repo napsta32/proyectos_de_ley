@@ -15,11 +15,12 @@ def dame_sin_tramitar(numero_de_proyectos):
     return percentage_without_seguimientos, without_seguimientos
 
 
-def dame_sin_dictamen(queryset):
+def dame_sin_dictamen(queryset, numero_de_proyectos):
     count = 0
     for i in queryset.values():
         count += i['count']
-    return count
+    percentage = round((count * 100) / numero_de_proyectos, 1)
+    return percentage, count
 
 
 def index(request):
@@ -61,7 +62,7 @@ def index(request):
     comision_count_str += "]"
 
     # sin dictamen?
-    total_in_commissions = dame_sin_dictamen(queryset)
+    percentage_total_in_commissions, total_in_commissions = dame_sin_dictamen(queryset, numero_de_proyectos)
 
     # Projects dispensed of 2nd round of votes
     res = Dispensed.objects.all()[0]
@@ -77,6 +78,7 @@ def index(request):
 
     return render(request, "stats/index.html",
                   {'percentage_without_seguimientos': percentage_without_seguimientos,
+                   'percentage_total_in_commissions': percentage_total_in_commissions,
                    'total_in_commissions': total_in_commissions,
 
                    'numero_de_proyectos': numero_de_proyectos,
