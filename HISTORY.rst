@@ -1,7 +1,7 @@
 History
 =======
 
-v2.0.0 (2015-xx-xx)
+v2.0.0 (2015-03-30)
 ~~~~~~~~~~~~~~~~~~~
 * Using haystack and elasticsearch.
 * Indexing ascii and accented chars for search fields by overriding
@@ -9,6 +9,7 @@ v2.0.0 (2015-xx-xx)
 * Stats: chart "by commission" has links on the bars. Click them to see projects
   stuck in each commission'
 * Advanced search: now we can search projects by comission.
+* Update stats.
 
 v1.7.0 (2015-02-04)
 ~~~~~~~~~~~~~~~~~~~
