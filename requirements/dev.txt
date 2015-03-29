@@ -21,3 +21,4 @@ pyflakes==0.8.1
 python-slugify==0.0.9
 requests==2.4.0
 short-url==1.2.1
+django-debug-toolbar==1.2.2
