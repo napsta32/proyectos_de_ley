@@ -12,6 +12,7 @@ class SimpleSearchForm(HighlightedSearchForm):
             return self.no_query_found()
 
         sqs = self.searchqueryset.auto_query(self.cleaned_data['q']).order_by('-date')
+        print(">>>>>>cleaned data", sqs)
 
         if self.load_all:
             sqs = sqs.load_all()
