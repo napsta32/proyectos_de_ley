@@ -1,3 +1,5 @@
+import unicodedata
+
 from haystack.forms import HighlightedSearchForm
 
 
@@ -11,7 +13,8 @@ class SimpleSearchForm(HighlightedSearchForm):
         if not self.cleaned_data.get('q'):
             return self.no_query_found()
 
-        sqs = self.searchqueryset.auto_query(self.cleaned_data['q']).order_by('-codigo')
+        query = unicodedata.normalize('NFD', self.cleaned_data['q']).encode('ascii', 'ignore').decode(encoding='utf-8')
+        sqs = self.searchqueryset.auto_query(query).order_by('-codigo')
 
         if self.load_all:
             sqs = sqs.load_all()
