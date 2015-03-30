@@ -90,7 +90,7 @@ TEMPLATE_DIRS = (
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "..", "pdl", "static"),
 )
 
 # needed for building sitemaps
