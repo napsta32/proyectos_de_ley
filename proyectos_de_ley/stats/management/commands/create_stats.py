@@ -86,12 +86,12 @@ class Command(BaseCommand):
         queryset = Seguimientos.objects.all().order_by('proyecto_id').values('proyecto_id', 'evento')
         proyect_ids = self.get_proyect_ids(queryset)
 
-        proyects_with_dictamen_but_not_voted = []
+        projects = []
         for proyecto_id in proyect_ids:
             if self.has_dictamen(proyecto_id, queryset) is True and \
                     self.is_voted(proyecto_id, queryset) is False:
-                proyects_with_dictamen_but_not_voted.append(WithDictamenButNotVoted(proyect_id=proyecto_id))
-        WithDictamenButNotVoted.objects.bulk_create(proyects_with_dictamen_but_not_voted)
+                projects.append(WithDictamenButNotVoted(proyect_id=proyecto_id))
+        WithDictamenButNotVoted.objects.bulk_create(projects)
 
     def get_proyect_ids(self, queryset):
         proyect_ids = set()
