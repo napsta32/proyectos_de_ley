@@ -9,6 +9,7 @@ import re
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
+from django.conf import settings
 
 from pdl.models import Seguimientos
 from stats.models import ComisionCount
@@ -86,8 +87,9 @@ class Command(BaseCommand):
         queryset = Seguimientos.objects.all().order_by('proyecto_id').values('proyecto_id', 'evento')
         proyect_ids = self.get_proyect_ids(queryset)
 
-        cursor = connection.cursor()
-        cursor.execute("TRUNCATE TABLE stats_withdictamenbutnotvoted RESTART IDENTITY")
+        if not settings.TESTING:
+            cursor = connection.cursor()
+            cursor.execute("TRUNCATE TABLE stats_withdictamenbutnotvoted RESTART IDENTITY")
 
         projects = []
         for proyecto_id in proyect_ids:
