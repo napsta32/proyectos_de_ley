@@ -5,6 +5,8 @@ v2.0.1 (2015-03-31)
 ~~~~~~~~~~~~~~~~~~~
 * Fixed with of stats counter.
 * Better search engine. Now query words will match accented and unaccented words.
+* Stats: "en comisión sin dictamen"
+* Stats: "sin tramitar"
 
 v2.0.0 (2015-03-30)
 ~~~~~~~~~~~~~~~~~~~
