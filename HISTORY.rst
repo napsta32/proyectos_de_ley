@@ -1,6 +1,10 @@
 History
 =======
 
+v2.x.x (2015-04-14)
+~~~~~~~~~~~~~~~~~~~
+* Stats: "proyectos con dictamen pero sin votación"
+
 v2.0.1 (2015-03-31)
 ~~~~~~~~~~~~~~~~~~~
 * Fixed with of stats counter.
