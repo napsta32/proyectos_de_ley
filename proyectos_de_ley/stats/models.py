@@ -30,3 +30,9 @@ class Dispensed(models.Model):
     dispensed_others = models.IntegerField(
         help_text="All other projects dispensed, and those with no specific reason.",
     )
+
+
+class WithDictamenButNotVoted(models.Model):
+    proyect_id = models.IntegerField(
+        help_text="Project id as in table pdl_proyecto",
+    )

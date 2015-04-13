@@ -85,8 +85,11 @@ class Command(BaseCommand):
         queryset = Seguimientos.objects.all().order_by('proyecto_id').values('proyecto_id', 'evento')
         proyect_ids = self.get_proyect_ids(queryset)
 
-        print(self.has_dictamen(2105, queryset))
-        print(self.is_voted(2105, queryset))
+        proyects_with_dictamen_but_not_voted = []
+        for proyecto_id in proyect_ids:
+            if self.has_dictamen(proyecto_id, queryset) is True and \
+                    self.is_voted(proyecto_id, queryset) is False:
+                proyects_with_dictamen_but_not_voted.append(proyecto_id)
 
     def get_proyect_ids(self, queryset):
         proyect_ids = set()
@@ -95,19 +98,22 @@ class Command(BaseCommand):
         return proyect_ids
 
     def is_voted(self, proyect_id, queryset):
-        events = []
-        for i in queryset:
-            if i['proyecto_id'] == proyect_id:
-                events.append(i['evento'])
+        events = self.get_events(proyect_id, queryset)
         for i in events:
             if 'publicado' in i.lower() or 'promulgado' in i.lower() or 'votación' in i.lower():
                 return True
+        return False
 
     def has_dictamen(self, proyect_id, queryset):
+        events = self.get_events(proyect_id, queryset)
+        for i in events:
+            if 'dictamen' in i.lower():
+                return True
+        return False
+
+    def get_events(self, proyect_id, queryset):
         events = []
         for i in queryset:
             if i['proyecto_id'] == proyect_id:
                 events.append(i['evento'])
-        for i in events:
-            if 'dictamen' in i.lower():
-                return True
+        return events
