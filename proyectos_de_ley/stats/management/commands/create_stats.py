@@ -5,10 +5,10 @@ for `/stats` page. These stat values go to tables for this app.
 * projects that are being accumulated in each `comisión`.
 * projects that were aproved without 2nd round of votes.
 """
-import datetime
 import re
 
 from django.core.management.base import BaseCommand, CommandError
+from django.db import connection
 
 from pdl.models import Seguimientos
 from stats.models import ComisionCount
@@ -85,6 +85,9 @@ class Command(BaseCommand):
         """
         queryset = Seguimientos.objects.all().order_by('proyecto_id').values('proyecto_id', 'evento')
         proyect_ids = self.get_proyect_ids(queryset)
+
+        cursor = connection.cursor()
+        cursor.execute("TRUNCATE TABLE stats_withdictamenbutnotvoted RESTART IDENTITY")
 
         projects = []
         for proyecto_id in proyect_ids:
