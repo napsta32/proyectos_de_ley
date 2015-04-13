@@ -13,6 +13,7 @@ from django.core.management.base import BaseCommand, CommandError
 from pdl.models import Seguimientos
 from stats.models import ComisionCount
 from stats.models import Dispensed
+from stats.models import WithDictamenButNotVoted
 
 
 class Command(BaseCommand):
@@ -89,7 +90,8 @@ class Command(BaseCommand):
         for proyecto_id in proyect_ids:
             if self.has_dictamen(proyecto_id, queryset) is True and \
                     self.is_voted(proyecto_id, queryset) is False:
-                proyects_with_dictamen_but_not_voted.append(proyecto_id)
+                proyects_with_dictamen_but_not_voted.append(WithDictamenButNotVoted(proyect_id=proyecto_id))
+        WithDictamenButNotVoted.objects.bulk_create(proyects_with_dictamen_but_not_voted)
 
     def get_proyect_ids(self, queryset):
         proyect_ids = set()
