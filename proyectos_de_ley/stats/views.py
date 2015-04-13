@@ -4,6 +4,7 @@ from pdl.models import Proyecto
 from pdl.models import Seguimientos
 from stats.models import ComisionCount
 from stats.models import Dispensed
+from stats.models import WithDictamenButNotVoted
 
 
 def dame_sin_tramitar(numero_de_proyectos):
@@ -33,12 +34,11 @@ def index(request):
     percentage_without_pdf_url = round(
         (without_pdf_url * 100) / numero_de_proyectos, 1)
 
-    with_iniciativas = Proyecto.objects.exclude(
-        iniciativas_agrupadas__isnull=True).exclude(
-        iniciativas_agrupadas__exact='').count()
-    without_iniciativas = numero_de_proyectos - with_iniciativas
-    percentage_without_iniciativas = round(
-        (without_iniciativas * 100) / numero_de_proyectos, 1)
+    # With dictamen sin votación
+    total_dictamen_sin_votacion = WithDictamenButNotVoted.objects.count()
+    percentage_dictamen_sin_votacion = round(
+        (total_dictamen_sin_votacion * 100) / numero_de_proyectos, 1
+    )
 
     # Sin Tramitar
     percentage_without_seguimientos, without_seguimientos = dame_sin_tramitar(
@@ -81,11 +81,12 @@ def index(request):
                    'percentage_total_in_commissions': percentage_total_in_commissions,
                    'total_in_commissions': total_in_commissions,
 
+                   'total_dictamen_sin_votacion': total_dictamen_sin_votacion,
+                   'percentage_dictamen_sin_votacion': percentage_dictamen_sin_votacion,
+
                    'numero_de_proyectos': numero_de_proyectos,
                    'without_pdf_url': without_pdf_url,
                    'percentage_without_pdf_url': percentage_without_pdf_url,
-                   'without_iniciativas': without_iniciativas,
-                   'percentage_without_iniciativas': percentage_without_iniciativas,
                    'without_seguimientos': without_seguimientos,
                    'are_not_law': are_not_law,
                    'percentage_are_not_law': percentage_are_not_law,

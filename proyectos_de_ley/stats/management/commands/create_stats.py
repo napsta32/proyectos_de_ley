@@ -5,14 +5,16 @@ for `/stats` page. These stat values go to tables for this app.
 * projects that are being accumulated in each `comisión`.
 * projects that were aproved without 2nd round of votes.
 """
-import datetime
 import re
 
 from django.core.management.base import BaseCommand, CommandError
+from django.db import connection
+from django.conf import settings
 
 from pdl.models import Seguimientos
 from stats.models import ComisionCount
 from stats.models import Dispensed
+from stats.models import WithDictamenButNotVoted
 
 
 class Command(BaseCommand):
@@ -54,6 +56,9 @@ class Command(BaseCommand):
         # Get projects that did not go to 2da round of votes
         self.get_dispensed_projects()
 
+        # Proyectos con dictamen pero sin votación
+        self.get_with_dictamen_but_not_voted()
+
     def get_dispensed_projects(self):
         total_approved = Seguimientos.objects.filter(evento__icontains='aprobado').count()
         total_dispensed = Seguimientos.objects.filter(evento__icontains='dispensado 2da').count()
@@ -72,3 +77,50 @@ class Command(BaseCommand):
                 'dispensed_others': dispensed_others,
             }
         )
+
+    def get_with_dictamen_but_not_voted(self):
+        """
+        Crea tabla con lista de: proyectos que no figure
+          "publicado" || promulgado || votación || en lista de seguimientos,
+        pero tenga "dictamen".
+        """
+        queryset = Seguimientos.objects.all().order_by('proyecto_id').values('proyecto_id', 'evento')
+        proyect_ids = self.get_proyect_ids(queryset)
+
+        if not settings.TESTING:
+            cursor = connection.cursor()
+            cursor.execute("TRUNCATE TABLE stats_withdictamenbutnotvoted RESTART IDENTITY")
+
+        projects = []
+        for proyecto_id in proyect_ids:
+            if self.has_dictamen(proyecto_id, queryset) is True and \
+                    self.is_voted(proyecto_id, queryset) is False:
+                projects.append(WithDictamenButNotVoted(proyect_id=proyecto_id))
+        WithDictamenButNotVoted.objects.bulk_create(projects)
+
+    def get_proyect_ids(self, queryset):
+        proyect_ids = set()
+        for i in queryset:
+            proyect_ids.add(i['proyecto_id'])
+        return proyect_ids
+
+    def is_voted(self, proyect_id, queryset):
+        events = self.get_events(proyect_id, queryset)
+        for i in events:
+            if 'publicado' in i.lower() or 'promulgado' in i.lower() or 'votación' in i.lower():
+                return True
+        return False
+
+    def has_dictamen(self, proyect_id, queryset):
+        events = self.get_events(proyect_id, queryset)
+        for i in events:
+            if 'dictamen' in i.lower():
+                return True
+        return False
+
+    def get_events(self, proyect_id, queryset):
+        events = []
+        for i in queryset:
+            if i['proyecto_id'] == proyect_id:
+                events.append(i['evento'])
+        return events

@@ -177,12 +177,12 @@ $(function () {
 
   var g = new JustGage({
     id: "g3",
-    value: {{ percentage_without_iniciativas }},
-    label: "{{ without_iniciativas|intcomma }} proyectos",
+    value: {{ percentage_dictamen_sin_votacion }},
+    label: "{{ total_dictamen_sin_votacion }} proyectos",
     min: 0,
     max: 100,
     levelColorsGradient: false,
-    title: "% proyectos sin fusionar"
+    title: "% proyectos con \ndictamen y sin votación"
   });
 
   var g = new JustGage({
