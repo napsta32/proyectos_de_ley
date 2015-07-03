@@ -5,6 +5,8 @@ v2.x.x (2015-04-14)
 ~~~~~~~~~~~~~~~~~~~
 * Stats: "proyectos con dictamen pero sin votación"
 * Búsqueda simple tiene capacidad de hacer *partial match*.
+* Corregido: bug cuando query contenía espacios en blanco el navegador entraba
+  en loop infinito.
 
 v2.0.1 (2015-03-31)
 ~~~~~~~~~~~~~~~~~~~
