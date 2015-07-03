@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+import re
+
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -82,6 +84,8 @@ def search(request):
     all_items = form.search()
     obj = do_pagination(request, all_items, search=True)
 
+    keywords = clean_my_query(query)
+
     return render(request, "pdl/search.html", {
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
@@ -90,10 +94,18 @@ def search(request):
         "first_page": obj['first_page'],
         "last_page": obj['last_page'],
         "current": obj['current'],
-        "keywords": query.split(" "),
+        "keywords": keywords,
         "query": query,
         "pagination_keyword": query,
     })
+
+
+def clean_my_query(query):
+    keywords = re.sub('\s+', ' ', query)
+    keywords = re.sub('\s+$', '', keywords)
+    keywords = re.sub('^\s+', '', keywords)
+    keywords = keywords.split(' ')
+    return keywords
 
 
 def congresista(request, congresista_slug):
