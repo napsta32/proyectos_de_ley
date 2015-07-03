@@ -8,9 +8,10 @@ from .models import Proyecto
 
 class ProyectoIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    # date = indexes.DateField(model_attr='fecha_presentacion', null=True)
     codigo = indexes.CharField(model_attr='codigo')
+    titulo = indexes.EdgeNgramField(model_attr='titulo', null=True)
 
+    """
     def prepare_text(self, obj):
         codigo = obj.codigo
         codigo_truncado = re.sub('^0+', '', codigo)
@@ -23,6 +24,12 @@ class ProyectoIndex(indexes.SearchIndex, indexes.Indexable):
 
         original = ' '.join(data)
         modified = unicodedata.normalize('NFD', original).encode('ascii', 'ignore')
+        result = ' '.join([original, modified.decode(encoding='utf-8')])
+        return result
+    """
+    def prepare_titulo(self, obj):
+        original = obj.titulo
+        modified = unicodedata.normalize('NFKD', original).encode('ascii', 'ignore')
         result = ' '.join([original, modified.decode(encoding='utf-8')])
         return result
 
