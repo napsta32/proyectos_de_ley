@@ -1,12 +1,14 @@
 History
 =======
 
-v2.x.x (2015-04-14)
+v2.x.x (2015-07-04)
 ~~~~~~~~~~~~~~~~~~~
 * Stats: "proyectos con dictamen pero sin votación"
 * Búsqueda simple tiene capacidad de hacer *partial match*.
 * Corregido: bug cuando query contenía espacios en blanco el navegador entraba
   en loop infinito.
+* Corregido: número de proyectos que no son ley (considerando que en las leyes
+  promulgadas hay numerosos proyectos que han sido fusionados).
 
 v2.0.1 (2015-03-31)
 ~~~~~~~~~~~~~~~~~~~
