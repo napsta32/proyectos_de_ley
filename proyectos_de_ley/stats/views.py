@@ -44,6 +44,7 @@ def index(request):
     percentage_without_seguimientos, without_seguimientos = dame_sin_tramitar(
         numero_de_proyectos)
 
+    # Proyectos no son ley
     are_law = Proyecto.objects.exclude(
         titulo_de_ley__isnull=True).exclude(
         titulo_de_ley__exact='').count()
