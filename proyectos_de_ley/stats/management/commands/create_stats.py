@@ -11,6 +11,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
 from django.conf import settings
 
+from pdl.models import Proyecto
 from pdl.models import Seguimientos
 from stats.models import ComisionCount
 from stats.models import Dispensed
@@ -59,6 +60,9 @@ class Command(BaseCommand):
         # Proyectos con dictamen pero sin votación
         self.get_with_dictamen_but_not_voted()
 
+        # Para calcular estadisticas de proyectos que aun no son ley
+        self.update_iniciativas_agrupadas_with_title_of_law()
+
     def get_dispensed_projects(self):
         total_approved = Seguimientos.objects.filter(evento__icontains='aprobado').count()
         total_dispensed = Seguimientos.objects.filter(evento__icontains='dispensado 2da').count()
@@ -97,6 +101,25 @@ class Command(BaseCommand):
                     self.is_voted(proyecto_id, queryset) is False:
                 projects.append(WithDictamenButNotVoted(proyect_id=proyecto_id))
         WithDictamenButNotVoted.objects.bulk_create(projects)
+
+    def update_iniciativas_agrupadas_with_title_of_law(self):
+        projects_with_law = Proyecto.objects.all().exclude(titulo_de_ley='').values('codigo',
+                                                                                    'titulo_de_ley',
+                                                                                    'iniciativas_agrupadas',
+                                                                                    )
+        for i in projects_with_law:
+            if i['iniciativas_agrupadas'] != '':
+                iniciativas = i['iniciativas_agrupadas'].replace('{', '')
+                iniciativas = iniciativas.replace('}', '')
+                iniciativas = iniciativas.split(',')
+                for iniciativa in iniciativas:
+                    try:
+                        p = Proyecto.objects.get(codigo=iniciativa)
+                    except Proyecto.DoesNotExist:
+                        continue
+                    if p.titulo_de_ley == '':
+                        p.titulo_de_ley = i['titulo_de_ley']
+                        p.save()
 
     def get_proyect_ids(self, queryset):
         proyect_ids = set()

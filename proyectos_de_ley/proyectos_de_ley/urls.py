@@ -4,13 +4,12 @@ from django.contrib.sitemaps.views import sitemap
 from pdl.feeds import LatestEntriesFeed
 from pdl.sitemaps import ProyectoSitemap, CongresistaSitemap
 from seguimientos import views as seg_views
-# from django.contrib import admin
-from rest_framework import routers
+
 
 sitemaps = {
     'static': ProyectoSitemap,
     'congresista': CongresistaSitemap,
-    }
+}
 
 urlpatterns = patterns(
     '',

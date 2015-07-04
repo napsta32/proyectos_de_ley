@@ -44,10 +44,16 @@ def index(request):
     percentage_without_seguimientos, without_seguimientos = dame_sin_tramitar(
         numero_de_proyectos)
 
+    # Proyectos no son ley
+    laws = set()
     are_law = Proyecto.objects.exclude(
         titulo_de_ley__isnull=True).exclude(
-        titulo_de_ley__exact='').count()
-    are_not_law = numero_de_proyectos - are_law
+        titulo_de_ley__exact='')
+    for i in are_law:
+        laws.add(i.titulo_de_ley)
+
+    are_not_law = Proyecto.objects.filter(titulo_de_ley='').count() + \
+        Proyecto.objects.filter(titulo_de_ley__isnull=True).count()
     percentage_are_not_law = round(
         (are_not_law * 100) / numero_de_proyectos, 1)
 
@@ -66,12 +72,12 @@ def index(request):
 
     # Projects dispensed of 2nd round of votes
     res = Dispensed.objects.all()[0]
-    dispensed_values = "[" + str(res.total_approved) + ", " \
+    dispensed_values = "[" + str(len(laws)) + ", " + str(res.total_approved) + ", " \
                        + str(res.total_dispensed) + ", " \
                        + str(res.dispensed_by_plenary) + ", " \
                        + str(res.dispensed_by_spokesmen) + ", " \
                        + str(res.dispensed_others) + "]"
-    dispensed_categories = "['TOTAL aprobados', 'TOTAL dispensados de 2da votación', " \
+    dispensed_categories = "['NÚMERO TOTAL DE LEYES', 'TOTAL aprobados', 'TOTAL dispensados de 2da votación', " \
                            "'Dispensados por acuerdo del pleno', " \
                            "'Dispensados por junta portavoces', " \
                            "'Otros proyectos dispensados']"

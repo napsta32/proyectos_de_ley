@@ -178,7 +178,7 @@ $(function () {
   var g = new JustGage({
     id: "g3",
     value: {{ percentage_dictamen_sin_votacion }},
-    label: "{{ total_dictamen_sin_votacion }} proyectos",
+    label: "{{ total_dictamen_sin_votacion|intcomma }} proyectos",
     min: 0,
     max: 100,
     levelColorsGradient: false,
