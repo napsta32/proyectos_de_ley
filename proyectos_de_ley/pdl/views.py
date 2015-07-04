@@ -25,10 +25,8 @@ def index(request):
     without_iniciativas = numero_de_proyectos - with_iniciativas
 
     # no son ley
-    are_law = Proyecto.objects.exclude(
-        titulo_de_ley__isnull=True).exclude(
-        titulo_de_ley__exact='').count()
-    are_not_law = numero_de_proyectos - are_law
+    are_not_law = Proyecto.objects.filter(titulo_de_ley='').count() + \
+        Proyecto.objects.filter(titulo_de_ley__isnull=True).count()
 
     # total aprobados
     res = Dispensed.objects.all()[0]
