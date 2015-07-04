@@ -13,7 +13,7 @@ class TestCustomCommand(TestCase):
             'numero_proyecto': '00586/2011-CR',
             'fecha_presentacion': '2010-10-10',
             'short_url': '4huj5x',
-            'iniciativas_agrupadas': '{0001,0002,00586}',
+            'iniciativas_agrupadas': '{00001,00002,00586}',
             'titulo_de_ley': 'Titulo de Ley',
             'id': 1,
         })

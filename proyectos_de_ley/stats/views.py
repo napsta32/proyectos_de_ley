@@ -67,12 +67,12 @@ def index(request):
 
     # Projects dispensed of 2nd round of votes
     res = Dispensed.objects.all()[0]
-    dispensed_values = "[" + str(res.total_approved) + ", " \
+    dispensed_values = "[" + str(are_law) + ", " + str(res.total_approved) + ", " \
                        + str(res.total_dispensed) + ", " \
                        + str(res.dispensed_by_plenary) + ", " \
                        + str(res.dispensed_by_spokesmen) + ", " \
                        + str(res.dispensed_others) + "]"
-    dispensed_categories = "['TOTAL aprobados', 'TOTAL dispensados de 2da votación', " \
+    dispensed_categories = "['NÚMERO TOTAL DE LEYES', 'TOTAL aprobados', 'TOTAL dispensados de 2da votación', " \
                            "'Dispensados por acuerdo del pleno', " \
                            "'Dispensados por junta portavoces', " \
                            "'Otros proyectos dispensados']"
