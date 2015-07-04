@@ -52,7 +52,8 @@ def index(request):
     for i in are_law:
         laws.add(i.titulo_de_ley)
 
-    are_not_law = Proyecto.objects.filter(titulo_de_ley='').count()
+    are_not_law = Proyecto.objects.filter(titulo_de_ley='').count() + \
+        Proyecto.objects.filter(titulo_de_ley__isnull=True).count()
     percentage_are_not_law = round(
         (are_not_law * 100) / numero_de_proyectos, 1)
 
