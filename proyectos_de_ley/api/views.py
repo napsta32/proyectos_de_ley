@@ -1,7 +1,10 @@
+import json
+
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
 
 from pdl.models import Proyecto
 from .serializers import ProyectoSerializer
@@ -17,14 +20,30 @@ class JSONResponse(HttpResponse):
         super(JSONResponse, self).__init__(content, **kwargs)
 
 
-def proyecto(request, numero):
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def proyecto(request, codigo):
     """
     Lista metadatos de cada proyecto de ley.
+    ---
+    type:
+      codigo:
+        required: true
+        type: string
+
+    parameters:
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
+        type: string
+        paramType: path
+        required: true
     """
+    codigo = codigo.replace('-', '/')
     try:
-        proy = Proyecto.objects.get(codigo=numero)
+        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
     except Proyecto.DoesNotExist:
-        return HttpResponse(status=404)
+        msg = {'error': 'proyecto no existe'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
 
     if request.method == 'GET':
         serializer = ProyectoSerializer(proy)

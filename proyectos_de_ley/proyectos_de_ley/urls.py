@@ -24,6 +24,7 @@ urlpatterns = patterns(
 
     url(r'^api/seguimientos/(?P<short_url>[0-9a-z]+)/$', seg_views.seguimientos_list),
     url(r'^api/iniciativas/(?P<short_url>[0-9a-z]+)/$', seg_views.iniciativa_list),
+    url(r'^api/', include('api.urls')),
 
     url(r'^search-advanced/', include('search_advanced.urls')),
     # url(r'^admin/', include(admin.site.urls)),

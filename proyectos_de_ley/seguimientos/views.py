@@ -47,6 +47,7 @@ def iniciativa_list(request, short_url):
         description: URL que identifica cada proyecto de ley, por ejemplo 4skzgv
         type: string
         paramType: path
+        required: true
     """
     try:
         item = utils.get_proyecto_from_short_url(short_url=short_url)
@@ -79,6 +80,7 @@ def seguimientos_list(request, short_url):
         description: URL que identifica cada proyecto de ley, por ejemplo 4skzgv
         type: string
         paramType: path
+        required: true
     """
     try:
         item = utils.get_proyecto_from_short_url(short_url=short_url)
