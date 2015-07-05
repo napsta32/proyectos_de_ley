@@ -35,7 +35,20 @@ class JSONResponse(HttpResponse):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def iniciativa_list(request, short_url):
-    """List all iniciativas for proyecto."""
+    """Lista todas las iniciativas que se agruparon para proyecto de ley.
+    ---
+    type:
+      short_url:
+        required: true
+        type: string
+
+
+    parameters:
+      - name: short_url
+        description: URL que identifica cada proyecto de ley, por ejemplo 4skzgv
+        type: string
+        paramType: path
+    """
     try:
         item = utils.get_proyecto_from_short_url(short_url=short_url)
         new_item = utils.prepare_json_for_d3(item)
