@@ -2,13 +2,15 @@
 import re
 
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
 
-from django.shortcuts import render
-
-from . import utils
 from pdl.models import Proyecto
+from . import utils
 from .serializers import IniciativasSerializer, SeguimientosSerializer
 
 
@@ -30,6 +32,8 @@ class JSONResponse(HttpResponse):
 
 
 @csrf_exempt
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
 def iniciativa_list(request, short_url):
     """List all iniciativas for proyecto."""
     try:
