@@ -1,4 +1,3 @@
-from django.forms import widgets
 from rest_framework import serializers
 
 from seguimientos.models import Iniciativas, SeguimientosJson
