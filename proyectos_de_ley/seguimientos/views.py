@@ -42,7 +42,6 @@ def iniciativa_list(request, short_url):
         required: true
         type: string
 
-
     parameters:
       - name: short_url
         description: URL que identifica cada proyecto de ley, por ejemplo 4skzgv
@@ -65,8 +64,22 @@ class MyObj(object):
 
 
 @csrf_exempt
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
 def seguimientos_list(request, short_url):
-    """List all seguimientos for proyecto."""
+    """Lista todos los eventos de seguimiento para cada proyecto de ley.
+    ---
+    type:
+      short_url:
+        required: true
+        type: string
+
+    parameters:
+      - name: short_url
+        description: URL que identifica cada proyecto de ley, por ejemplo 4skzgv
+        type: string
+        paramType: path
+    """
     try:
         item = utils.get_proyecto_from_short_url(short_url=short_url)
         seguimientos = utils.get_seguimientos_from_proyecto_id(item.id)
