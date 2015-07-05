@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'seguimientos',
     'stats',
     'search_advanced',
+    'api',
 )
 
 MIDDLEWARE_CLASSES = (
