@@ -87,6 +87,17 @@ class TestSeguimientos(TestCase):
         result = utils.prepare_json_for_d3(item)
         self.assertEqual(expected, result)
 
+    def test_prepare_json_for_d3_no_project(self):
+        item = Object()
+        item.numero_proyecto = "02764/2013-CR"
+        item.codigo = "02764"
+        item.titulo = "Propone Ley Universitaria"
+        item.iniciativas_agrupadas = '{027640000}'
+
+        expected = {'nodes': []}
+        result = utils.prepare_json_for_d3(item)
+        self.assertEqual(expected, result)
+
     def test_hiperlink_congre(self):
         congresista = 'Gamarra Saldivar, Teofilo'
         expected = "<a href='/congresista/gamarra_saldivar_teofilo/' title='ver todos sus proyectos'>Gamarra Saldivar, Teofilo</a>"
