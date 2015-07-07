@@ -74,7 +74,7 @@ class TestSeguimientos(TestCase):
         item.numero_proyecto = "02764/2013-CR"
         item.codigo = "02764"
         item.titulo = "Propone Ley Universitaria"
-        item.iniciativas_agrupadas = ['02764']
+        item.iniciativas_agrupadas = '{02764}'
 
         expected = {'nodes': [{'codigo': '02764', 'url': '/p/4zhube'}]}
         result = utils.prepare_json_for_d3(item)

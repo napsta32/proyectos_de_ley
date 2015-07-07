@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import json
 import re
 
 from django.http import HttpResponse
@@ -19,7 +20,14 @@ def index(request, short_url):
     short_url = re.sub("/seguimiento/", "", short_url)
     item = utils.get_proyecto_from_short_url(short_url)
     item.expediente_events = utils.get_events_from_expediente(item.id)
-    return render(request, "seguimientos/index.html", {"item": item})
+
+    # TODO: arreglar esto para cuanto tengamos proyectos de la legislatura 2016
+    friendly_code = str(item.codigo) + '-2011'
+    return render(request, "seguimientos/index.html",
+                  {
+                      "item": item,
+                      "friendly_code": friendly_code,
+                  })
 
 
 class JSONResponse(HttpResponse):
@@ -34,26 +42,33 @@ class JSONResponse(HttpResponse):
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def iniciativa_list(request, short_url):
+def iniciativa_list(request, codigo):
     """Lista todas las iniciativas que se agruparon para proyecto de ley.
     ---
     type:
-      short_url:
+      codigo:
         required: true
         type: string
 
     parameters:
-      - name: short_url
-        description: URL que identifica cada proyecto de ley, por ejemplo 4skzgv
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
         type: string
         paramType: path
         required: true
     """
+    codigo = re.sub('-[0-9]+', '', codigo)
     try:
-        item = utils.get_proyecto_from_short_url(short_url=short_url)
-        new_item = utils.prepare_json_for_d3(item)
+        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
     except Proyecto.DoesNotExist:
-        return HttpResponse(status=404)
+        msg = {'error': 'proyecto no existe'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    if proy.iniciativas_agrupadas is None or proy.iniciativas_agrupadas.strip() == '':
+        msg = {'error': 'sin iniciativas agrupadas'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    new_item = utils.prepare_json_for_d3(proy)
 
     if request.method == 'GET':
         serializer = IniciativasSerializer(new_item)
@@ -67,38 +82,41 @@ class MyObj(object):
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def seguimientos_list(request, short_url):
+def seguimientos_list(request, codigo):
     """Lista todos los eventos de seguimiento para cada proyecto de ley.
     ---
     type:
-      short_url:
+      codigo:
         required: true
         type: string
 
     parameters:
-      - name: short_url
-        description: URL que identifica cada proyecto de ley, por ejemplo 4skzgv
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
         type: string
         paramType: path
         required: true
     """
+    codigo = re.sub('-[0-9]+', '', codigo)
     try:
-        item = utils.get_proyecto_from_short_url(short_url=short_url)
-        seguimientos = utils.get_seguimientos_from_proyecto_id(item.id)
-        seguimientos.append({
-            'headline': 'Fecha de presentación',
-            'startDate': utils.convert_date_to_string(item.fecha_presentacion).replace("-", ","),
-        })
-        obj = MyObj()
-
-        mydict = {}
-        mydict['type'] = 'default'
-        mydict['text'] = "Proyecto No: " + str(item.numero_proyecto).replace("/", "_")
-        mydict['date'] = seguimientos
-
-        obj.timeline = mydict
+        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
     except Proyecto.DoesNotExist:
-        return HttpResponse(status=404)
+        msg = {'error': 'proyecto no existe'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    seguimientos = utils.get_seguimientos_from_proyecto_id(proy.id)
+    seguimientos.append({
+        'headline': 'Fecha de presentación',
+        'startDate': utils.convert_date_to_string(proy.fecha_presentacion).replace("-", ","),
+    })
+    obj = MyObj()
+
+    mydict = {}
+    mydict['type'] = 'default'
+    mydict['text'] = "Proyecto No: " + str(proy.numero_proyecto).replace("/", "_")
+    mydict['date'] = seguimientos
+
+    obj.timeline = mydict
 
     if request.method == 'GET':
         serializer = SeguimientosSerializer(obj)
