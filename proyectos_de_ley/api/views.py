@@ -1,4 +1,5 @@
 import json
+import re
 
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
@@ -38,7 +39,9 @@ def proyecto(request, codigo):
         paramType: path
         required: true
     """
-    codigo = codigo.replace('-', '/')
+    # TODO: hay que agregar un campo a la tabla especificando si es legislatura 2011 o cual.
+    # luego corregir aquí el API
+    codigo = re.sub('-[0-9]+', '', codigo)
     try:
         proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
     except Proyecto.DoesNotExist:

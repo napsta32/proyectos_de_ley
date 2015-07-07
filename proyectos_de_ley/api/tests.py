@@ -1,3 +1,5 @@
+import json
+
 from django.test import Client
 from django.test import TestCase
 
@@ -28,12 +30,12 @@ class TestAPI(TestCase):
 
     def test_getting_proyecto(self):
         response = self.c.get('/api/proyecto/03774-2011/')
-        result = response.content.decode('utf-8')
-        expected = ''
-        self.assertEqual(expected, result)
+        result = json.loads(response.content.decode('utf-8'))
+        expected = "03774"
+        self.assertEqual(expected, result['codigo'])
 
     def test_getting_proyecto_missing(self):
-        response = self.c.get('/api/proyecto/03774-2012/')
+        response = self.c.get('/api/proyecto/037740-2011/')
         result = response.content.decode('utf-8')
         expected = '{"error": "proyecto no existe"}'
         self.assertEqual(expected, result)
