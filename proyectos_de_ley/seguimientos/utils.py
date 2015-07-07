@@ -58,14 +58,18 @@ def get_seguimientos_from_proyecto_id(id):
 
 
 def prepare_json_for_d3(item):
-    if item.iniciativas_agrupadas is None:
-        return {"nodes": ""}
-
     nodes = []
     append = nodes.append
     j = 1
-    for i in item.iniciativas_agrupadas:
-        queryset = Proyecto.objects.get(codigo=i)
+
+    iniciativas_agrupadas = item.iniciativas_agrupadas.replace('{', '').replace('}', '').split(',')
+
+    for i in iniciativas_agrupadas:
+        try:
+            queryset = Proyecto.objects.get(codigo=i)
+        except Proyecto.DoesNotExist:
+            j += 1
+            continue
         node = {"codigo": i, "url": "/p/" + queryset.short_url}
         append(node)
         j += 1

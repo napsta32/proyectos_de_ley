@@ -42,26 +42,33 @@ class JSONResponse(HttpResponse):
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def iniciativa_list(request, short_url):
+def iniciativa_list(request, codigo):
     """Lista todas las iniciativas que se agruparon para proyecto de ley.
     ---
     type:
-      short_url:
+      codigo:
         required: true
         type: string
 
     parameters:
-      - name: short_url
-        description: URL que identifica cada proyecto de ley, por ejemplo 4skzgv
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
         type: string
         paramType: path
         required: true
     """
+    codigo = re.sub('-[0-9]+', '', codigo)
     try:
-        item = utils.get_proyecto_from_short_url(short_url=short_url)
-        new_item = utils.prepare_json_for_d3(item)
+        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
     except Proyecto.DoesNotExist:
-        return HttpResponse(status=404)
+        msg = {'error': 'proyecto no existe'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    if proy.iniciativas_agrupadas is None or proy.iniciativas_agrupadas.strip() == '':
+        msg = {'error': 'sin iniciativas agrupadas'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    new_item = utils.prepare_json_for_d3(proy)
 
     if request.method == 'GET':
         serializer = IniciativasSerializer(new_item)
