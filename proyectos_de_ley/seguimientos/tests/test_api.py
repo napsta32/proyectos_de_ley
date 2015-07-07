@@ -28,14 +28,25 @@ class TestAPI(TestCase):
 
         self.c = Client()
 
-    def test_getting_proyecto(self):
-        response = self.c.get('/api/proyecto/03774-2011/')
-        result = json.loads(response.content.decode('utf-8'))
-        expected = "03774"
-        self.assertEqual(expected, result['codigo'])
+    def test_api_seguimientos(self):
+        response = self.c.get('/api/seguimientos/03774-2011/')
+        as_string = response.content.decode("utf-8")
+        result = json.loads(as_string)
+        expected = "Proyecto No: 03774_2014-CR"
+        self.assertEqual(expected, result['timeline']['text'])
 
-    def test_getting_proyecto_missing(self):
-        response = self.c.get('/api/proyecto/037740-2011/')
-        result = response.content.decode('utf-8')
-        expected = '{"error": "proyecto no existe"}'
-        self.assertEqual(expected, result)
+    def test_api_seguimientos_missing(self):
+        response = self.c.get('/api/seguimientos/0377400-2011/')
+        as_string = response.content.decode("utf-8")
+        result = json.loads(as_string)
+        expected = "proyecto no existe"
+        self.assertEqual(expected, result['error'])
+
+    def test_api_iniciativas(self):
+        c = Client()
+        response = c.get('/api/iniciativas/4huj5x', follow=True)
+        print(response.content)
+        self.assertEqual(200, response.status_code)
+
+        response = c.get('/api/iniciativas/4huj5xaaaa', follow=True)
+        self.assertEqual(404, response.status_code)
