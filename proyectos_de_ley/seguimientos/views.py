@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import json
 import re
 
 from django.http import HttpResponse
@@ -67,38 +68,41 @@ class MyObj(object):
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def seguimientos_list(request, short_url):
+def seguimientos_list(request, codigo):
     """Lista todos los eventos de seguimiento para cada proyecto de ley.
     ---
     type:
-      short_url:
+      codigo:
         required: true
         type: string
 
     parameters:
-      - name: short_url
-        description: URL que identifica cada proyecto de ley, por ejemplo 4skzgv
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
         type: string
         paramType: path
         required: true
     """
+    codigo = re.sub('-[0-9]+', '', codigo)
     try:
-        item = utils.get_proyecto_from_short_url(short_url=short_url)
-        seguimientos = utils.get_seguimientos_from_proyecto_id(item.id)
-        seguimientos.append({
-            'headline': 'Fecha de presentación',
-            'startDate': utils.convert_date_to_string(item.fecha_presentacion).replace("-", ","),
-        })
-        obj = MyObj()
-
-        mydict = {}
-        mydict['type'] = 'default'
-        mydict['text'] = "Proyecto No: " + str(item.numero_proyecto).replace("/", "_")
-        mydict['date'] = seguimientos
-
-        obj.timeline = mydict
+        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
     except Proyecto.DoesNotExist:
-        return HttpResponse(status=404)
+        msg = {'error': 'proyecto no existe'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    seguimientos = utils.get_seguimientos_from_proyecto_id(proy.id)
+    seguimientos.append({
+        'headline': 'Fecha de presentación',
+        'startDate': utils.convert_date_to_string(proy.fecha_presentacion).replace("-", ","),
+    })
+    obj = MyObj()
+
+    mydict = {}
+    mydict['type'] = 'default'
+    mydict['text'] = "Proyecto No: " + str(proy.numero_proyecto).replace("/", "_")
+    mydict['date'] = seguimientos
+
+    obj.timeline = mydict
 
     if request.method == 'GET':
         serializer = SeguimientosSerializer(obj)

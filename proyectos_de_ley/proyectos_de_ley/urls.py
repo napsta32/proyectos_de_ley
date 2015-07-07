@@ -22,7 +22,7 @@ urlpatterns = patterns(
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
 
-    url(r'^api/seguimientos/(?P<short_url>[0-9a-z]+)/$', seg_views.seguimientos_list),
+    url(r'^api/seguimientos/(?P<codigo>[0-9]+\-[0-9]+)/$', seg_views.seguimientos_list),
     url(r'^api/iniciativas/(?P<short_url>[0-9a-z]+)/$', seg_views.iniciativa_list),
     url(r'^api/', include('api.urls')),
 
