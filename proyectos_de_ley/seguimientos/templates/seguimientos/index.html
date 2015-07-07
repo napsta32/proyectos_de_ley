@@ -194,7 +194,7 @@ $.getJSON("/api/iniciativas/{{ item.short_url }}", function(data) {
 
 <script>
 $(document).ready(function() {
-  $.getJSON("/api/seguimientos/{{ item.short_url }}", function(data) {
+  $.getJSON("/api/seguimientos/{{ friendly_code }}", function(data) {
     createStoryJS({
         type:       'timeline',
         width:      '100%',
