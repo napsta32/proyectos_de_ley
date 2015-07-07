@@ -2,7 +2,7 @@ import datetime
 
 from django.test import TestCase
 
-from pdl.models import Proyecto, Seguimientos
+from pdl.models import Proyecto, Seguimientos, Expedientes
 from seguimientos import utils
 
 
@@ -37,6 +37,13 @@ class TestSeguimientos(TestCase):
         b = Seguimientos(**seguimiento1)
         b.save()
         b = Seguimientos(**seguimiento2)
+        b.save()
+
+        expediente1 = seguimiento1  # Expediente y Seguimiento con casi lo mismo
+        expediente2 = seguimiento2  # Expediente y Seguimiento con casi lo mismo
+        b = Expedientes(**expediente1)
+        b.save()
+        b = Expedientes(**expediente2)
         b.save()
 
     def test_get_proyecto_from_short_url(self):
@@ -97,3 +104,8 @@ class TestSeguimientos(TestCase):
         expected = '2010-10-10'
         result = utils.convert_date_to_string(fecha)
         self.assertEqual(expected, result)
+
+    def test_get_events_from_expediente(self):
+        result = utils.get_events_from_expediente('1')
+        expected = '15 Oct, 2013'
+        self.assertEqual(expected, result[0].fecha)
