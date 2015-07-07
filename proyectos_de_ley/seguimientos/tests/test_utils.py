@@ -109,3 +109,8 @@ class TestSeguimientos(TestCase):
         result = utils.get_events_from_expediente('1')
         expected = '15 Oct, 2013'
         self.assertEqual(expected, result[0].fecha)
+
+    def test_get_seguimientos_from_proyecto_id(self):
+        result = utils.get_seguimientos_from_proyecto_id('1')
+        expected = 'Decretado a... Educación, Juventud y Deporte'
+        self.assertEqual(expected, result[0]['headline'])
