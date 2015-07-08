@@ -4,6 +4,8 @@ from pdl.models import Proyecto
 
 
 class ProyectoSerializer(serializers.ModelSerializer):
+    fecha_presentacion = serializers.DateTimeField(format=None)
+
     class Meta:
         model = Proyecto
         fields = ('codigo', 'numero_proyecto', 'short_url', 'congresistas',
