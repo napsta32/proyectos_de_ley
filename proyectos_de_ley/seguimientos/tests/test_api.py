@@ -64,7 +64,7 @@ class TestAPI(TestCase):
         as_string = response.content.decode("utf-8")
         result = json.loads(as_string)
         expected = '03774'
-        self.assertEqual(expected, result['nodes'][0]['codigo'])
+        self.assertEqual(expected, result['iniciativas'][0]['codigo'])
 
     def test_api_iniciativas_missing(self):
         response = self.c.get('/api/iniciativas/03774-2011/')
