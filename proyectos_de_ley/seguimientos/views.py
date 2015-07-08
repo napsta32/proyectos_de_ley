@@ -116,9 +116,7 @@ def seguimientos_list(request, codigo):
     my_dict['date'] = seguimientos
 
     data = {'timeline': my_dict}
-    print(">>>>>data", data)
 
     if request.method == 'GET':
         serializer = SeguimientosSerializer(data)
-        print(">>>>>serializer", serializer.data)
         return JSONResponse(serializer.data)
