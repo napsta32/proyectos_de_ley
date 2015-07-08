@@ -1,6 +1,10 @@
 {% extends 'pdl/base.html' %}
 {% load staticfiles %}
 
+{% block title %}
+Proyectos de ley | Documentación del API
+{% endblock title %}
+
 {% block additional_css %}
   <link href="//fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css"/>
   <link href="{% static 'rest_framework_swagger/css/highlight.default.css' %}" media="screen" rel="stylesheet" type="text/css"/>
