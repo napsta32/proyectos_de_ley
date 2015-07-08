@@ -68,10 +68,10 @@ def iniciativa_list(request, codigo):
         msg = {'error': 'sin iniciativas agrupadas'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
-    new_item = utils.prepare_json_for_d3(proy)
+    data = utils.prepare_json_for_d3(proy)
 
     if request.method == 'GET':
-        serializer = IniciativasSerializer(new_item)
+        serializer = IniciativasSerializer(data)
         return JSONResponse(serializer.data)
 
 

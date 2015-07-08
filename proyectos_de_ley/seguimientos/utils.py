@@ -60,7 +60,6 @@ def get_seguimientos_from_proyecto_id(id):
 def prepare_json_for_d3(item):
     nodes = []
     append = nodes.append
-    j = 1
 
     iniciativas_agrupadas = item.iniciativas_agrupadas.replace('{', '').replace('}', '').split(',')
 
@@ -68,16 +67,12 @@ def prepare_json_for_d3(item):
         try:
             queryset = Proyecto.objects.get(codigo=i)
         except Proyecto.DoesNotExist:
-            j += 1
             continue
         node = {"codigo": i, "url": "/p/" + queryset.short_url}
         append(node)
-        j += 1
 
-    # sort nodes by value (codigo)
-    sorted_nodes_by_value = sorted(nodes, key=lambda k: k['codigo'])
-    data_json = {"nodes": sorted_nodes_by_value}
-    return data_json
+    sorted_nodes_by_code = sorted(nodes, key=lambda k: k['codigo'])
+    return {'iniciativas': sorted_nodes_by_code}
 
 
 def hiperlink_congre(congresistas):
