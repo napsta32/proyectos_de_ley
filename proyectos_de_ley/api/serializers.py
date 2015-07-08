@@ -16,5 +16,6 @@ class ProyectoSerializer(serializers.ModelSerializer):
 
 
 class CongresistaSerializer(serializers.Serializer):
-    congresista = serializers.CharField(max_length=250)
-    proyectos = serializers.ListField()
+    resultado = serializers.ListField(
+    )
+    numero_de_congresistas = serializers.IntegerField()

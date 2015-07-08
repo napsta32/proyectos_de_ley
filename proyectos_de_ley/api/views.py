@@ -64,12 +64,12 @@ def congresista(request, nombre_corto):
     Lista proyectos de ley de cada congresista
     ---
     type:
-      nombre:
+      nombre_corto:
         required: true
         type: string
 
     parameters:
-      - name: nombre
+      - name: nombre_corto
         description: nombre y apellido del congresista
         type: string
         paramType: path
@@ -84,22 +84,24 @@ def congresista(request, nombre_corto):
         obj = {'nombre': name, 'proyectos': projects_list}
         projects_and_person.append(obj)
 
-    data = {'congresista': projects_and_person}
-    print(">>>>>>>>>>data", data)
+    data = {
+        'resultado': projects_and_person,
+        'numero_de_congresistas': len(projects_and_person),
+    }
     if request.method == 'GET':
-        serializer = CongresistaSerializer(proy)
+        serializer = CongresistaSerializer(data)
         return JSONResponse(serializer.data)
 
 
 def find_name_from_short_name(nombre_corto):
     nombre_corto = unicodedata.normalize('NFKD', nombre_corto).encode('ascii', 'ignore')
-    nombre_corto = re.sub('\s+', ' ', nombre_corto)
+    nombre_corto = re.sub('\s+', ' ', nombre_corto.decode('utf-8'))
     nombre_corto = nombre_corto.split(' ')
     if len(nombre_corto) < 2:
         return {'error': 'ingrese un nombre y un apellido'}
 
     nombre_corto = nombre_corto[:2]
-    res = Slug.objects.filter(Q(slug__icontains=nombre_corto[0]) & Q(slug__icontains=nombre_corto[1]))
+    res = Slug.objects.filter(Q(nombre__icontains=nombre_corto[0]) & Q(nombre__icontains=nombre_corto[1]))
 
     if len(res) > 0:
         return [i.nombre for i in res]
