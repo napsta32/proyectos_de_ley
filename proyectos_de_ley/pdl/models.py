@@ -1,3 +1,5 @@
+import unicodedata
+
 from django.db import models
 
 
@@ -54,4 +56,9 @@ class Slug(models.Model):
     """A translation table between a Congresista name and a slug to be used
     as hiperlink."""
     nombre = models.CharField(max_length=200)
+    ascii = models.CharField(max_length=200, help_text='nombre sin caracteres escpeciales')
     slug = models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        self.ascii = unicodedata.normalize('NFKD', self.nombre).encode('ascii', 'ignore').decode('utf-8')
+        super(Slug, self).save(*args, **kwargs)

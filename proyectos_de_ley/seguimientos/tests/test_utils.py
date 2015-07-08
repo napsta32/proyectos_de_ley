@@ -83,7 +83,7 @@ class TestSeguimientos(TestCase):
         item.titulo = "Propone Ley Universitaria"
         item.iniciativas_agrupadas = '{02764}'
 
-        expected = {'nodes': [{'codigo': '02764', 'url': '/p/4zhube'}]}
+        expected = {'iniciativas': [{'codigo': '02764', 'url': '/p/4zhube'}]}
         result = utils.prepare_json_for_d3(item)
         self.assertEqual(expected, result)
 
@@ -94,7 +94,7 @@ class TestSeguimientos(TestCase):
         item.titulo = "Propone Ley Universitaria"
         item.iniciativas_agrupadas = '{027640000}'
 
-        expected = {'nodes': []}
+        expected = {'iniciativas': []}
         result = utils.prepare_json_for_d3(item)
         self.assertEqual(expected, result)
 

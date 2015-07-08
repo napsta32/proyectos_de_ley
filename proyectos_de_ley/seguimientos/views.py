@@ -68,10 +68,10 @@ def iniciativa_list(request, codigo):
         msg = {'error': 'sin iniciativas agrupadas'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
-    new_item = utils.prepare_json_for_d3(proy)
+    data = utils.prepare_json_for_d3(proy)
 
     if request.method == 'GET':
-        serializer = IniciativasSerializer(new_item)
+        serializer = IniciativasSerializer(data)
         return JSONResponse(serializer.data)
 
 
@@ -109,15 +109,14 @@ def seguimientos_list(request, codigo):
         'headline': 'Fecha de presentación',
         'startDate': utils.convert_date_to_string(proy.fecha_presentacion).replace("-", ","),
     })
-    obj = MyObj()
 
-    mydict = {}
-    mydict['type'] = 'default'
-    mydict['text'] = "Proyecto No: " + str(proy.numero_proyecto).replace("/", "_")
-    mydict['date'] = seguimientos
+    my_dict = dict()
+    my_dict['type'] = 'default'
+    my_dict['text'] = "Proyecto No: " + str(proy.numero_proyecto).replace("/", "_")
+    my_dict['date'] = seguimientos
 
-    obj.timeline = mydict
+    data = {'timeline': my_dict}
 
     if request.method == 'GET':
-        serializer = SeguimientosSerializer(obj)
+        serializer = SeguimientosSerializer(data)
         return JSONResponse(serializer.data)
