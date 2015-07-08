@@ -101,7 +101,7 @@ def find_name_from_short_name(nombre_corto):
         return {'error': 'ingrese un nombre y un apellido'}
 
     nombre_corto = nombre_corto[:2]
-    res = Slug.objects.filter(Q(nombre__icontains=nombre_corto[0]) & Q(nombre__icontains=nombre_corto[1]))
+    res = Slug.objects.filter(Q(ascii__icontains=nombre_corto[0]) & Q(ascii__icontains=nombre_corto[1]))
 
     if len(res) > 0:
         return [i.nombre for i in res]
