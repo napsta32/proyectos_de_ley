@@ -109,15 +109,13 @@ def seguimientos_list(request, codigo):
         'headline': 'Fecha de presentación',
         'startDate': utils.convert_date_to_string(proy.fecha_presentacion).replace("-", ","),
     })
-    obj = MyObj()
 
-    mydict = {}
-    mydict['type'] = 'default'
-    mydict['text'] = "Proyecto No: " + str(proy.numero_proyecto).replace("/", "_")
-    mydict['date'] = seguimientos
-
-    obj.timeline = mydict
+    my_dict = dict()
+    my_dict['type'] = 'default'
+    my_dict['text'] = "Proyecto No: " + str(proy.numero_proyecto).replace("/", "_")
+    my_dict['date'] = seguimientos
 
     if request.method == 'GET':
-        serializer = SeguimientosSerializer(obj)
+        serializer = SeguimientosSerializer(my_dict)
+        print(">>>>>serializer", serializer.data)
         return JSONResponse(serializer.data)
