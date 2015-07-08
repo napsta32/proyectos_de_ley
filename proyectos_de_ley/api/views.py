@@ -1,14 +1,18 @@
 import json
 import re
+import unicodedata
 
 from django.http import HttpResponse
+from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
 
 from pdl.models import Proyecto
+from pdl.models import Slug
 from .serializers import ProyectoSerializer
+from .serializers import CongresistaSerializer
 
 
 class JSONResponse(HttpResponse):
@@ -51,3 +55,53 @@ def proyecto(request, codigo):
     if request.method == 'GET':
         serializer = ProyectoSerializer(proy)
         return JSONResponse(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def congresista(request, nombre_corto):
+    """
+    Lista proyectos de ley de cada congresista
+    ---
+    type:
+      nombre:
+        required: true
+        type: string
+
+    parameters:
+      - name: nombre
+        description: nombre y apellido del congresista
+        type: string
+        paramType: path
+        required: true
+    """
+    names = find_name_from_short_name(nombre_corto)
+
+    projects_and_person = []
+    for name in names:
+        projects = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
+        projects_list = [str(i.codigo) + '-2011' for i in projects]
+        obj = {'nombre': name, 'proyectos': projects_list}
+        projects_and_person.append(obj)
+
+    data = {'congresista': projects_and_person}
+    print(">>>>>>>>>>data", data)
+    if request.method == 'GET':
+        serializer = CongresistaSerializer(proy)
+        return JSONResponse(serializer.data)
+
+
+def find_name_from_short_name(nombre_corto):
+    nombre_corto = unicodedata.normalize('NFKD', nombre_corto).encode('ascii', 'ignore')
+    nombre_corto = re.sub('\s+', ' ', nombre_corto)
+    nombre_corto = nombre_corto.split(' ')
+    if len(nombre_corto) < 2:
+        return {'error': 'ingrese un nombre y un apellido'}
+
+    nombre_corto = nombre_corto[:2]
+    res = Slug.objects.filter(Q(slug__icontains=nombre_corto[0]) & Q(slug__icontains=nombre_corto[1]))
+
+    if len(res) > 0:
+        return [i.nombre for i in res]
+    else:
+        return {'error': 'no se pudo encontrar congresista'}

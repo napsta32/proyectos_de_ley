@@ -13,3 +13,8 @@ class ProyectoSerializer(serializers.ModelSerializer):
                   'seguimiento_page', 'proponente', 'grupo_parlamentario',
                   'iniciativas_agrupadas', 'nombre_comision', 'titulo_de_ley',
                   'numero_de_ley')
+
+
+class CongresistaSerializer(serializers.Serializer):
+    congresista = serializers.CharField(max_length=250)
+    proyectos = serializers.ListField()
