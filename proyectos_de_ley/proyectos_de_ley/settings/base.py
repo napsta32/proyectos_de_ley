@@ -118,7 +118,12 @@ REST_FRAMEWORK = {
         'anon': '1000/day',
         'user': '1000/day'
     },
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'UNICODE_JSON': True,
 }
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',

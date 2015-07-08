@@ -70,7 +70,7 @@ def congresista(request, nombre_corto):
 
     parameters:
       - name: nombre_corto
-        description: nombre y apellido del congresista
+        description: Nombre y apellido del congresista, por ejemplo Manuel Zerillo
         type: string
         paramType: path
         required: true
