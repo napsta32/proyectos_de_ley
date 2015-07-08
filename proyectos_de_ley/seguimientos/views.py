@@ -115,7 +115,10 @@ def seguimientos_list(request, codigo):
     my_dict['text'] = "Proyecto No: " + str(proy.numero_proyecto).replace("/", "_")
     my_dict['date'] = seguimientos
 
+    data = {'timeline': my_dict}
+    print(">>>>>data", data)
+
     if request.method == 'GET':
-        serializer = SeguimientosSerializer(my_dict)
+        serializer = SeguimientosSerializer(data)
         print(">>>>>serializer", serializer.data)
         return JSONResponse(serializer.data)

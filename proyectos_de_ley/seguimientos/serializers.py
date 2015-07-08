@@ -6,4 +6,4 @@ class IniciativasSerializer(serializers.Serializer):
 
 
 class SeguimientosSerializer(serializers.Serializer):
-    timeline = serializers.ListField()
+    timeline = serializers.DictField()
