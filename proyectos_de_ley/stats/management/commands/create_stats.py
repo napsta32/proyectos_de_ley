@@ -117,7 +117,7 @@ class Command(BaseCommand):
                                                                                     'iniciativas_agrupadas',
                                                                                     )
         for i in projects_with_law:
-            if i['iniciativas_agrupadas'] != '':
+            if i['iniciativas_agrupadas'] != '' and i['iniciativas_agrupadas'] is not None:
                 iniciativas = i['iniciativas_agrupadas'].replace('{', '')
                 iniciativas = iniciativas.replace('}', '')
                 iniciativas = iniciativas.split(',')
