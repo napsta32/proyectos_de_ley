@@ -64,7 +64,16 @@ class Command(BaseCommand):
         self.update_iniciativas_agrupadas_with_title_of_law()
 
     def get_dispensed_projects(self):
-        total_approved = Seguimientos.objects.filter(evento__icontains='aprobado').count()
+        total_approved = set()
+
+        tmp = Seguimientos.objects.filter(evento__icontains='promulgado')
+        for i in tmp:
+            total_approved.add(i.proyecto_id)
+
+        tmp = Seguimientos.objects.filter(evento__icontains='publicado')
+        for i in tmp:
+            total_approved.add(i.proyecto_id)
+
         total_dispensed = Seguimientos.objects.filter(evento__icontains='dispensado 2da').count()
         dispensed_by_plenary = Seguimientos.objects.filter(
             evento__icontains='dispensado 2da').filter(evento__icontains='pleno').count()
@@ -74,7 +83,7 @@ class Command(BaseCommand):
 
         Dispensed.objects.update_or_create(
             id=1, defaults={
-                'total_approved': total_approved,
+                'total_approved': len(total_approved),
                 'total_dispensed': total_dispensed,
                 'dispensed_by_plenary': dispensed_by_plenary,
                 'dispensed_by_spokesmen': dispensed_by_spokesmen,
