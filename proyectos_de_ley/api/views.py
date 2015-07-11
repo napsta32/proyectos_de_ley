@@ -109,4 +109,4 @@ def find_name_from_short_name(nombre_corto):
     if len(res) > 0:
         return [i.nombre for i in res]
     else:
-        return {'error': 'no se pudo encontrar congresista'}
+        return ['---error---', 'no se pudo encontrar congresista']

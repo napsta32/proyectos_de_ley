@@ -58,3 +58,9 @@ class TestAPI(TestCase):
         result = json.loads(response.content.decode('utf-8'))
         expected = {'error': 'ingrese un nombre y un apellido'}
         self.assertEqual(expected, result)
+
+    def test_person_cannot_be_found(self):
+        response = self.c.get('/api/congresista/Aus Bus/')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = {'error': 'no se pudo encontrar congresista'}
+        self.assertEqual(expected, result)
