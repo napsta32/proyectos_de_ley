@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Sum
 
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
@@ -17,9 +18,8 @@ def dame_sin_tramitar(numero_de_proyectos):
 
 
 def dame_sin_dictamen(queryset, numero_de_proyectos):
-    count = 0
-    for i in queryset.values():
-        count += i['count']
+    # thanks to @eyscode
+    count = queryset.aggregate(Sum('count'))['count__sum']
     percentage = round((count * 100) / numero_de_proyectos, 1)
     return percentage, count
 

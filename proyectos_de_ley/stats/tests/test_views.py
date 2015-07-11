@@ -39,6 +39,12 @@ class TestStatsViews(TestCase):
         result = views.dame_sin_tramitar(numero_de_proyectos)
         self.assertEqual(expected, result)
 
+    def test_dame_sin_dictamen(self):
+        queryset = ComisionCount.objects.all().order_by('-count')
+        result = views.dame_sin_dictamen(queryset, 1)
+        expected = (700.0, 7)
+        self.assertEqual(expected, result)
+
     def test_percentage_arent_law(self):
         result = views.get_projects_that_arent_law(1)
         expected = (0, 0.0, {'Ley No 2261'})
