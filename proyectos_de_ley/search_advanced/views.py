@@ -87,6 +87,7 @@ def search_dispensados_todos(form, request):
 
     obj = do_pagination(request, total_dispensed, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
+        "result_count": len(total_dispensed),
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
         "first_half": obj['first_half'],

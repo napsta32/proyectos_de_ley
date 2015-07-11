@@ -97,7 +97,7 @@
 
 {% if items %}
   <div id="contenido" class="container">
-    <h1>Resultados de búsqueda:</h1>
+    <h1>Resultados de búsqueda: {{ result_count }}</h1>
     {% if results == 'No se encontraron resultados.' %}
       <h2>{{ results }}</h2>
     {% else %}
