@@ -1,9 +1,10 @@
-.PHONY: help serve migrations stats coverage rebuild_index
+.PHONY: help serve migrations house_keeping stats coverage rebuild_index
 
 help:
 	@echo "help - see available commands"
 	@echo "serve - runserver for development"
 	@echo "migrations - prepare database for Django based on models"
+	@echo "house_keeping - fix data in our database"
 	@echo "stats - get stats about the proyects in our database"
 	@echo "coverage - run unittests and calculate coverage"
 	@echo "rebuild_index - re-index our data using elasticsearch"
@@ -14,6 +15,9 @@ serve:
 migrations:
 	cd proyectos_de_ley; python ./manage.py makemigrations --settings=proyectos_de_ley.settings.local
 	cd proyectos_de_ley; python ./manage.py migrate --settings=proyectos_de_ley.settings.local
+
+house_keeping:
+	cd proyectos_de_ley; python ./manage.py house_keeping --settings=proyectos_de_ley.settings.local
 
 stats:
 	cd proyectos_de_ley; python ./manage.py create_stats --settings=proyectos_de_ley.settings.local

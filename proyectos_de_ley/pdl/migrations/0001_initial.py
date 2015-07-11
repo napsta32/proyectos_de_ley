@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Expedientes',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
                 ('fecha', models.DateField(blank=True)),
                 ('evento', models.TextField(blank=True)),
                 ('pdf_url', models.URLField(blank=True)),
@@ -22,30 +22,30 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Proyecto',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
                 ('codigo', models.CharField(max_length=20)),
                 ('numero_proyecto', models.CharField(max_length=50)),
                 ('short_url', models.CharField(max_length=20)),
                 ('congresistas', models.TextField(blank=True)),
-                ('fecha_presentacion', models.DateTimeField(null=True)),
+                ('fecha_presentacion', models.DateField(null=True)),
                 ('titulo', models.TextField(blank=True)),
                 ('expediente', models.URLField(blank=True)),
                 ('pdf_url', models.URLField(blank=True)),
                 ('seguimiento_page', models.URLField(blank=True)),
                 ('time_created', models.DateTimeField(auto_now_add=True)),
                 ('time_edited', models.DateTimeField(auto_now=True)),
-                ('proponente', models.CharField(blank=True, max_length=250, default='')),
-                ('grupo_parlamentario', models.CharField(blank=True, max_length=250, default='')),
+                ('proponente', models.CharField(max_length=250, blank=True, default='')),
+                ('grupo_parlamentario', models.CharField(max_length=250, blank=True, default='')),
                 ('iniciativas_agrupadas', models.TextField(blank=True, default='')),
-                ('nombre_comision', models.CharField(blank=True, max_length=250, default='')),
+                ('nombre_comision', models.CharField(max_length=250, blank=True, default='')),
                 ('titulo_de_ley', models.TextField(blank=True, default='')),
-                ('numero_de_ley', models.CharField(blank=True, max_length=200, default='')),
+                ('numero_de_ley', models.CharField(max_length=200, blank=True, default='')),
             ],
         ),
         migrations.CreateModel(
             name='Seguimientos',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
                 ('fecha', models.DateField(blank=True)),
                 ('evento', models.TextField(blank=True)),
                 ('proyecto', models.ForeignKey(to='pdl.Proyecto')),
@@ -54,9 +54,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Slug',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
                 ('nombre', models.CharField(max_length=200)),
-                ('ascii', models.CharField(help_text='nombre sin caracteres escpeciales', max_length=200)),
+                ('ascii', models.CharField(max_length=200, help_text='nombre sin caracteres escpeciales')),
                 ('slug', models.CharField(max_length=100)),
             ],
         ),

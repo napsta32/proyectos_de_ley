@@ -15,7 +15,8 @@ def index(request):
             if form.cleaned_data['date_from'] is not None:
                 date_from = form.cleaned_data['date_from']
                 date_to = form.cleaned_data['date_to']
-                queryset = Proyecto.objects.filter(fecha_presentacion__range=[date_from, date_to]).order_by('-codigo')
+                queryset = Proyecto.objects.filter(
+                    fecha_presentacion__range=(date_from, date_to)).order_by('-codigo')
 
                 obj = do_pagination(request, queryset, search=True, advanced_search=True)
                 return render(request, "search_advanced/index.html", {

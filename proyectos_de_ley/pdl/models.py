@@ -11,7 +11,7 @@ class Proyecto(models.Model):
     congresistas = models.TextField(blank=True)
 
     # migrate from date as string
-    fecha_presentacion = models.DateTimeField(null=True)
+    fecha_presentacion = models.DateField(null=True)
     titulo = models.TextField(blank=True)
     expediente = models.URLField(max_length=200, blank=True)
     pdf_url = models.URLField(max_length=200, blank=True)
