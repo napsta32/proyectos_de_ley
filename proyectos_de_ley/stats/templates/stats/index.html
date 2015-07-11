@@ -136,7 +136,22 @@ $(function () {
             enabled: false
         },
          tooltip: {
+            positioner: function () {
+                return { x: 150, y: 300 };
+            },
             pointFormat: '{point.y} proyectos'
+        },
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function () {
+                            location.href = '/search-advanced/?dispensed_2da_votacion=' + this.category;
+                        }
+                    }
+                }
+            }
         },
         series: [
         {
