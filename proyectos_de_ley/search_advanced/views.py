@@ -18,7 +18,7 @@ def index(request):
             if form.cleaned_data['comision'].strip() != '':
                 return search_by_comission(form, request)
 
-            if form.cleaned_data['dispensados_2da_votacion'] == 'total':
+            if form.cleaned_data['dispensados_2da_votacion'] == 'TOTAL dispensados':
                 return search_dispensados_todos(form, request)
 
             return render(request, "search_advanced/index.html", {

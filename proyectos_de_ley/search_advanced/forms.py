@@ -60,6 +60,6 @@ class SearchAdvancedForm(forms.Form):
         required=False,
         choices=[
             ('---', '---'),
-            ('total', 'total'),
+            ('TOTAL dispensados', 'TOTAL dispensados'),
         ]
     )
