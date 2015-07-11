@@ -45,17 +45,7 @@ def index(request):
         numero_de_proyectos)
 
     # Proyectos no son ley
-    laws = set()
-    are_law = Proyecto.objects.exclude(
-        titulo_de_ley__isnull=True).exclude(
-        titulo_de_ley__exact='')
-    for i in are_law:
-        laws.add(i.titulo_de_ley)
-
-    are_not_law = Proyecto.objects.filter(titulo_de_ley='').count() + \
-        Proyecto.objects.filter(titulo_de_ley__isnull=True).count()
-    percentage_are_not_law = round(
-        (are_not_law * 100) / numero_de_proyectos, 1)
+    are_not_law, percentage_are_not_law, laws = get_projects_that_arent_law(numero_de_proyectos)
 
     # Projects by comision count
     queryset = ComisionCount.objects.all().order_by('-count')
@@ -102,3 +92,19 @@ def index(request):
                    'dispensed_categories': dispensed_categories,
                    }
                   )
+
+
+def get_projects_that_arent_law(numero_de_proyectos):
+    laws = set()
+    are_law = Proyecto.objects.exclude(
+        titulo_de_ley__isnull=True).exclude(
+        titulo_de_ley__exact='')
+
+    for i in are_law:
+        laws.add(i.titulo_de_ley)
+
+    are_not_law = Proyecto.objects.filter(
+        titulo_de_ley='').count() + Proyecto.objects.filter(titulo_de_ley__isnull=True).count()
+    percentage_are_not_law = round(
+        (are_not_law * 100) / numero_de_proyectos, 1)
+    return are_not_law, percentage_are_not_law, laws
