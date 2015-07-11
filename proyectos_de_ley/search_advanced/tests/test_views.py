@@ -34,7 +34,7 @@ class TestSearchAdvancedViews(TestCase):
 
     def test_index_search_date(self):
         c = Client()
-        response = c.get('/search-advanced/?date_from=10/03/2014&date_to=01/01/2015')
+        response = c.get('/search-advanced/?date_from=03%2F03%2F2015&date_to=07%2F02%2F2015')
         self.assertEqual(200, response.status_code)
 
     def test_index_search_comission(self):
