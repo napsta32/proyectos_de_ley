@@ -116,6 +116,12 @@ class TestSeguimientos(TestCase):
         result = utils.convert_date_to_string(fecha)
         self.assertEqual(expected, result)
 
+    def test_convert_date_to_string_with_exception(self):
+        fecha = '2010-10-10'
+        expected = '2010-10-10'
+        result = utils.convert_date_to_string(fecha)
+        self.assertEqual(expected, result)
+
     def test_get_events_from_expediente(self):
         result = utils.get_events_from_expediente('1')
         expected = '15 Oct, 2013'

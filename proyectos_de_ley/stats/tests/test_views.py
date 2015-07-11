@@ -14,6 +14,7 @@ class TestStatsViews(TestCase):
             'numero_proyecto': '02764',
             'time_created': datetime.datetime.now(),
             'fecha_presentacion': '2010-10-10',
+            'titulo_de_ley': 'Ley No 2261',
         })
         Dispensed.objects.create(**{
             'total_approved': 1444,
@@ -36,4 +37,9 @@ class TestStatsViews(TestCase):
         numero_de_proyectos = Proyecto.objects.all().count()
         expected = (100.0, 1)
         result = views.dame_sin_tramitar(numero_de_proyectos)
+        self.assertEqual(expected, result)
+
+    def test_percentage_arent_law(self):
+        result = views.get_projects_that_arent_law(1)
+        expected = (0, 0.0, {'Ley No 2261'})
         self.assertEqual(expected, result)

@@ -76,6 +76,9 @@ def congresista(request, nombre_corto):
         required: true
     """
     names = find_name_from_short_name(nombre_corto)
+    if '---error---' in names:
+        msg = {'error': names[1]}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
 
     projects_and_person = []
     for name in names:
@@ -98,7 +101,7 @@ def find_name_from_short_name(nombre_corto):
     nombre_corto = re.sub('\s+', ' ', nombre_corto.decode('utf-8'))
     nombre_corto = nombre_corto.split(' ')
     if len(nombre_corto) < 2:
-        return {'error': 'ingrese un nombre y un apellido'}
+        return ['---error---', 'ingrese un nombre y un apellido']
 
     nombre_corto = nombre_corto[:2]
     res = Slug.objects.filter(Q(ascii__icontains=nombre_corto[0]) & Q(ascii__icontains=nombre_corto[1]))
@@ -106,4 +109,4 @@ def find_name_from_short_name(nombre_corto):
     if len(res) > 0:
         return [i.nombre for i in res]
     else:
-        return {'error': 'no se pudo encontrar congresista'}
+        return ['---error---', 'no se pudo encontrar congresista']

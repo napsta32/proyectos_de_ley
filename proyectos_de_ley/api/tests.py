@@ -4,6 +4,7 @@ from django.test import Client
 from django.test import TestCase
 
 from pdl.models import Proyecto
+from pdl.models import Slug
 
 
 class TestAPI(TestCase):
@@ -23,8 +24,14 @@ class TestAPI(TestCase):
             "time_edited": "2014-09-05 03:00:00",
             "titulo": "Propone establecer los lineamientos para la promoción de la eficiencia y competitividad en la actividad empresarial del Estado, garantizando su aporte estratégico para el desarrollo descentralizado y la soberanía nacional."
         }
-        p = Proyecto(**dummy)
-        p.save()
+        Proyecto(**dummy).save()
+
+        dummy_slug = {
+            "nombre": "Dammert Ego Aguirre, Manuel Enrique Ernesto",
+            "ascii": "Dammert Ego Aguirre, Manuel Enrique Ernesto",
+            "slug": "dammert_ego_aguirre/",
+        }
+        Slug(**dummy_slug).save()
 
         self.c = Client()
 
@@ -38,4 +45,22 @@ class TestAPI(TestCase):
         response = self.c.get('/api/proyecto/037740-2011/')
         result = response.content.decode('utf-8')
         expected = '{"error": "proyecto no existe"}'
+        self.assertEqual(expected, result)
+
+    def test_getting_projects_of_person(self):
+        response = self.c.get('/api/congresista/Dammert Ego/')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
+        self.assertEqual(expected, result['resultado'][0]['nombre'])
+
+    def test_not_enough_names_to_search_for_person(self):
+        response = self.c.get('/api/congresista/Dammert/')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = {'error': 'ingrese un nombre y un apellido'}
+        self.assertEqual(expected, result)
+
+    def test_person_cannot_be_found(self):
+        response = self.c.get('/api/congresista/Aus Bus/')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = {'error': 'no se pudo encontrar congresista'}
         self.assertEqual(expected, result)
