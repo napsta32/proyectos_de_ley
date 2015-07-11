@@ -54,3 +54,12 @@ class SearchAdvancedForm(forms.Form):
             ('Vivienda', 'Vivienda'),
         ]
     )
+    dispensados_2da_votacion = forms.ChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Dispensados 2da votación',
+        required=False,
+        choices=[
+            ('---', '---'),
+            ('total', 'total'),
+        ]
+    )

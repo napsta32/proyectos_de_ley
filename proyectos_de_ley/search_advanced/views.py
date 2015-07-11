@@ -18,10 +18,12 @@ def index(request):
             if form.cleaned_data['comision'].strip() != '':
                 return search_by_comission(form, request)
 
+            if form.cleaned_data['dispensados_2da_votacion'] == 'total':
+                return search_dispensados_todos(form, request)
+
             return render(request, "search_advanced/index.html", {
                 "form": form,
             })
-
         else:
             return render(request, "search_advanced/index.html", {
                 "form": form,
@@ -66,6 +68,24 @@ def search_by_comission(form, request):
         this_proyecto_id = i.proyecto_id
     obj = do_pagination(request, proyects_found, search=True,
                         advanced_search=True)
+    return render(request, "search_advanced/index.html", {
+        "items": obj['items'],
+        "pretty_items": obj['pretty_items'],
+        "first_half": obj['first_half'],
+        "second_half": obj['second_half'],
+        "first_page": obj['first_page'],
+        "last_page": obj['last_page'],
+        "current": obj['current'],
+        "form": form,
+        "comision": obj['comision'],
+    })
+
+
+def search_dispensados_todos(form, request):
+    total_dispensed = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
+                       evento__icontains='dispensado 2da')]
+
+    obj = do_pagination(request, total_dispensed, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
