@@ -11,7 +11,7 @@ class Proyecto(models.Model):
     congresistas = models.TextField(blank=True)
 
     # migrate from date as string
-    fecha_presentacion = models.DateField(null=True)
+    fecha_presentacion = models.DateField(null=False)
     titulo = models.TextField(blank=True)
     expediente = models.URLField(max_length=200, blank=True)
     pdf_url = models.URLField(max_length=200, blank=True)
@@ -22,13 +22,12 @@ class Proyecto(models.Model):
     time_edited = models.DateTimeField(auto_now=True)
 
     # > v1.1.1
-    proponente = models.CharField(max_length=250, blank=True, default='')
-    grupo_parlamentario = models.CharField(max_length=250, blank=True,
-                                           default='')
-    iniciativas_agrupadas = models.TextField(blank=True, default='')
-    nombre_comision = models.CharField(max_length=250, blank=True, default='')
-    titulo_de_ley = models.TextField(blank=True, default='')
-    numero_de_ley = models.CharField(max_length=200, blank=True, default='')
+    proponente = models.TextField(null=True, blank=True, default='')
+    grupo_parlamentario = models.TextField(blank=True, default='')
+    iniciativas_agrupadas = models.TextField(null=True, blank=True, default='')
+    nombre_comision = models.TextField(null=True, blank=True, default='')
+    titulo_de_ley = models.TextField(null=True, blank=True, default='')
+    numero_de_ley = models.TextField(null=True, blank=True, default='')
 
 
 class Seguimientos(models.Model):
