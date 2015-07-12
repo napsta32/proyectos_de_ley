@@ -40,7 +40,11 @@ class TestSearchAdvancedViews(TestCase):
         self.assertTrue('arco y flecha' in str(response.content))
 
     def test_numero_total_de_leyes(self):
-        response = self.c.get('/search-advanced/?dispensados_2da_votacion=NÚMERO TOTAL DE LEYES')
+        response = self.c.get('/search-advanced/?dictamen=NÚMERO TOTAL DE LEYES')
+        self.assertEqual(200, response.status_code)
+
+    def test_exonerados_dictamen(self):
+        response = self.c.get('/search-advanced/?dictamen=Exonerados de dictamen')
         self.assertEqual(200, response.status_code)
 
     def test_numero_total_aprobados(self):
