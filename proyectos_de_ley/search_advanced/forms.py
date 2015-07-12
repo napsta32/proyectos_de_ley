@@ -65,5 +65,6 @@ class SearchAdvancedForm(forms.Form):
             ('TOTAL aprobados', 'TOTAL aprobados'),
             ('Dispensados por acuerdo del pleno', 'Dispensados por acuerdo del pleno'),
             ('Dispensados por junta portavoces', 'Dispensados por junta portavoces'),
+            ('Otros proyectos dispensados', 'Otros proyectos dispensados'),
         ]
     )

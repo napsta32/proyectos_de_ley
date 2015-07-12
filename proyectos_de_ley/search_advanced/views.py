@@ -35,6 +35,9 @@ def index(request):
             if form.cleaned_data['dispensados_2da_votacion'] == 'Dispensados por junta portavoces':
                 return search_dispensados_junta_portavoces(form, request)
 
+            if form.cleaned_data['dispensados_2da_votacion'] == 'Otros proyectos dispensados':
+                return search_dispensados_otros(form, request)
+
             return render(request, "search_advanced/index.html", {
                 "form": form,
             })
@@ -185,6 +188,28 @@ def search_dispensados_junta_portavoces(form, request):
     return render(request, "search_advanced/index.html", {
         "result_count": len(dispensed_by_spokesmen),
         "extra_result_msg": "Dispensados 2da votación por junta de portavoces",
+        "items": obj['items'],
+        "pretty_items": obj['pretty_items'],
+        "first_half": obj['first_half'],
+        "second_half": obj['second_half'],
+        "first_page": obj['first_page'],
+        "last_page": obj['last_page'],
+        "current": obj['current'],
+        "form": form,
+        "comision": obj['comision'],
+    })
+
+
+def search_dispensados_otros(form, request):
+    otros_dispensados = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
+        evento__icontains='dispensado 2da').exclude(
+        evento__icontains='pleno').exclude(
+        evento__icontains='portavoces')]
+
+    obj = do_pagination(request, otros_dispensados, search=True, advanced_search=True)
+    return render(request, "search_advanced/index.html", {
+        "result_count": len(otros_dispensados),
+        "extra_result_msg": "Dispensados 2da votación por otras razones",
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
         "first_half": obj['first_half'],
