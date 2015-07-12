@@ -62,5 +62,7 @@ class SearchAdvancedForm(forms.Form):
             ('---', '---'),
             ('TOTAL dispensados', 'TOTAL dispensados'),
             ('NÚMERO TOTAL DE LEYES', 'NÙMERO TOTAL DE LEYES'),
+            ('TOTAL aprobados', 'TOTAL aprobados'),
+            ('Dispensados por acuerdo del pleno', 'Dispensados por acuerdo del pleno'),
         ]
     )
