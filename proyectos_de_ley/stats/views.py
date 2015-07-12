@@ -73,7 +73,7 @@ def index(request):
                            "'Otros proyectos dispensados']"
 
     exonerado_de_dictamen = Seguimientos.objects.filter(
-        evento__icontains='exoneración de dictamen').distinct('proyecto_id').count()
+        evento__icontains='exoneración de dictamen').values_list('proyecto_id', flat=True).distinct().count()
     dictamen_values = "[" + str(len(laws)) + ", " + str(exonerado_de_dictamen) + "]"
     dictamen_categories = "['NÚMERO TOTAL DE LEYES', 'Exonerados de dictamen']"
 
