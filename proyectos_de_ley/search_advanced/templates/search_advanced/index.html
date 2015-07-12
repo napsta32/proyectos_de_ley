@@ -98,7 +98,7 @@
 
 {% if items %}
   <div id="contenido" class="container">
-    <h1>Resultados de búsqueda: {{ result_count|intcomma }} <small>{{ extra_result_msg }}</small></h1>
+    <h1>Resultados de búsqueda: <small>{{ extra_result_msg }} {{ result_count|intcomma }}</small></h1>
 
     {% if results == 'No se encontraron resultados.' %}
       <h2>{{ results }}</h2>
