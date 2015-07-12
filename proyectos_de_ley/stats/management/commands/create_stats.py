@@ -112,23 +112,38 @@ class Command(BaseCommand):
         WithDictamenButNotVoted.objects.bulk_create(projects)
 
     def update_iniciativas_agrupadas_with_title_of_law(self):
-        projects_with_law = Proyecto.objects.all().exclude(titulo_de_ley='').values('codigo',
-                                                                                    'titulo_de_ley',
-                                                                                    'iniciativas_agrupadas',
-                                                                                    )
+        projects_with_law = Proyecto.objects.all().exclude(
+            titulo_de_ley='').values('codigo', 'titulo_de_ley', 'iniciativas_agrupadas')
+
+        iniciativas_con_ley = self.get_iniciativas_con_ley(projects_with_law)
+        project_code_as_dict = self.get_project_code_as_dict(projects_with_law)
+
+        for iniciativa in iniciativas_con_ley:
+            try:
+                p = Proyecto.objects.get(codigo=iniciativa)
+            except Proyecto.DoesNotExist:
+                continue
+            if p.titulo_de_ley == '':
+                p.titulo_de_ley = project_code_as_dict[iniciativa]
+                p.save()
+
+    def get_iniciativas_con_ley(self, projects_with_law):
+        iniciativas_con_ley = []
         for i in projects_with_law:
-            if i['iniciativas_agrupadas'] != '' and i['iniciativas_agrupadas'] is not None:
-                iniciativas = i['iniciativas_agrupadas'].replace('{', '')
+            iniciativas = i['iniciativas_agrupadas']
+            if iniciativas != '' and iniciativas is not None:
+                iniciativas = iniciativas.replace('{', '')
                 iniciativas = iniciativas.replace('}', '')
                 iniciativas = iniciativas.split(',')
-                for iniciativa in iniciativas:
-                    try:
-                        p = Proyecto.objects.get(codigo=iniciativa)
-                    except Proyecto.DoesNotExist:
-                        continue
-                    if p.titulo_de_ley == '':
-                        p.titulo_de_ley = i['titulo_de_ley']
-                        p.save()
+                iniciativas_con_ley += iniciativas
+        return list(set(iniciativas_con_ley))
+
+    def get_project_code_as_dict(self, projects_with_law):
+        my_dict = {}
+        for i in projects_with_law:
+            code = i['codigo']
+            my_dict[code] = i['titulo_de_ley']
+        return my_dict
 
     def get_proyect_ids(self, queryset):
         proyect_ids = set()
