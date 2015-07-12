@@ -1,4 +1,5 @@
 {% extends "pdl/base.html" %}
+{% load humanize %}
 
 {% block title %}
 Proyectos de ley emitidos por el Congreso de la República del Perú | About
@@ -10,7 +11,7 @@ Proyectos de ley emitidos por el Congreso de la República del Perú | About
   {% if pretty_items|length < 1 %}
     <h2>No se encontraron resultados.</h2>
   {% else %}
-  <h1>Resultados de búsqueda:</h1>
+  <h1>Resultados de búsqueda: <small>{{ extra_result_msg }} {{ result_count|intcomma }}</small></h1>
     {% for i in pretty_items %}
       {{ i|safe }}
     {% endfor %}
