@@ -27,10 +27,10 @@ class TestStatsViews(TestCase):
             'count': 7,
             'comision': 'Justicia',
         })
+        self.c = Client()
 
     def test_index(self):
-        c = Client()
-        response = c.get('/stats/')
+        response = self.c.get('/stats/')
         self.assertEqual(200, response.status_code)
 
     def test_dame_sin_tramitar(self):
