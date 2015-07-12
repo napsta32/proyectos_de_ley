@@ -12,6 +12,7 @@ def index(request):
     if request.method == 'GET':
         form = forms.SearchAdvancedForm(request.GET)
         if form.is_valid():
+            print(">>cleaned_data", form.cleaned_data)
             if form.cleaned_data['date_from'] is not None:
                 return search_by_date(form, request)
 
@@ -20,6 +21,9 @@ def index(request):
 
             if form.cleaned_data['dispensados_2da_votacion'] == 'TOTAL dispensados':
                 return search_dispensados_todos(form, request)
+
+            if form.cleaned_data['dispensados_2da_votacion'] == 'NÚMERO TOTAL DE LEYES':
+                return search_total_leyes(form, request)
 
             return render(request, "search_advanced/index.html", {
                 "form": form,
@@ -88,6 +92,27 @@ def search_dispensados_todos(form, request):
     obj = do_pagination(request, total_dispensed, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
         "result_count": len(total_dispensed),
+        "items": obj['items'],
+        "pretty_items": obj['pretty_items'],
+        "first_half": obj['first_half'],
+        "second_half": obj['second_half'],
+        "first_page": obj['first_page'],
+        "last_page": obj['last_page'],
+        "current": obj['current'],
+        "form": form,
+        "comision": obj['comision'],
+    })
+
+
+def search_total_leyes(form, request):
+    are_law = Proyecto.objects.exclude(
+        titulo_de_ley__isnull=True).exclude(
+        titulo_de_ley__exact='')
+
+    obj = do_pagination(request, are_law, search=True, advanced_search=True)
+    return render(request, "search_advanced/index.html", {
+        "result_count": len(are_law),
+        "extra_result_msg": "Total número de proyectos que han generado leyes",
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
         "first_half": obj['first_half'],
