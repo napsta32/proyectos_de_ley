@@ -68,3 +68,12 @@ class SearchAdvancedForm(forms.Form):
             ('Otros proyectos dispensados', 'Otros proyectos dispensados'),
         ]
     )
+    dictamen = forms.ChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Dictamen',
+        required=False,
+        choices=[
+            ('---', '---'),
+            ('NÚMERO TOTAL DE LEYES', 'NÙMERO TOTAL DE LEYES'),
+        ]
+    )

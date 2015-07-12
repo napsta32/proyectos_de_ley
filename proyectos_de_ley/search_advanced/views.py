@@ -13,6 +13,7 @@ def index(request):
     if request.method == 'GET':
         form = forms.SearchAdvancedForm(request.GET)
         if form.is_valid():
+            print(form.cleaned_data)
             if form.cleaned_data['date_from'] is not None:
                 return search_by_date(form, request)
 
@@ -22,7 +23,7 @@ def index(request):
             if form.cleaned_data['dispensados_2da_votacion'] == 'TOTAL dispensados':
                 return search_dispensados_todos(form, request)
 
-            if form.cleaned_data['dispensados_2da_votacion'] == 'NÚMERO TOTAL DE LEYES':
+            if form.cleaned_data['dictamen'] == 'NÚMERO TOTAL DE LEYES':
                 return search_total_leyes(form, request)
 
             if form.cleaned_data['dispensados_2da_votacion'] == 'TOTAL aprobados':

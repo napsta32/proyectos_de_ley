@@ -48,6 +48,9 @@
       <div class="col-lg-4 col-md-5 col-sm-6 col-xs-7">
         <div id="dispensed_chart" style="width:350px; height:400px;"></div>
       </div>
+      <div class="col-lg-4 col-md-5 col-sm-6 col-xs-7">
+        <div id="dictamen_chart" style="width:350px; height:400px;"></div>
+      </div>
     </div><!-- row -->
   </div><!-- container -->
 </div>
@@ -157,6 +160,60 @@ $(function () {
         {
             name: 'Número proyectos',
             data: {{ dispensed_values }},
+            dataLabels: {
+                enabled: true,
+                style: {
+                    fontSize: '10px',
+                    fontFamily: 'Verdana, sans-serif',
+                }
+            }
+        }]
+    });
+});
+</script>
+
+<script>
+$(function () {
+    $('#dictamen_chart').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Proyectos aprobados sin dictamen'
+        },
+        xAxis: {
+            categories: {{ dictamen_categories|safe }}
+        },
+        yAxis: {
+            title: {
+                text: 'Número de proyectos'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+         tooltip: {
+            positioner: function () {
+                return { x: 150, y: 300 };
+            },
+            pointFormat: '{point.y} proyectos'
+        },
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function () {
+                            location.href = '/search-advanced/?dictamen=' + this.category;
+                        }
+                    }
+                }
+            }
+        },
+        series: [
+        {
+            name: 'Número proyectos',
+            data: {{ dictamen_values }},
             dataLabels: {
                 enabled: true,
                 style: {

@@ -62,15 +62,18 @@ def index(request):
 
     # Projects dispensed of 2nd round of votes
     res = Dispensed.objects.all()[0]
-    dispensed_values = "[" + str(len(laws)) + ", " + str(res.total_approved) + ", " \
+    dispensed_values = "[" + str(res.total_approved) + ", " \
                        + str(res.total_dispensed) + ", " \
                        + str(res.dispensed_by_plenary) + ", " \
                        + str(res.dispensed_by_spokesmen) + ", " \
                        + str(res.dispensed_others) + "]"
-    dispensed_categories = "['NÚMERO TOTAL DE LEYES', 'TOTAL aprobados', 'TOTAL dispensados', " \
+    dispensed_categories = "['TOTAL aprobados', 'TOTAL dispensados', " \
                            "'Dispensados por acuerdo del pleno', " \
                            "'Dispensados por junta portavoces', " \
                            "'Otros proyectos dispensados']"
+
+    dictamen_values = "[" + str(len(laws)) + "]"
+    dictamen_categories = "['NÚMERO TOTAL DE LEYES']"
 
     return render(request, "stats/index.html",
                   {'percentage_without_seguimientos': percentage_without_seguimientos,
@@ -90,6 +93,9 @@ def index(request):
                    'comision_count': comision_count_str,
                    'dispensed_values': dispensed_values,
                    'dispensed_categories': dispensed_categories,
+
+                   'dictamen_values': dictamen_values,
+                   'dictamen_categories': dictamen_categories,
                    }
                   )
 
