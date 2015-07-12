@@ -150,7 +150,7 @@ def search_exonerados_dictamen(form, request):
     obj = do_pagination(request, exonerado_de_dictamen, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
         "result_count": len(exonerado_de_dictamen),
-        "extra_result_msg": "Total número de proyectos que han generado leyes",
+        "extra_result_msg": "Proyectos Exonerados de dictamen",
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
         "first_half": obj['first_half'],
