@@ -51,6 +51,10 @@ rss icon by: http://glyphicons.com/
 
 
   <style type="text/css">
+    body, html {
+      height: 100%;
+    }
+
     .highlight { background-color: yellow }
     .navbar .divider-vertical {
     min-height: 50px;
@@ -58,12 +62,27 @@ rss icon by: http://glyphicons.com/
     border-right: 1px solid #ffffff;
     border-left: 1px solid #f2f2f2;
     }
+
+    #wrap {
+      min-height: 100%;
+      height: auto;
+      /* Negative indent footer by its height */
+      margin: 0 auto -93px;
+      /* Pad bottom by footer height */
+      padding: 0px 0 81px;
+    }
+
+    #footer {
+      padding-top: 12px;
+      height: 81px;
+    }
   </style>
     {% block additional_css %}
     {% endblock %}
 
 </head>
 <body>
+<div id="wrap">
 
     <!-- Static navbar -->
     <div class="navbar navbar-default navbar-static-top" role="navigation">
@@ -113,8 +132,9 @@ rss icon by: http://glyphicons.com/
 {% endblock content %}
 
 
+</div><!-- wrap -->
 
-<footer>
+<div id="footer">
   <div class="container">
     <hr>
 
@@ -132,7 +152,7 @@ rss icon by: http://glyphicons.com/
     <br />
     <br />
   </div>
-</footer>
+</div>
 
 
 <!-- Bootstrap core JavaScript
@@ -144,6 +164,7 @@ rss icon by: http://glyphicons.com/
     <script src="{% static 'js/pagination.js' %}"></script>
     {% block additional_javascript %}{% endblock %}
     {% block highlight_keyword %}{% endblock %}
+
 
 </body>
 </html>
