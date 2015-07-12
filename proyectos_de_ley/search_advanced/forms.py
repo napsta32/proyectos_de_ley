@@ -75,5 +75,6 @@ class SearchAdvancedForm(forms.Form):
         choices=[
             ('---', '---'),
             ('NÚMERO TOTAL DE LEYES', 'NÙMERO TOTAL DE LEYES'),
+            ('Exonerados de dictamen', 'Exonerados de dictamen'),
         ]
     )

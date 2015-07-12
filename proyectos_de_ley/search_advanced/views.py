@@ -20,11 +20,14 @@ def index(request):
             if form.cleaned_data['comision'].strip() != '':
                 return search_by_comission(form, request)
 
-            if form.cleaned_data['dispensados_2da_votacion'] == 'TOTAL dispensados':
-                return search_dispensados_todos(form, request)
-
             if form.cleaned_data['dictamen'] == 'NÚMERO TOTAL DE LEYES':
                 return search_total_leyes(form, request)
+
+            if form.cleaned_data['dictamen'] == 'Exonerados de dictamen':
+                return search_exonerados_dictamen(form, request)
+
+            if form.cleaned_data['dispensados_2da_votacion'] == 'TOTAL dispensados':
+                return search_dispensados_todos(form, request)
 
             if form.cleaned_data['dispensados_2da_votacion'] == 'TOTAL aprobados':
                 return search_total_aprobados(form, request)
@@ -126,6 +129,26 @@ def search_total_leyes(form, request):
     obj = do_pagination(request, are_law, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
         "result_count": len(are_law),
+        "extra_result_msg": "Total número de proyectos que han generado leyes",
+        "items": obj['items'],
+        "pretty_items": obj['pretty_items'],
+        "first_half": obj['first_half'],
+        "second_half": obj['second_half'],
+        "first_page": obj['first_page'],
+        "last_page": obj['last_page'],
+        "current": obj['current'],
+        "form": form,
+        "comision": obj['comision'],
+    })
+
+
+def search_exonerados_dictamen(form, request):
+    exonerado_de_dictamen = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
+        evento__icontains='exoneración de dictamen').distinct('proyecto_id')]
+
+    obj = do_pagination(request, exonerado_de_dictamen, search=True, advanced_search=True)
+    return render(request, "search_advanced/index.html", {
+        "result_count": len(exonerado_de_dictamen),
         "extra_result_msg": "Total número de proyectos que han generado leyes",
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
