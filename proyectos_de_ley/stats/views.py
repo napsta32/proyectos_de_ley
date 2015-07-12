@@ -72,8 +72,10 @@ def index(request):
                            "'Dispensados por junta portavoces', " \
                            "'Otros proyectos dispensados']"
 
-    dictamen_values = "[" + str(len(laws)) + "]"
-    dictamen_categories = "['NÚMERO TOTAL DE LEYES']"
+    exonerado_de_dictamen = Seguimientos.objects.filter(
+        evento__icontains='exoneración de dictamen').distinct('proyecto_id').count()
+    dictamen_values = "[" + str(len(laws)) + ", " + str(exonerado_de_dictamen) + "]"
+    dictamen_categories = "['NÚMERO TOTAL DE LEYES', 'Exonerados de dictamen']"
 
     return render(request, "stats/index.html",
                   {'percentage_without_seguimientos': percentage_without_seguimientos,
