@@ -112,23 +112,42 @@ class Command(BaseCommand):
         WithDictamenButNotVoted.objects.bulk_create(projects)
 
     def update_iniciativas_agrupadas_with_title_of_law(self):
-        projects_with_law = Proyecto.objects.all().exclude(titulo_de_ley='').values('codigo',
-                                                                                    'titulo_de_ley',
-                                                                                    'iniciativas_agrupadas',
-                                                                                    )
-        for i in projects_with_law:
-            if i['iniciativas_agrupadas'] != '' and i['iniciativas_agrupadas'] is not None:
-                iniciativas = i['iniciativas_agrupadas'].replace('{', '')
-                iniciativas = iniciativas.replace('}', '')
-                iniciativas = iniciativas.split(',')
-                for iniciativa in iniciativas:
+        projects_with_law = Proyecto.objects.all().exclude(
+            titulo_de_ley='').exclude(
+            titulo_de_ley__isnull=True).values('codigo', 'titulo_de_ley', 'iniciativas_agrupadas')
+
+        iniciativas_deben_tener_ley = self.get_iniciativas_con_ley(projects_with_law)
+
+        for iniciativa in iniciativas_deben_tener_ley.items():
+            for i in iniciativa[1]['iniciativas']:
+                if i not in iniciativas_deben_tener_ley.keys():
                     try:
-                        p = Proyecto.objects.get(codigo=iniciativa)
+                        p = Proyecto.objects.get(codigo=i)
                     except Proyecto.DoesNotExist:
                         continue
                     if p.titulo_de_ley == '':
-                        p.titulo_de_ley = i['titulo_de_ley']
+                        p.titulo_de_ley = iniciativa[1]['titulo_de_ley']
                         p.save()
+
+    def get_iniciativas_con_ley(self, projects_with_law):
+        iniciativas_con_ley = {}
+        for i in projects_with_law:
+            iniciativas = i['iniciativas_agrupadas']
+            if iniciativas != '' and iniciativas is not None:
+                iniciativas = iniciativas.replace('{', '')
+                iniciativas = iniciativas.replace('}', '')
+                iniciativas = iniciativas.split(',')
+
+                if i['codigo'] not in iniciativas_con_ley:
+                    iniciativas_con_ley[i['codigo']] = {
+                        'iniciativas': [],
+                        'titulo_de_ley': '',
+                    }
+
+                iniciativas_con_ley[i['codigo']]['iniciativas'] += iniciativas
+                iniciativas_con_ley[i['codigo']]['titulo_de_ley'] = i['titulo_de_ley']
+
+        return iniciativas_con_ley
 
     def get_proyect_ids(self, queryset):
         proyect_ids = set()
