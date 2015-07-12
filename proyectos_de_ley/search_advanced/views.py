@@ -144,7 +144,8 @@ def search_total_leyes(form, request):
 
 def search_exonerados_dictamen(form, request):
     exonerado_de_dictamen = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
-        evento__icontains='exoneración de dictamen').distinct('proyecto_id')]
+        evento__icontains='exoneración de dictamen').distinct()]
+    exonerado_de_dictamen = list(set(exonerado_de_dictamen))
 
     obj = do_pagination(request, exonerado_de_dictamen, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
