@@ -20,6 +20,11 @@ def index(request):
             if form.cleaned_data['comision'].strip() != '' and form.cleaned_data['comision'] != '---':
                 return search_by_comission(form, request)
 
+            if form.cleaned_data['congresista'] is not None:
+                name = form.cleaned_data['congresista']
+                return search_by_congresista(form, request, name)
+
+            # requests from stats view
             if form.cleaned_data['dictamen'] == 'NÚMERO TOTAL DE LEYES':
                 return search_total_leyes(form, request)
 
@@ -40,10 +45,6 @@ def index(request):
 
             if form.cleaned_data['dispensados_2da_votacion'] == 'Otros proyectos dispensados':
                 return search_dispensados_otros(form, request)
-
-            if form.cleaned_data['congresista'] is not None:
-                name = form.cleaned_data['congresista']
-                return search_by_congresista(form, request, name)
 
             return render(request, "search_advanced/index.html", {
                 "form": form,
