@@ -43,6 +43,10 @@ class TestSearchAdvancedViews(TestCase):
         response = self.c.get('/search-advanced/?comision=Ciencia&grupo_parlamentario=--Escoger bancada--')
         self.assertTrue('arco y flecha' in str(response.content))
 
+    def test_search_palabra_clave(self):
+        response = self.c.get('/search-advanced/?query=arco y flecha')
+        self.assertTrue('arco y flecha' in str(response.content))
+
     def test_search_congresista(self):
         response = self.c.get('/search-advanced/?congresista=1&grupo_parlamentario=--Escoger bancada--')
         self.assertTrue('arco y flecha' in str(response.content))
