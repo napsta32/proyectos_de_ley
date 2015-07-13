@@ -24,6 +24,11 @@ def index(request):
                 name = form.cleaned_data['congresista']
                 return search_by_congresista(form, request, name)
 
+            if form.cleaned_data['grupo_parlamentario'].strip() != '' \
+                    and form.cleaned_data['grupo_parlamentario'] is not None:
+                name = form.cleaned_data['grupo_parlamentario']
+                return search_by_grupo_parlamentario(form, request, name)
+
             # requests from stats view
             if form.cleaned_data['dictamen'] == 'NÚMERO TOTAL DE LEYES':
                 return search_total_leyes(form, request)
@@ -50,6 +55,7 @@ def index(request):
                 "form": form,
             })
         else:
+            print(form.errors)
             return render(request, "search_advanced/index.html", {
                 "form": form,
             })
@@ -258,6 +264,25 @@ def search_by_congresista(form, request, name):
     return render(request, "search_advanced/index.html", {
         "result_count": len(projects),
         "extra_result_msg": "Proyectos de congresista {}".format(name),
+        "items": obj['items'],
+        "pretty_items": obj['pretty_items'],
+        "first_half": obj['first_half'],
+        "second_half": obj['second_half'],
+        "first_page": obj['first_page'],
+        "last_page": obj['last_page'],
+        "current": obj['current'],
+        "form": form,
+        "comision": obj['comision'],
+    })
+
+
+def search_by_grupo_parlamentario(form, request, name):
+    projects = Proyecto.objects.filter(grupo_parlamentario=name).order_by('-codigo')
+
+    obj = do_pagination(request, projects, search=True, advanced_search=True)
+    return render(request, "search_advanced/index.html", {
+        "result_count": len(projects),
+        "extra_result_msg": "Proyectos de la bancada {}".format(name),
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
         "first_half": obj['first_half'],

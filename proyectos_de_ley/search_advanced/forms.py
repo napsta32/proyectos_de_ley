@@ -64,16 +64,21 @@ class SearchAdvancedForm(forms.Form):
         empty_label='--Escoger nombre--',
         widget=forms.Select(attrs={'class': 'form-control'}),
     )
-    grupo_parlamentario = forms.ModelChoiceField(
-        Proyecto.objects.filter(
-            grupo_parlamentario__isnull=False).exclude(
-            grupo_parlamentario='').values_list(
-            'grupo_parlamentario', flat=True).order_by('grupo_parlamentario').distinct(),
+
+    tmp = Proyecto.objects.filter(
+        grupo_parlamentario__isnull=False).exclude(
+        grupo_parlamentario='').values_list(
+        'grupo_parlamentario', flat=True).order_by('grupo_parlamentario').distinct()
+    choices = [('--Escoger bancada--', '--Escoger bancada--',)]
+    for i in tmp:
+        choices.append((i, i,))
+    grupo_parlamentario = forms.ChoiceField(
+        choices=choices,
         label='Búsqueda por grupo parlamentario.',
         required=False,
-        empty_label='--Escoger bancada--',
         widget=forms.Select(attrs={'class': 'form-control'}),
     )
+
     dispensados_2da_votacion = forms.ChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
         label='Dispensados 2da votación',
