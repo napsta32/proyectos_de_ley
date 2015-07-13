@@ -13,20 +13,9 @@ def index(request):
     if request.method == 'GET':
         form = forms.SearchAdvancedForm(request.GET)
         if form.is_valid():
-            if form.cleaned_data['date_from'] is not None:
-                return search_by_date(form, request)
-
-            if form.cleaned_data['comision'].strip() != '' and form.cleaned_data['comision'] != '---':
-                return search_by_comission(form, request)
-
-            if form.cleaned_data['congresista'] is not None:
-                name = form.cleaned_data['congresista']
-                return search_by_congresista(form, request, name)
-
-            if form.cleaned_data['grupo_parlamentario'].strip() != '' \
-                    and form.cleaned_data['grupo_parlamentario'] is not None:
-                name = form.cleaned_data['grupo_parlamentario']
-                return search_by_grupo_parlamentario(form, request, name)
+            keywords = clean_keywords_for_combined_search(form.cleaned_data)
+            if len(keywords) > 0:
+                return combined_search(keywords, form, request)
 
             # requests from stats view
             if form.cleaned_data['dictamen'] == 'NÚMERO TOTAL DE LEYES':
@@ -58,6 +47,62 @@ def index(request):
             return render(request, "search_advanced/index.html", {
                 "form": form,
             })
+
+
+def clean_keywords_for_combined_search(cleaned_data):
+    keywords = {}
+    for k, v in cleaned_data.items():
+        if v != '' and v is not None:
+            if v in ['---', '--Escoger bancada--']:
+                continue
+            if k in ['dispensados_2da_votacion', 'dictamen']:
+                continue
+            keywords[k] = v
+    return keywords
+
+
+def combined_search(keywords, form, request):
+    print(keywords)
+    queryset = Proyecto.objects.all().order_by('-codigo')
+    if 'date_to' and 'date_from' in keywords:
+        queryset = queryset.filter(fecha_presentacion__range=(keywords['date_from'], keywords['date_to']))
+    if 'congresista' in keywords:
+        queryset = queryset.filter(congresistas__icontains=keywords['congresista'])
+    if 'grupo_parlamentario' in keywords:
+        queryset = queryset.filter(grupo_parlamentario=keywords['grupo_parlamentario'])
+    if 'comision' in keywords:
+        queryset = filter_by_comision(keywords, queryset)
+
+    obj = do_pagination(request, queryset, search=True, advanced_search=True)
+    return render(request, "search_advanced/index.html", {
+        "items": obj['items'],
+        "pretty_items": obj['pretty_items'],
+        "first_half": obj['first_half'],
+        "second_half": obj['second_half'],
+        "first_page": obj['first_page'],
+        "last_page": obj['last_page'],
+        "current": obj['current'],
+        "form": form,
+    })
+
+
+def filter_by_comision(keywords, queryset):
+    comision = keywords['comision']
+    if comision.lower() == 'ciencia':
+        comision = 'Ciencia'
+    seguimientos_queryset = Seguimientos.objects.order_by('-proyecto_id')
+    proyectos = queryset.order_by('-codigo')
+    proyects_found = []
+    this_proyecto_id = ''
+    for i in seguimientos_queryset:
+        if i.proyecto_id != this_proyecto_id:
+            if comision in i.evento:
+                for proyecto in proyectos:
+                    if i.proyecto_id == proyecto.id:
+                        proyects_found.append(proyecto)
+                        continue
+        this_proyecto_id = i.proyecto_id
+    return proyects_found
 
 
 def search_by_date(form, request):
