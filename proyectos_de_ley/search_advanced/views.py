@@ -63,6 +63,7 @@ def clean_keywords_for_combined_search(cleaned_data):
 
 def combined_search(keywords, form, request):
     print(keywords)
+    msg = ''
     queryset = Proyecto.objects.all().order_by('-codigo')
     if 'date_to' and 'date_from' in keywords:
         msg = "Número de proyectos entre fecha indicada"
@@ -80,19 +81,25 @@ def combined_search(keywords, form, request):
     if len(keywords) > 1:
         msg = "Número de proyectos encontrados"
 
-    obj = do_pagination(request, queryset, search=True, advanced_search=True)
-    return render(request, "search_advanced/index.html", {
-        "result_count": len(queryset),
-        "extra_result_msg": msg,
-        "items": obj['items'],
-        "pretty_items": obj['pretty_items'],
-        "first_half": obj['first_half'],
-        "second_half": obj['second_half'],
-        "first_page": obj['first_page'],
-        "last_page": obj['last_page'],
-        "current": obj['current'],
-        "form": form,
-    })
+    if len(queryset) > 0:
+        obj = do_pagination(request, queryset, search=True, advanced_search=True)
+        return render(request, "search_advanced/index.html", {
+            "result_count": len(queryset),
+            "extra_result_msg": msg,
+            "items": obj['items'],
+            "pretty_items": obj['pretty_items'],
+            "first_half": obj['first_half'],
+            "second_half": obj['second_half'],
+            "first_page": obj['first_page'],
+            "last_page": obj['last_page'],
+            "current": obj['current'],
+            "form": form,
+        })
+    else:
+        return render(request, "search_advanced/index.html", {
+            "form": form,
+            "info_msg": 'No se encontraron resultados para esa combinación de términos de búsqueda',
+        })
 
 
 def filter_by_comision(keywords, queryset):
