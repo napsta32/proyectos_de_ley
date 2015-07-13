@@ -13,12 +13,13 @@ DateInput2 = partial(forms.DateInput, {'class': 'datepicker form-control',
 
 
 class SearchAdvancedForm(forms.Form):
-    keyword = forms.CharField(
+    query = forms.CharField(
         max_length=200,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Palabra de búsqueda',
-        })
+        }),
+        required=False,
     )
     date_from = forms.DateField(
         widget=DateInput1(),

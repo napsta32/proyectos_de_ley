@@ -62,9 +62,11 @@ def clean_keywords_for_combined_search(cleaned_data):
 
 
 def combined_search(keywords, form, request):
-    print(keywords)
     msg = ''
     queryset = Proyecto.objects.all().order_by('-codigo')
+    if 'query' in keywords:
+        msg = "Número de proyectos encontrados"
+        queryset = queryset.filter(titulo__icontains=keywords['query'])
     if 'date_to' and 'date_from' in keywords:
         msg = "Número de proyectos entre fecha indicada"
         queryset = queryset.filter(fecha_presentacion__range=(keywords['date_from'], keywords['date_to']))
