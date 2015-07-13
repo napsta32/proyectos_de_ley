@@ -2,6 +2,8 @@ from functools import partial
 
 from django import forms
 
+from pdl.models import Slug
+
 
 DateInput1 = partial(forms.DateInput, {'class': 'datepicker form-control',
                                        'placeholder': 'Fecha inicio'})
@@ -77,4 +79,11 @@ class SearchAdvancedForm(forms.Form):
             ('NÚMERO TOTAL DE LEYES', 'NÙMERO TOTAL DE LEYES'),
             ('Exonerados de dictamen', 'Exonerados de dictamen'),
         ]
+    )
+    congresista = forms.ModelChoiceField(
+        Slug.objects.all().order_by('nombre'),
+        label='Búsqueda por author de proyecto de ley.',
+        required=False,
+        empty_label='--Escoger nombre--',
+        widget=forms.Select(attrs={'class': 'form-control'}),
     )

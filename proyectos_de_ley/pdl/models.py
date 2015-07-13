@@ -61,3 +61,6 @@ class Slug(models.Model):
     def save(self, *args, **kwargs):
         self.ascii = unicodedata.normalize('NFKD', self.nombre).encode('ascii', 'ignore').decode('utf-8')
         super(Slug, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.nombre

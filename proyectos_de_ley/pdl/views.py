@@ -85,6 +85,7 @@ def search(request):
     keywords = clean_my_query(query)
 
     return render(request, "pdl/search.html", {
+        "result_count": len(all_items),
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
         "first_half": obj['first_half'],
