@@ -5,6 +5,7 @@ from django.test import TestCase, Client
 
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
+from pdl.models import Slug
 
 
 class TestSearchAdvancedViews(TestCase):
@@ -23,6 +24,9 @@ class TestSearchAdvancedViews(TestCase):
                              evento='Decreado a... Ciencia, Innovación y Tecnología')
             s.save()
 
+        Slug(nombre='Chihuan Ramos, Leyla Felicita', ascii='Chihuan Ramos, Leyla Felicita',
+             slug='chihuan-ramos-leyla-felicita').save()
+
     def test_index(self):
         response = self.c.get('/search-advanced/')
         self.assertEqual(200, response.status_code)
@@ -36,7 +40,11 @@ class TestSearchAdvancedViews(TestCase):
         self.assertEqual(200, response.status_code)
 
     def test_index_search_comission(self):
-        response = self.c.get('/search-advanced/?comision=Ciencia')
+        response = self.c.get('/search-advanced/?comision=Ciencia&grupo_parlamentario=--Escoger bancada--')
+        self.assertTrue('arco y flecha' in str(response.content))
+
+    def test_search_congresista(self):
+        response = self.c.get('/search-advanced/?congresista=1&grupo_parlamentario=--Escoger bancada--')
         self.assertTrue('arco y flecha' in str(response.content))
 
     def test_numero_total_de_leyes(self):

@@ -2,6 +2,7 @@ from functools import partial
 
 from django import forms
 
+from pdl.models import Proyecto
 from pdl.models import Slug
 
 
@@ -56,6 +57,28 @@ class SearchAdvancedForm(forms.Form):
             ('Vivienda', 'Vivienda'),
         ]
     )
+    congresista = forms.ModelChoiceField(
+        Slug.objects.all().order_by('nombre'),
+        label='Búsqueda por author de proyecto de ley.',
+        required=False,
+        empty_label='--Escoger nombre--',
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
+
+    tmp = Proyecto.objects.filter(
+        grupo_parlamentario__isnull=False).exclude(
+        grupo_parlamentario='').values_list(
+        'grupo_parlamentario', flat=True).order_by('grupo_parlamentario').distinct()
+    choices = [('--Escoger bancada--', '--Escoger bancada--',)]
+    for i in tmp:
+        choices.append((i, i,))
+    grupo_parlamentario = forms.ChoiceField(
+        choices=choices,
+        label='Búsqueda por grupo parlamentario.',
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
+
     dispensados_2da_votacion = forms.ChoiceField(
         widget=forms.Select(attrs={'class': 'form-control'}),
         label='Dispensados 2da votación',
@@ -79,11 +102,4 @@ class SearchAdvancedForm(forms.Form):
             ('NÚMERO TOTAL DE LEYES', 'NÙMERO TOTAL DE LEYES'),
             ('Exonerados de dictamen', 'Exonerados de dictamen'),
         ]
-    )
-    congresista = forms.ModelChoiceField(
-        Slug.objects.all().order_by('nombre'),
-        label='Búsqueda por author de proyecto de ley.',
-        required=False,
-        empty_label='--Escoger nombre--',
-        widget=forms.Select(attrs={'class': 'form-control'}),
     )

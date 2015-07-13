@@ -13,16 +13,9 @@ def index(request):
     if request.method == 'GET':
         form = forms.SearchAdvancedForm(request.GET)
         if form.is_valid():
-            print(form.cleaned_data)
-            if form.cleaned_data['date_from'] is not None:
-                return search_by_date(form, request)
-
-            if form.cleaned_data['comision'].strip() != '' and form.cleaned_data['comision'] != '---':
-                return search_by_comission(form, request)
-
-            if form.cleaned_data['congresista'] is not None:
-                name = form.cleaned_data['congresista']
-                return search_by_congresista(form, request, name)
+            keywords = clean_keywords_for_combined_search(form.cleaned_data)
+            if len(keywords) > 0:
+                return combined_search(keywords, form, request)
 
             # requests from stats view
             if form.cleaned_data['dictamen'] == 'NÚMERO TOTAL DE LEYES':
@@ -50,40 +43,74 @@ def index(request):
                 "form": form,
             })
         else:
+            print(form.errors)
             return render(request, "search_advanced/index.html", {
                 "form": form,
             })
 
 
-def search_by_date(form, request):
-    date_from = form.cleaned_data['date_from']
-    date_to = form.cleaned_data['date_to']
-    queryset = Proyecto.objects.filter(
-        fecha_presentacion__range=(date_from, date_to)).order_by('-codigo')
-    obj = do_pagination(request, queryset, search=True, advanced_search=True)
-    return render(request, "search_advanced/index.html", {
-        "items": obj['items'],
-        "pretty_items": obj['pretty_items'],
-        "first_half": obj['first_half'],
-        "second_half": obj['second_half'],
-        "first_page": obj['first_page'],
-        "last_page": obj['last_page'],
-        "current": obj['current'],
-        "form": form,
-        "date_from": convert_date_to_string(date_from),
-        "date_to": convert_date_to_string(date_to),
-    })
+def clean_keywords_for_combined_search(cleaned_data):
+    keywords = {}
+    for k, v in cleaned_data.items():
+        if v != '' and v is not None:
+            if v in ['---', '--Escoger bancada--']:
+                continue
+            if k in ['dispensados_2da_votacion', 'dictamen']:
+                continue
+            keywords[k] = v
+    return keywords
 
 
-def search_by_comission(form, request):
-    comision = form.cleaned_data['comision']
+def combined_search(keywords, form, request):
+    print(keywords)
+    msg = ''
+    queryset = Proyecto.objects.all().order_by('-codigo')
+    if 'date_to' and 'date_from' in keywords:
+        msg = "Número de proyectos entre fecha indicada"
+        queryset = queryset.filter(fecha_presentacion__range=(keywords['date_from'], keywords['date_to']))
+    if 'congresista' in keywords:
+        msg = "Número de proyectos de congresista {}".format(keywords['congresista'])
+        queryset = queryset.filter(congresistas__icontains=keywords['congresista'])
+    if 'grupo_parlamentario' in keywords:
+        msg = "Número de proyectos de bancada {}".format(keywords['grupo_parlamentario'])
+        queryset = queryset.filter(grupo_parlamentario=keywords['grupo_parlamentario'])
+    if 'comision' in keywords:
+        msg = "Número de proyectos de comisión {}".format(keywords['comision'])
+        queryset = filter_by_comision(keywords, queryset)
+
+    if len(keywords) > 1:
+        msg = "Número de proyectos encontrados"
+
+    if len(queryset) > 0:
+        obj = do_pagination(request, queryset, search=True, advanced_search=True)
+        return render(request, "search_advanced/index.html", {
+            "result_count": len(queryset),
+            "extra_result_msg": msg,
+            "items": obj['items'],
+            "pretty_items": obj['pretty_items'],
+            "first_half": obj['first_half'],
+            "second_half": obj['second_half'],
+            "first_page": obj['first_page'],
+            "last_page": obj['last_page'],
+            "current": obj['current'],
+            "form": form,
+        })
+    else:
+        return render(request, "search_advanced/index.html", {
+            "form": form,
+            "info_msg": 'No se encontraron resultados para esa combinación de términos de búsqueda',
+        })
+
+
+def filter_by_comision(keywords, queryset):
+    comision = keywords['comision']
     if comision.lower() == 'ciencia':
         comision = 'Ciencia'
-    queryset = Seguimientos.objects.order_by('-proyecto_id')
-    proyectos = Proyecto.objects.order_by('-codigo')
+    seguimientos_queryset = Seguimientos.objects.order_by('-proyecto_id')
+    proyectos = queryset.order_by('-codigo')
     proyects_found = []
     this_proyecto_id = ''
-    for i in queryset:
+    for i in seguimientos_queryset:
         if i.proyecto_id != this_proyecto_id:
             if comision in i.evento:
                 for proyecto in proyectos:
@@ -91,19 +118,7 @@ def search_by_comission(form, request):
                         proyects_found.append(proyecto)
                         continue
         this_proyecto_id = i.proyecto_id
-    obj = do_pagination(request, proyects_found, search=True,
-                        advanced_search=True)
-    return render(request, "search_advanced/index.html", {
-        "items": obj['items'],
-        "pretty_items": obj['pretty_items'],
-        "first_half": obj['first_half'],
-        "second_half": obj['second_half'],
-        "first_page": obj['first_page'],
-        "last_page": obj['last_page'],
-        "current": obj['current'],
-        "form": form,
-        "comision": obj['comision'],
-    })
+    return proyects_found
 
 
 def search_dispensados_todos(form, request):
@@ -239,25 +254,6 @@ def search_dispensados_otros(form, request):
     return render(request, "search_advanced/index.html", {
         "result_count": len(otros_dispensados),
         "extra_result_msg": "Dispensados 2da votación por otras razones",
-        "items": obj['items'],
-        "pretty_items": obj['pretty_items'],
-        "first_half": obj['first_half'],
-        "second_half": obj['second_half'],
-        "first_page": obj['first_page'],
-        "last_page": obj['last_page'],
-        "current": obj['current'],
-        "form": form,
-        "comision": obj['comision'],
-    })
-
-
-def search_by_congresista(form, request, name):
-    projects = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
-
-    obj = do_pagination(request, projects, search=True, advanced_search=True)
-    return render(request, "search_advanced/index.html", {
-        "result_count": len(projects),
-        "extra_result_msg": "Proyectos de congresista {}".format(name),
         "items": obj['items'],
         "pretty_items": obj['pretty_items'],
         "first_half": obj['first_half'],
