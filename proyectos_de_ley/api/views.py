@@ -62,22 +62,49 @@ def proyecto(request, codigo):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def congresista(request, nombre_corto):
+def congresista(request):
     """
-    Lista proyectos de ley de cada congresista
+    Lista proyectos de ley de cada congresista. El parámetro `comision` es
+    opcional.
+
+    # Por ejemplo:
+
+    * <http://proyectosdeley.pe/api/congresista/?nombre_corto=Manuel+Zerillo>
+    * <http://proyectosdeley.pe/api/congresista/?nombre_corto=Manuel+Zerillo&comision=Economía>
     ---
     type:
       nombre_corto:
         required: true
         type: string
+      comision:
+        required: false
+        type: string
 
     parameters:
       - name: nombre_corto
-        description: Nombre y apellido del congresista, por ejemplo Manuel Zerillo
+        description: Nombre y apellido del congresista, por ejemplo<br /> nombre_corto=Manuel+Zerillo
         type: string
         paramType: path
         required: true
+      - name: comision
+        description: Opcional. Comisión congresal, por ejemplo<br /> comision=Economía
+        type: string
+        paramType: path
+        required: false
     """
+    if 'nombre_corto' in request.GET:
+        nombre_corto = request.GET['nombre_corto']
+    else:
+        msg = {
+            'error': 'ingrese nombre_corto de congresista (requerido) y comision (opcional).'
+                     'Por ejemplo: http://proyectosdeley.pe/api/congresista/?nombre_corto=Manuel+Zerillo&comision=Economía',
+        }
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    comision = ''
+    if 'comision' in request.GET:
+        comision = request.GET['comision']
+
     names = find_name_from_short_name(nombre_corto)
     if '---error---' in names:
         msg = {'error': names[1]}
@@ -85,8 +112,10 @@ def congresista(request, nombre_corto):
 
     projects_and_person = []
     for name in names:
-        projects = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
-        projects_list = [str(i.codigo) + '-2011' for i in projects]
+        queryset = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
+        if comision != '':
+            queryset = queryset.filter(nombre_comision__icontains=comision)
+        projects_list = [str(i.codigo) + '-2011' for i in queryset]
         obj = {'nombre': name, 'proyectos': projects_list}
         projects_and_person.append(obj)
 
