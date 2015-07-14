@@ -183,7 +183,7 @@
 <script type="text/javascript" src="{% static 'js/storyjs-embed.js' %}"></script>
 
 <script>
-$.getJSON("/api/iniciativas/{{ friendly_code }}", function(data) {
+$.getJSON("/api/iniciativas.json/{{ friendly_code }}", function(data) {
     var items = [];
     $.each(data.iniciativas, function(k, v) {
         items.push("<a href='" + v.url + "' title='Proyecto " + v.codigo + "'>" + v.codigo + "</a>")
@@ -194,7 +194,7 @@ $.getJSON("/api/iniciativas/{{ friendly_code }}", function(data) {
 
 <script>
 $(document).ready(function() {
-  $.getJSON("/api/seguimientos/{{ friendly_code }}", function(data) {
+  $.getJSON("/api/seguimientos.json/{{ friendly_code }}", function(data) {
     createStoryJS({
         type:       'timeline',
         width:      '100%',
