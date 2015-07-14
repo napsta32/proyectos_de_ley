@@ -81,3 +81,18 @@ class TestAPI(TestCase):
         result = json.loads(response.content.decode('utf-8'))
         expected = {'resultado': ['03774-2011']}
         self.assertEqual(expected, result)
+
+    def test_exonerados_2da_votacion_empty(self):
+        response = self.c.get('/api/exonerados_2da_votacion/')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = {'error': 'no se encontraron resultados'}
+        self.assertEqual(expected, result)
+
+    def test_exonerados_2da_votacion(self):
+        Seguimientos(proyecto=self.p,
+                     evento='dispensado 2da',
+                     fecha='2010-10-10').save()
+        response = self.c.get('/api/exonerados_2da_votacion/')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = {'resultado': ['03774-2011']}
+        self.assertEqual(expected, result)

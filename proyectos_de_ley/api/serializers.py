@@ -23,3 +23,7 @@ class CongresistaSerializer(serializers.Serializer):
 
 class ExoneradoDictamenSerializer(serializers.Serializer):
     resultado = serializers.ListField()
+
+
+class Exonerados2daVotacionSerializer(serializers.Serializer):
+    resultado = serializers.ListField()

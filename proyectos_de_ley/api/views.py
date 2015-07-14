@@ -14,6 +14,7 @@ from pdl.models import Seguimientos
 from pdl.models import Slug
 from .serializers import CongresistaSerializer
 from .serializers import ExoneradoDictamenSerializer
+from .serializers import Exonerados2daVotacionSerializer
 from .serializers import ProyectoSerializer
 
 
@@ -113,6 +114,27 @@ def exonerados_dictamen(request):
         data = {'resultado': exonerado_de_dictamen}
         if request.method == 'GET':
             serializer = ExoneradoDictamenSerializer(data)
+            return JSONResponse(serializer.data)
+    else:
+        msg = {'error': 'no se encontraron resultados'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def exonerados_2da_votacion(request):
+    """
+    Lista proyectos que han sido exonerados de 2da votación en el pleno.
+    ---
+    """
+    total_dispensed = ["{}-2011".format(i.proyecto.codigo)
+                       for i in Seguimientos.objects.select_related('proyecto').filter(
+                       evento__icontains='dispensado 2da')]
+
+    if len(total_dispensed) > 0:
+        data = {'resultado': total_dispensed}
+        if request.method == 'GET':
+            serializer = Exonerados2daVotacionSerializer(data)
             return JSONResponse(serializer.data)
     else:
         msg = {'error': 'no se encontraron resultados'}
