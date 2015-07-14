@@ -62,10 +62,54 @@ def proyecto(request, codigo):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def congresista(request, nombre_corto, comision):
+def congresista(request, nombre_corto):
     """
-    Lista proyectos de ley de cada congresista. El parámetro `comision` es
-    opcional.
+    Lista proyectos de ley de cada congresista.
+
+    # Por ejemplo:
+
+    * <http://proyectosdeley.pe/api/congresista/Manuel+Zerillo/>
+    ---
+    type:
+      nombre_corto:
+        required: true
+        type: string
+
+    parameters:
+      - name: nombre_corto
+        description: Nombre y apellido del congresista, por ejemplo<br /> Manuel+Zerillo
+        type: string
+        paramType: path
+        required: true
+    """
+    nombre_corto = nombre_corto.replace('+', ' ')
+    names = find_name_from_short_name(nombre_corto)
+
+    if '---error---' in names:
+        msg = {'error': names[1]}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    projects_and_person = []
+    for name in names:
+        queryset = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
+        projects_list = [str(i.codigo) + '-2011' for i in queryset]
+        obj = {'nombre': name, 'proyectos': projects_list}
+        projects_and_person.append(obj)
+
+    data = {
+        'resultado': projects_and_person,
+        'numero_de_congresistas': len(projects_and_person),
+    }
+    if request.method == 'GET':
+        serializer = CongresistaSerializer(data)
+        return JSONResponse(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def congresista_y_comision(request, nombre_corto, comision):
+    """
+    Lista proyectos de ley de cada congresista.
 
     # Por ejemplo:
 
@@ -77,7 +121,7 @@ def congresista(request, nombre_corto, comision):
         required: true
         type: string
       comision:
-        required: false
+        required: true
         type: string
 
     parameters:
@@ -87,10 +131,10 @@ def congresista(request, nombre_corto, comision):
         paramType: path
         required: true
       - name: comision
-        description: Opcional. Comisión congresal, por ejemplo<br /> Economía
+        description: Comisión congresal, por ejemplo<br /> Economía
         type: string
         paramType: path
-        required: false
+        required: true
     """
     nombre_corto = nombre_corto.replace('+', ' ')
     names = find_name_from_short_name(nombre_corto)
