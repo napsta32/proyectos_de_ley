@@ -4,6 +4,7 @@ from django.test import Client
 from django.test import TestCase
 
 from pdl.models import Proyecto
+from pdl.models import Seguimientos
 from pdl.models import Slug
 
 
@@ -24,7 +25,8 @@ class TestAPI(TestCase):
             "time_edited": "2014-09-05 03:00:00",
             "titulo": "Propone establecer los lineamientos para la promoción de la eficiencia y competitividad en la actividad empresarial del Estado, garantizando su aporte estratégico para el desarrollo descentralizado y la soberanía nacional."
         }
-        Proyecto(**dummy).save()
+        self.p = Proyecto(**dummy)
+        self.p.save()
 
         dummy_slug = {
             "nombre": "Dammert Ego Aguirre, Manuel Enrique Ernesto",
@@ -63,4 +65,19 @@ class TestAPI(TestCase):
         response = self.c.get('/api/congresista/Aus Bus/')
         result = json.loads(response.content.decode('utf-8'))
         expected = {'error': 'no se pudo encontrar congresista'}
+        self.assertEqual(expected, result)
+
+    def test_exonerados_dictamen_empty(self):
+        response = self.c.get('/api/exonerados_dictamen/')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = {'error': 'no se encontraron resultados'}
+        self.assertEqual(expected, result)
+
+    def test_exonerados_dictamen(self):
+        Seguimientos(proyecto=self.p,
+                     evento='exoneración de dictamen',
+                     fecha='2010-10-10').save()
+        response = self.c.get('/api/exonerados_dictamen/')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = {'resultado': ['03774-2011']}
         self.assertEqual(expected, result)

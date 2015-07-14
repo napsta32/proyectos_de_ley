@@ -10,9 +10,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
 
 from pdl.models import Proyecto
+from pdl.models import Seguimientos
 from pdl.models import Slug
-from .serializers import ProyectoSerializer
 from .serializers import CongresistaSerializer
+from .serializers import ExoneradoDictamenSerializer
+from .serializers import ProyectoSerializer
 
 
 class JSONResponse(HttpResponse):
@@ -94,6 +96,27 @@ def congresista(request, nombre_corto):
     if request.method == 'GET':
         serializer = CongresistaSerializer(data)
         return JSONResponse(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def exonerados_dictamen(request):
+    """
+    Lista proyectos que han sido aprobados y exonerados de dictamen.
+    """
+    exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
+                             for i in Seguimientos.objects.select_related('proyecto').filter(
+                             evento__icontains='exoneración de dictamen').distinct()]
+    exonerado_de_dictamen = list(set(exonerado_de_dictamen))
+
+    if len(exonerado_de_dictamen) > 0:
+        data = {'resultado': exonerado_de_dictamen}
+        if request.method == 'GET':
+            serializer = ExoneradoDictamenSerializer(data)
+            return JSONResponse(serializer.data)
+    else:
+        msg = {'error': 'no se encontraron resultados'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
 
 
 def find_name_from_short_name(nombre_corto):
