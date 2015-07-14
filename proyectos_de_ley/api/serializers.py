@@ -16,8 +16,7 @@ class ProyectoSerializer(serializers.ModelSerializer):
 
 
 class CongresistaSerializer(serializers.Serializer):
-    resultado = serializers.ListField(
-    )
+    resultado = serializers.ListField()
     numero_de_congresistas = serializers.IntegerField()
 
 

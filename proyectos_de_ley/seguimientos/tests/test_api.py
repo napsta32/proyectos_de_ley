@@ -46,35 +46,35 @@ class TestAPI(TestCase):
         self.c = Client()
 
     def test_api_seguimientos(self):
-        response = self.c.get('/api/seguimientos/03774-2011/')
+        response = self.c.get('/api/seguimientos.json/03774-2011/')
         as_string = response.content.decode("utf-8")
         result = json.loads(as_string)
         expected = "Proyecto No: 03774_2014-CR"
         self.assertEqual(expected, result['timeline']['text'])
 
     def test_api_seguimientos_missing(self):
-        response = self.c.get('/api/seguimientos/0377400-2011/')
+        response = self.c.get('/api/seguimientos.json/0377400-2011/')
         as_string = response.content.decode("utf-8")
         result = json.loads(as_string)
         expected = "proyecto no existe"
         self.assertEqual(expected, result['error'])
 
     def test_api_iniciativas(self):
-        response = self.c.get('/api/iniciativas/03775-2011/')
+        response = self.c.get('/api/iniciativas.json/03775-2011/')
         as_string = response.content.decode("utf-8")
         result = json.loads(as_string)
         expected = '03774'
         self.assertEqual(expected, result['iniciativas'][0]['codigo'])
 
     def test_api_iniciativas_missing(self):
-        response = self.c.get('/api/iniciativas/03774-2011/')
+        response = self.c.get('/api/iniciativas.json/03774-2011/')
         as_string = response.content.decode("utf-8")
         result = json.loads(as_string)
         expected = 'sin iniciativas agrupadas'
         self.assertEqual(expected, result['error'])
 
     def test_api_iniciativas_missing_proyecto(self):
-        response = self.c.get('/api/iniciativas/000003770000-2011/')
+        response = self.c.get('/api/iniciativas.json/000003770000-2011/')
         as_string = response.content.decode("utf-8")
         result = json.loads(as_string)
         expected = 'proyecto no existe'
