@@ -62,15 +62,15 @@ def proyecto(request, codigo):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def congresista(request):
+def congresista(request, nombre_corto, comision):
     """
     Lista proyectos de ley de cada congresista. El parámetro `comision` es
     opcional.
 
     # Por ejemplo:
 
-    * <http://proyectosdeley.pe/api/congresista/?nombre_corto=Manuel+Zerillo>
-    * <http://proyectosdeley.pe/api/congresista/?nombre_corto=Manuel+Zerillo&comision=Economía>
+    * <http://proyectosdeley.pe/api/congresista/Manuel+Zerillo/>
+    * <http://proyectosdeley.pe/api/congresista/Manuel+Zerillo/Economía/>
     ---
     type:
       nombre_corto:
@@ -82,35 +82,24 @@ def congresista(request):
 
     parameters:
       - name: nombre_corto
-        description: Nombre y apellido del congresista, por ejemplo<br /> nombre_corto=Manuel+Zerillo
+        description: Nombre y apellido del congresista, por ejemplo<br /> Manuel+Zerillo
         type: string
         paramType: path
         required: true
       - name: comision
-        description: Opcional. Comisión congresal, por ejemplo<br /> comision=Economía
+        description: Opcional. Comisión congresal, por ejemplo<br /> Economía
         type: string
         paramType: path
         required: false
     """
-    if 'nombre_corto' in request.GET:
-        nombre_corto = request.GET['nombre_corto']
-        nombre_corto = nombre_corto.replace('/', ' ')
-    else:
-        msg = {
-            'error': 'ingrese nombre_corto de congresista (requerido) y comision (opcional).'
-                     'Por ejemplo: http://proyectosdeley.pe/api/congresista/?nombre_corto=Manuel+Zerillo&comision=Economía',
-        }
-        return HttpResponse(json.dumps(msg), content_type='application/json')
-
+    nombre_corto = nombre_corto.replace('+', ' ')
     names = find_name_from_short_name(nombre_corto)
+
     if '---error---' in names:
         msg = {'error': names[1]}
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
-    comision = ''
-    if 'comision' in request.GET:
-        comision = request.GET['comision']
-        comision = comision.replace('/', ' ')
+    comision = comision.strip()
 
     projects_and_person = []
     for name in names:
