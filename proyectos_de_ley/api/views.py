@@ -100,7 +100,7 @@ def congresista(request, nombre_corto):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def exoneracion_dictamen(request):
+def exonerados_dictamen(request):
     """
     Lista proyectos que han sido aprobados y exonerados de dictamen.
     """
@@ -109,12 +109,14 @@ def exoneracion_dictamen(request):
                              evento__icontains='exoneración de dictamen').distinct()]
     exonerado_de_dictamen = list(set(exonerado_de_dictamen))
 
-    data = {
-        'resultado': exonerado_de_dictamen,
-    }
-    if request.method == 'GET':
-        serializer = ExoneradoDictamenSerializer(data)
-        return JSONResponse(serializer.data)
+    if len(exonerado_de_dictamen) > 0:
+        data = {'resultado': exonerado_de_dictamen}
+        if request.method == 'GET':
+            serializer = ExoneradoDictamenSerializer(data)
+            return JSONResponse(serializer.data)
+    else:
+        msg = {'error': 'no se encontraron resultados'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
 
 
 def find_name_from_short_name(nombre_corto):

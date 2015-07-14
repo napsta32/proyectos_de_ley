@@ -7,5 +7,5 @@ urlpatterns = patterns(
     '',
     url(r'^proyecto/(?P<codigo>[0-9]+\-[0-9]+)/$', views.proyecto),
     url(r'^congresista/(?P<nombre_corto>.+)/$', views.congresista),
-    url(r'^exoneracion_dictamen/$', views.exoneracion_dictamen),
+    url(r'^exonerados_dictamen/$', views.exonerados_dictamen),
 )
