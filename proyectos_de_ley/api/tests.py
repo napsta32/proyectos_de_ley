@@ -51,13 +51,13 @@ class TestAPI(TestCase):
         self.assertEqual(expected, result)
 
     def test_getting_projects_of_person(self):
-        response = self.c.get('/api/congresista/?nombre_corto=Dammert Ego/')
+        response = self.c.get('/api/congresista/Dammert Ego/')
         result = json.loads(response.content.decode('utf-8'))
         expected = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
         self.assertEqual(expected, result['resultado'][0]['nombre'])
 
     def test_getting_projects_of_person_and_comission(self):
-        response = self.c.get('/api/congresista/?nombre_corto=Dammert Ego&comision=economia')
+        response = self.c.get('/api/congresista_y_comision/Dammert Ego/economia/')
         result = json.loads(response.content.decode('utf-8'))
         expected = ['03774-2011']
         self.assertEqual(expected, result['resultado'][0]['proyectos'])
@@ -65,20 +65,26 @@ class TestAPI(TestCase):
     def test_not_enough_names_to_search_for_person(self):
         response = self.c.get('/api/congresista/Dammert/')
         result = json.loads(response.content.decode('utf-8'))
-        expected = 'ingrese nombre_corto'
-        self.assertTrue(expected in result['error'])
+        expected = 'ingrese un nombre y un apellido'
+        self.assertEqual(expected, result['error'])
+
+    def test_not_enough_names_to_search_for_person_in_comision(self):
+        response = self.c.get('/api/congresista_y_comision/Dammert/economia/')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = 'ingrese un nombre y un apellido'
+        self.assertEqual(expected, result['error'])
 
     def test_person_cannot_be_found(self):
         response = self.c.get('/api/congresista/Aus Bus/')
         result = json.loads(response.content.decode('utf-8'))
-        expected = 'ingrese nombre_corto'
-        self.assertTrue(expected in result['error'])
+        expected = 'no se pudo encontrar congresista'
+        self.assertEqual(expected, result['error'])
 
     def test_person_name_incomplete(self):
-        response = self.c.get('/api/congresista/?nombre_corto=Bus')
+        response = self.c.get('/api/congresista/Bus/')
         result = json.loads(response.content.decode('utf-8'))
         expected = 'ingrese un nombre y un apellido'
-        self.assertTrue(expected in result['error'])
+        self.assertEqual(expected, result['error'])
 
     def test_exonerados_dictamen_empty(self):
         response = self.c.get('/api/exonerados_dictamen/')
