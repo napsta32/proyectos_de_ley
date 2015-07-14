@@ -21,5 +21,9 @@ class CongresistaSerializer(serializers.Serializer):
     numero_de_congresistas = serializers.IntegerField()
 
 
+class ExoneradoDictamenSerializer(serializers.Serializer):
+    resultado = serializers.ListField()
+
+
 class Exonerados2daVotacionSerializer(serializers.Serializer):
     resultado = serializers.ListField()
