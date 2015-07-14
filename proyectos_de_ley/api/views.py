@@ -6,8 +6,10 @@ from django.http import HttpResponse
 from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.decorators import permission_classes
+from rest_framework.decorators import renderer_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
+from rest_framework_csv import renderers
 
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
@@ -26,6 +28,29 @@ class JSONResponse(HttpResponse):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
+
+
+class CSVResponse(HttpResponse):
+    """
+    An HttpResponse that renders its content into CSV.
+    """
+    def __init__(self, data, **kwargs):
+        content = CSVRenderer().render(data)
+        kwargs['content_type'] = 'text/csv'
+        super(CSVResponse, self).__init__(content, **kwargs)
+
+
+class CSVRenderer(renderers.CSVRenderer):
+    media_type = 'text/csv'
+    format = 'csv'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        data_to_csv = []
+        for i in data['resultado']:
+            data_to_csv.append({'nombre': i['nombre']})
+            for p in i['proyectos']:
+                data_to_csv.append({'proyecto': p})
+        return super(CSVRenderer, self).render(data_to_csv, media_type, renderer_context)
 
 
 @api_view(['GET'])
@@ -103,6 +128,52 @@ def congresista(request, nombre_corto):
     if request.method == 'GET':
         serializer = CongresistaSerializer(data)
         return JSONResponse(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+@renderer_classes((CSVRenderer,))
+def congresista_tsv(request, nombre_corto):
+    """
+    Lista proyectos de ley de cada congresista.
+
+    # Por ejemplo:
+
+    * <http://proyectosdeley.pe/api/congresista/Manuel+Zerillo/>
+    ---
+    type:
+      nombre_corto:
+        required: true
+        type: string
+
+    parameters:
+      - name: nombre_corto
+        description: Nombre y apellido del congresista, por ejemplo<br /> Manuel+Zerillo
+        type: string
+        paramType: path
+        required: true
+    """
+    nombre_corto = nombre_corto.replace('+', ' ')
+    names = find_name_from_short_name(nombre_corto)
+
+    if '---error---' in names:
+        msg = {'error': names[1]}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    projects_and_person = []
+    for name in names:
+        queryset = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
+        projects_list = [str(i.codigo) + '-2011' for i in queryset]
+        obj = {'nombre': name, 'proyectos': projects_list}
+        projects_and_person.append(obj)
+
+    data = {
+        'resultado': projects_and_person,
+        'numero_de_congresistas': len(projects_and_person),
+    }
+    if request.method == 'GET':
+        serializer = CongresistaSerializer(data)
+        return CSVResponse(serializer.data)
 
 
 @api_view(['GET'])
