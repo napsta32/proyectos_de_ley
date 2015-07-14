@@ -94,6 +94,7 @@ def congresista(request):
     """
     if 'nombre_corto' in request.GET:
         nombre_corto = request.GET['nombre_corto']
+        nombre_corto = nombre_corto.replace('/', ' ')
     else:
         msg = {
             'error': 'ingrese nombre_corto de congresista (requerido) y comision (opcional).'
@@ -101,14 +102,15 @@ def congresista(request):
         }
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
-    comision = ''
-    if 'comision' in request.GET:
-        comision = request.GET['comision']
-
     names = find_name_from_short_name(nombre_corto)
     if '---error---' in names:
         msg = {'error': names[1]}
         return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    comision = ''
+    if 'comision' in request.GET:
+        comision = request.GET['comision']
+        comision = comision.replace('/', ' ')
 
     projects_and_person = []
     for name in names:
