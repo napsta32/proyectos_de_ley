@@ -93,7 +93,13 @@ def congresista(request, nombre_corto):
 
     # Por ejemplo:
 
-    * <http://proyectosdeley.pe/api/congresista/Manuel+Zerillo/>
+    * <http://proyectosdeley.pe/api/congresista.json/Manuel+Zerillo/>
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `congresista.csv`:
+
+    * <http://proyectosdeley.pe/api/congresista.csv/Manuel+Zerillo/>
     ---
     type:
       nombre_corto:
@@ -130,21 +136,21 @@ def congresista(request, nombre_corto):
         return JSONResponse(serializer.data)
 
 
-@api_view(['GET'])
 @permission_classes((AllowAny,))
 @renderer_classes((CSVRenderer,))
-def congresista_tsv(request, nombre_corto):
+def congresista_csv(request, nombre_corto):
     """
     Lista proyectos de ley de cada congresista.
 
     # Por ejemplo:
 
-    * <http://proyectosdeley.pe/api/congresista/Manuel+Zerillo/>
+    * <http://proyectosdeley.pe/api/congresista.csv/Manuel+Zerillo/>
     ---
     type:
       nombre_corto:
         required: true
         type: string
+        omit_serializer: true
 
     parameters:
       - name: nombre_corto
@@ -184,8 +190,8 @@ def congresista_y_comision(request, nombre_corto, comision):
 
     # Por ejemplo:
 
-    * <http://proyectosdeley.pe/api/congresista/Manuel+Zerillo/>
-    * <http://proyectosdeley.pe/api/congresista/Manuel+Zerillo/Economía/>
+    * <http://proyectosdeley.pe/api/congresista.json/Manuel+Zerillo/>
+    * <http://proyectosdeley.pe/api/congresista.json/Manuel+Zerillo/Economía/>
     ---
     type:
       nombre_corto:

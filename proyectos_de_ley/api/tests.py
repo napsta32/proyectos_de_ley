@@ -51,43 +51,43 @@ class TestAPI(TestCase):
         self.assertEqual(expected, result)
 
     def test_getting_projects_of_person(self):
-        response = self.c.get('/api/congresista/Dammert Ego/')
+        response = self.c.get('/api/congresista.json/Dammert Ego/')
         result = json.loads(response.content.decode('utf-8'))
         expected = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
         self.assertEqual(expected, result['resultado'][0]['nombre'])
 
     def test_getting_projects_of_person_and_comission(self):
-        response = self.c.get('/api/congresista_y_comision/Dammert Ego/economia/')
+        response = self.c.get('/api/congresista_y_comision.json/Dammert Ego/economia/')
         result = json.loads(response.content.decode('utf-8'))
         expected = ['03774-2011']
         self.assertEqual(expected, result['resultado'][0]['proyectos'])
 
     def test_not_enough_names_to_search_for_person(self):
-        response = self.c.get('/api/congresista/Dammert/')
+        response = self.c.get('/api/congresista.json/Dammert/')
         result = json.loads(response.content.decode('utf-8'))
         expected = 'ingrese un nombre y un apellido'
         self.assertEqual(expected, result['error'])
 
     def test_not_enough_names_to_search_for_person_in_comision(self):
-        response = self.c.get('/api/congresista_y_comision/Dammert/economia/')
+        response = self.c.get('/api/congresista_y_comision.json/Dammert/economia/')
         result = json.loads(response.content.decode('utf-8'))
         expected = 'ingrese un nombre y un apellido'
         self.assertEqual(expected, result['error'])
 
     def test_person_cannot_be_found(self):
-        response = self.c.get('/api/congresista/Aus Bus/')
+        response = self.c.get('/api/congresista.json/Aus Bus/')
         result = json.loads(response.content.decode('utf-8'))
         expected = 'no se pudo encontrar congresista'
         self.assertEqual(expected, result['error'])
 
     def test_person_name_incomplete(self):
-        response = self.c.get('/api/congresista/Bus/')
+        response = self.c.get('/api/congresista.json/Bus/')
         result = json.loads(response.content.decode('utf-8'))
         expected = 'ingrese un nombre y un apellido'
         self.assertEqual(expected, result['error'])
 
     def test_exonerados_dictamen_empty(self):
-        response = self.c.get('/api/exonerados_dictamen/')
+        response = self.c.get('/api/exonerados_dictamen.json/')
         result = json.loads(response.content.decode('utf-8'))
         expected = {'error': 'no se encontraron resultados'}
         self.assertEqual(expected, result)
@@ -96,13 +96,13 @@ class TestAPI(TestCase):
         Seguimientos(proyecto=self.p,
                      evento='exoneración de dictamen',
                      fecha='2010-10-10').save()
-        response = self.c.get('/api/exonerados_dictamen/')
+        response = self.c.get('/api/exonerados_dictamen.json/')
         result = json.loads(response.content.decode('utf-8'))
         expected = {'resultado': ['03774-2011']}
         self.assertEqual(expected, result)
 
     def test_exonerados_2da_votacion_empty(self):
-        response = self.c.get('/api/exonerados_2da_votacion/')
+        response = self.c.get('/api/exonerados_2da_votacion.json/')
         result = json.loads(response.content.decode('utf-8'))
         expected = {'error': 'no se encontraron resultados'}
         self.assertEqual(expected, result)
@@ -111,7 +111,7 @@ class TestAPI(TestCase):
         Seguimientos(proyecto=self.p,
                      evento='dispensado 2da',
                      fecha='2010-10-10').save()
-        response = self.c.get('/api/exonerados_2da_votacion/')
+        response = self.c.get('/api/exonerados_2da_votacion.json/')
         result = json.loads(response.content.decode('utf-8'))
         expected = {'resultado': ['03774-2011']}
         self.assertEqual(expected, result)
