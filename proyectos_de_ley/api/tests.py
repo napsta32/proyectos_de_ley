@@ -21,6 +21,7 @@ class TestAPI(TestCase):
             "pdf_url": "http://www2.congreso.gob.pe/Sicr/TraDocEstProc/Contdoc02_2011_2.nsf/d99575da99ebfbe305256f2e006d1cf0/dbc9030966aac60905257d4a007b75d9/$FILE/PL03774050914.pdf",
             "seguimiento_page": "http://www2.congreso.gob.pe/Sicr/TraDocEstProc/CLProLey2011.nsf/Sicr/TraDocEstProc/CLProLey2011.nsf/PAporNumeroInverso/9609130B9871582F05257D4A00752301?opendocument",
             "short_url": "4aw8ym",
+            "nombre_comision": "economia",
             "time_created": "2014-09-05 03:00:00",
             "time_edited": "2014-09-05 03:00:00",
             "titulo": "Propone establecer los lineamientos para la promoción de la eficiencia y competitividad en la actividad empresarial del Estado, garantizando su aporte estratégico para el desarrollo descentralizado y la soberanía nacional."
@@ -50,22 +51,34 @@ class TestAPI(TestCase):
         self.assertEqual(expected, result)
 
     def test_getting_projects_of_person(self):
-        response = self.c.get('/api/congresista/Dammert Ego/')
+        response = self.c.get('/api/congresista/?nombre_corto=Dammert Ego/')
         result = json.loads(response.content.decode('utf-8'))
         expected = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
         self.assertEqual(expected, result['resultado'][0]['nombre'])
 
+    def test_getting_projects_of_person_and_comission(self):
+        response = self.c.get('/api/congresista/?nombre_corto=Dammert Ego&comision=economia')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = ['03774-2011']
+        self.assertEqual(expected, result['resultado'][0]['proyectos'])
+
     def test_not_enough_names_to_search_for_person(self):
         response = self.c.get('/api/congresista/Dammert/')
         result = json.loads(response.content.decode('utf-8'))
-        expected = {'error': 'ingrese un nombre y un apellido'}
-        self.assertEqual(expected, result)
+        expected = 'ingrese nombre_corto'
+        self.assertTrue(expected in result['error'])
 
     def test_person_cannot_be_found(self):
         response = self.c.get('/api/congresista/Aus Bus/')
         result = json.loads(response.content.decode('utf-8'))
-        expected = {'error': 'no se pudo encontrar congresista'}
-        self.assertEqual(expected, result)
+        expected = 'ingrese nombre_corto'
+        self.assertTrue(expected in result['error'])
+
+    def test_person_name_incomplete(self):
+        response = self.c.get('/api/congresista/?nombre_corto=Bus')
+        result = json.loads(response.content.decode('utf-8'))
+        expected = 'ingrese un nombre y un apellido'
+        self.assertTrue(expected in result['error'])
 
     def test_exonerados_dictamen_empty(self):
         response = self.c.get('/api/exonerados_dictamen/')
