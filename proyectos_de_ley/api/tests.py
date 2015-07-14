@@ -56,6 +56,12 @@ class TestAPI(TestCase):
         expected = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
         self.assertEqual(expected, result['resultado'][0]['nombre'])
 
+    def test_getting_projects_of_person_csv(self):
+        response = self.c.get('/api/congresista.csv/Dammert Ego/')
+        result = response.content.decode('utf-8')
+        expected = 'Dammert Ego Aguirre, Manuel Enrique Ernesto'
+        self.assertTrue(expected in result)
+
     def test_getting_projects_of_person_and_comission(self):
         response = self.c.get('/api/congresista_y_comision.json/Dammert Ego/economia/')
         result = json.loads(response.content.decode('utf-8'))
@@ -85,6 +91,12 @@ class TestAPI(TestCase):
         result = json.loads(response.content.decode('utf-8'))
         expected = 'ingrese un nombre y un apellido'
         self.assertEqual(expected, result['error'])
+
+    def test_person_name_incomplete_csv(self):
+        response = self.c.get('/api/congresista.csv/Bus/')
+        result = response.content.decode('utf-8')
+        expected = 'error,ingrese un nombre y un apellido'
+        self.assertEqual(expected, result)
 
     def test_exonerados_dictamen_empty(self):
         response = self.c.get('/api/exonerados_dictamen.json/')

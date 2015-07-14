@@ -163,8 +163,8 @@ def congresista_csv(request, nombre_corto):
     names = find_name_from_short_name(nombre_corto)
 
     if '---error---' in names:
-        msg = {'error': names[1]}
-        return HttpResponse(json.dumps(msg), content_type='application/json')
+        msg = 'error,{}'.format(names[1])
+        return HttpResponse(msg, content_type='text/csv')
 
     projects_and_person = []
     for name in names:
