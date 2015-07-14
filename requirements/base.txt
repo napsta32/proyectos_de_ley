@@ -4,7 +4,7 @@ beautifulsoup4==4.3.2
 Django==1.8.2
 Jinja2==2.7.3
 MarkupSafe==0.23
-Markdown=2.6.2
+Markdown==2.6.2
 PyYAML==3.11
 Unipath==1.0
 django-haystack==2.4.0
