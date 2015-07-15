@@ -109,8 +109,8 @@ def proyecto_csv(request, codigo):
     codigo = re.sub('-[0-9]+', '', codigo)
     proyectos = Proyecto.objects.filter(numero_proyecto__startswith=codigo).values()
     if len(proyectos) < 1:
-        msg = {'error': 'proyecto no existe'}
-        return HttpResponse(json.dumps(msg), content_type='application/json')
+        msg = 'error,proyecto no existe'
+        return HttpResponse(msg, content_type='text/csv')
 
     data = [i for i in proyectos]
     if request.method == 'GET':
@@ -302,8 +302,8 @@ def congresista_y_comision_csv(request, nombre_corto, comision):
     names = find_name_from_short_name(nombre_corto)
 
     if '---error---' in names:
-        msg = {'error': names[1]}
-        return HttpResponse(json.dumps(msg), content_type='application/json')
+        msg = 'error,{}'.format(names[1])
+        return HttpResponse(msg, content_type='text/csv')
 
     comision = comision.strip()
     projects_and_person = get_projects_by_comission_for_person(comision, names)
@@ -376,8 +376,8 @@ def exonerados_dictamen_csv(request):
         if request.method == 'GET':
             return CSVResponse(data)
     else:
-        msg = {'error': 'no se encontraron resultados'}
-        return HttpResponse(json.dumps(msg), content_type='application/json')
+        msg = 'error,no se encontraron resultados'
+        return HttpResponse(msg, content_type='text/csv')
 
 
 @api_view(['GET'])
@@ -416,8 +416,8 @@ def exonerados_2da_votacion_csv(request):
         if request.method == 'GET':
             return CSVResponse(data)
     else:
-        msg = {'error': 'no se encontraron resultados'}
-        return HttpResponse(json.dumps(msg), content_type='application/json')
+        msg = 'error,no se encontraron resultados'
+        return HttpResponse(msg, content_type='text/csv')
 
 
 def find_name_from_short_name(nombre_corto):
