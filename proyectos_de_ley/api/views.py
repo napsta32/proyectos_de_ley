@@ -214,16 +214,7 @@ def congresista_y_comision(request, nombre_corto, comision):
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
     comision = comision.strip()
-
-    projects_and_person = []
-    for name in names:
-        queryset = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
-        if comision != '':
-            queryset = queryset.filter(nombre_comision__icontains=comision)
-        projects_list = [str(i.codigo) + '-2011' for i in queryset]
-        obj = {'nombre': name, 'proyectos': projects_list}
-        projects_and_person.append(obj)
-
+    projects_and_person = get_projects_by_comission_for_person(comision, names)
     data = {
         'resultado': projects_and_person,
         'numero_de_congresistas': len(projects_and_person),
@@ -233,7 +224,6 @@ def congresista_y_comision(request, nombre_corto, comision):
         return JSONResponse(serializer.data)
 
 
-@api_view(['GET'])
 @permission_classes((AllowAny, ))
 @renderer_classes((CSVRenderer,))
 def congresista_y_comision_csv(request, nombre_corto, comision):
@@ -273,23 +263,26 @@ def congresista_y_comision_csv(request, nombre_corto, comision):
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
     comision = comision.strip()
+    projects_and_person = get_projects_by_comission_for_person(comision, names)
+    data = []
+    for i in projects_and_person:
+        for p in i['proyectos']:
+            data.append({'proyecto': p, 'nombre': i['nombre']})
+    if request.method == 'GET':
+        return CSVResponse(data)
 
+
+def get_projects_by_comission_for_person(comision, names):
     projects_and_person = []
     for name in names:
-        queryset = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
+        queryset = Proyecto.objects.filter(
+            congresistas__icontains=name).order_by('-codigo')
         if comision != '':
             queryset = queryset.filter(nombre_comision__icontains=comision)
         projects_list = [str(i.codigo) + '-2011' for i in queryset]
         obj = {'nombre': name, 'proyectos': projects_list}
         projects_and_person.append(obj)
-
-    data = {
-        'resultado': projects_and_person,
-        'numero_de_congresistas': len(projects_and_person),
-    }
-    if request.method == 'GET':
-        serializer = CongresistaSerializer(data)
-        return JSONResponse(serializer.data)
+    return projects_and_person
 
 
 @api_view(['GET'])
