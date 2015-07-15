@@ -413,6 +413,12 @@ def iniciativa_list(request, codigo):
 @permission_classes((AllowAny, ))
 def seguimientos_list(request, codigo):
     """Lista todos los eventos de seguimiento para cada proyecto de ley.
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `seguimientos.csv`:
+
+    * <http://proyectosdeley.pe/api/seguimientos.csv/00002-2011/>
     ---
     type:
       codigo:
