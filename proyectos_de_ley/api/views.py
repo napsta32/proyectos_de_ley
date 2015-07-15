@@ -45,12 +45,7 @@ class CSVRenderer(renderers.CSVRenderer):
     format = 'csv'
 
     def render(self, data, media_type=None, renderer_context=None):
-        data_to_csv = []
-        for i in data['resultado']:
-            data_to_csv.append({'nombre': i['nombre']})
-            for p in i['proyectos']:
-                data_to_csv.append({'proyecto': p})
-        return super(CSVRenderer, self).render(data_to_csv, media_type, renderer_context)
+        return super(CSVRenderer, self).render(data, media_type, renderer_context)
 
 
 @api_view(['GET'])
@@ -58,6 +53,12 @@ class CSVRenderer(renderers.CSVRenderer):
 def proyecto(request, codigo):
     """
     Lista metadatos de cada proyecto de ley.
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `proyecto.csv`:
+
+    * <http://proyectosdeley.pe/api/proyecto.csv/00002-2011/>
     ---
     type:
       codigo:
@@ -83,6 +84,37 @@ def proyecto(request, codigo):
     if request.method == 'GET':
         serializer = ProyectoSerializer(proy)
         return JSONResponse(serializer.data)
+
+
+@permission_classes((AllowAny, ))
+@renderer_classes((CSVRenderer,))
+def proyecto_csv(request, codigo):
+    """
+    Lista metadatos de cada proyecto de ley.
+    ---
+    type:
+      codigo:
+        required: true
+        type: string
+
+    parameters:
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
+        type: string
+        paramType: path
+        required: true
+    """
+    # TODO: hay que agregar un campo a la tabla especificando si es legislatura 2011 o cual.
+    # luego corregir aquí el API
+    codigo = re.sub('-[0-9]+', '', codigo)
+    proyectos = Proyecto.objects.filter(numero_proyecto__startswith=codigo).values()
+    if len(proyectos) < 1:
+        msg = 'error,proyecto no existe'
+        return HttpResponse(msg, content_type='text/csv')
+
+    data = [i for i in proyectos]
+    if request.method == 'GET':
+        return CSVResponse(data)
 
 
 @api_view(['GET'])
@@ -120,13 +152,7 @@ def congresista(request, nombre_corto):
         msg = {'error': names[1]}
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
-    projects_and_person = []
-    for name in names:
-        queryset = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
-        projects_list = [str(i.codigo) + '-2011' for i in queryset]
-        obj = {'nombre': name, 'proyectos': projects_list}
-        projects_and_person.append(obj)
-
+    projects_and_person = get_projects_for_person(names)
     data = {
         'resultado': projects_and_person,
         'numero_de_congresistas': len(projects_and_person),
@@ -166,32 +192,41 @@ def congresista_csv(request, nombre_corto):
         msg = 'error,{}'.format(names[1])
         return HttpResponse(msg, content_type='text/csv')
 
+    projects_and_person = get_projects_for_person(names)
+    data = []
+    for i in projects_and_person:
+        for p in i['proyectos']:
+            data.append({'proyecto': p, 'nombre': i['nombre']})
+    if request.method == 'GET':
+        return CSVResponse(data)
+
+
+def get_projects_for_person(names):
     projects_and_person = []
     for name in names:
-        queryset = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
+        queryset = Proyecto.objects.filter(
+            congresistas__icontains=name).order_by('-codigo')
         projects_list = [str(i.codigo) + '-2011' for i in queryset]
         obj = {'nombre': name, 'proyectos': projects_list}
         projects_and_person.append(obj)
-
-    data = {
-        'resultado': projects_and_person,
-        'numero_de_congresistas': len(projects_and_person),
-    }
-    if request.method == 'GET':
-        serializer = CongresistaSerializer(data)
-        return CSVResponse(serializer.data)
+    return projects_and_person
 
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def congresista_y_comision(request, nombre_corto, comision):
     """
-    Lista proyectos de ley de cada congresista.
+    Lista proyectos de ley de cada congresista y la comisión que derivó.
 
     # Por ejemplo:
 
-    * <http://proyectosdeley.pe/api/congresista.json/Manuel+Zerillo/>
     * <http://proyectosdeley.pe/api/congresista.json/Manuel+Zerillo/Economía/>
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `congresista.csv`:
+
+    * <http://proyectosdeley.pe/api/congresista.csv/Manuel+Zerillo/Economía/>
     ---
     type:
       nombre_corto:
@@ -221,16 +256,7 @@ def congresista_y_comision(request, nombre_corto, comision):
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
     comision = comision.strip()
-
-    projects_and_person = []
-    for name in names:
-        queryset = Proyecto.objects.filter(congresistas__icontains=name).order_by('-codigo')
-        if comision != '':
-            queryset = queryset.filter(nombre_comision__icontains=comision)
-        projects_list = [str(i.codigo) + '-2011' for i in queryset]
-        obj = {'nombre': name, 'proyectos': projects_list}
-        projects_and_person.append(obj)
-
+    projects_and_person = get_projects_by_comission_for_person(comision, names)
     data = {
         'resultado': projects_and_person,
         'numero_de_congresistas': len(projects_and_person),
@@ -240,11 +266,79 @@ def congresista_y_comision(request, nombre_corto, comision):
         return JSONResponse(serializer.data)
 
 
+@permission_classes((AllowAny, ))
+@renderer_classes((CSVRenderer,))
+def congresista_y_comision_csv(request, nombre_corto, comision):
+    """
+    Lista proyectos de ley de cada congresista y la comisión que derivó.
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `congresista.csv`:
+
+    * <http://proyectosdeley.pe/api/congresista.csv/Manuel+Zerillo/Economía/>
+    ---
+    type:
+      nombre_corto:
+        required: true
+        type: string
+      comision:
+        required: true
+        type: string
+
+    parameters:
+      - name: nombre_corto
+        description: Nombre y apellido del congresista, por ejemplo<br /> Manuel+Zerillo
+        type: string
+        paramType: path
+        required: true
+      - name: comision
+        description: Comisión congresal, por ejemplo<br /> Economía
+        type: string
+        paramType: path
+        required: true
+    """
+    nombre_corto = nombre_corto.replace('+', ' ')
+    names = find_name_from_short_name(nombre_corto)
+
+    if '---error---' in names:
+        msg = 'error,{}'.format(names[1])
+        return HttpResponse(msg, content_type='text/csv')
+
+    comision = comision.strip()
+    projects_and_person = get_projects_by_comission_for_person(comision, names)
+    data = []
+    for i in projects_and_person:
+        for p in i['proyectos']:
+            data.append({'proyecto': p, 'nombre': i['nombre']})
+    if request.method == 'GET':
+        return CSVResponse(data)
+
+
+def get_projects_by_comission_for_person(comision, names):
+    projects_and_person = []
+    for name in names:
+        queryset = Proyecto.objects.filter(
+            congresistas__icontains=name).order_by('-codigo')
+        if comision != '':
+            queryset = queryset.filter(nombre_comision__icontains=comision)
+        projects_list = [str(i.codigo) + '-2011' for i in queryset]
+        obj = {'nombre': name, 'proyectos': projects_list}
+        projects_and_person.append(obj)
+    return projects_and_person
+
+
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def exonerados_dictamen(request):
     """
     Lista proyectos que han sido aprobados y exonerados de dictamen.
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `exonerados_dictamen.csv`:
+
+    * <http://proyectosdeley.pe/api/exonerados_dictamen.csv/>
     """
     exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
                              for i in Seguimientos.objects.select_related('proyecto').filter(
@@ -261,8 +355,34 @@ def exonerados_dictamen(request):
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
 
+@permission_classes((AllowAny, ))
+@renderer_classes((CSVRenderer,))
+def exonerados_dictamen_csv(request):
+    """
+    Lista proyectos que han sido aprobados y exonerados de dictamen.
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `exonerados_2da_votacion.csv`:
+
+    * <http://proyectosdeley.pe/api/exonerados_2da_votacion.csv/>
+    """
+    exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
+                             for i in Seguimientos.objects.select_related('proyecto').filter(
+                             evento__icontains='exoneración de dictamen').distinct()]
+    data = list(set(exonerado_de_dictamen))
+
+    if len(exonerado_de_dictamen) > 0:
+        if request.method == 'GET':
+            return CSVResponse(data)
+    else:
+        msg = 'error,no se encontraron resultados'
+        return HttpResponse(msg, content_type='text/csv')
+
+
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
+@renderer_classes((CSVRenderer,))
 def exonerados_2da_votacion(request):
     """
     Lista proyectos que han sido exonerados de 2da votación en el pleno.
@@ -280,6 +400,24 @@ def exonerados_2da_votacion(request):
     else:
         msg = {'error': 'no se encontraron resultados'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
+
+
+@permission_classes((AllowAny, ))
+def exonerados_2da_votacion_csv(request):
+    """
+    Lista proyectos que han sido exonerados de 2da votación en el pleno.
+    ---
+    """
+    data = ["{}-2011".format(i.proyecto.codigo)
+            for i in Seguimientos.objects.select_related('proyecto').filter(
+            evento__icontains='dispensado 2da')]
+
+    if len(data) > 0:
+        if request.method == 'GET':
+            return CSVResponse(data)
+    else:
+        msg = 'error,no se encontraron resultados'
+        return HttpResponse(msg, content_type='text/csv')
 
 
 def find_name_from_short_name(nombre_corto):

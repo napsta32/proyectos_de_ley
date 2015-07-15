@@ -44,10 +44,22 @@ class TestAPI(TestCase):
         expected = "03774"
         self.assertEqual(expected, result['codigo'])
 
+    def test_getting_proyecto_csv(self):
+        response = self.c.get('/api/proyecto.csv/03774-2011/')
+        result = response.content.decode('utf-8')
+        expected = "03774"
+        self.assertTrue(expected in result)
+
     def test_getting_proyecto_missing(self):
         response = self.c.get('/api/proyecto.json/037740-2011/')
         result = response.content.decode('utf-8')
         expected = '{"error": "proyecto no existe"}'
+        self.assertEqual(expected, result)
+
+    def test_getting_proyecto_missing_csv(self):
+        response = self.c.get('/api/proyecto.csv/037740-2011/')
+        result = response.content.decode('utf-8')
+        expected = 'error,proyecto no existe'
         self.assertEqual(expected, result)
 
     def test_getting_projects_of_person(self):
@@ -67,6 +79,18 @@ class TestAPI(TestCase):
         result = json.loads(response.content.decode('utf-8'))
         expected = ['03774-2011']
         self.assertEqual(expected, result['resultado'][0]['proyectos'])
+
+    def test_getting_projects_of_person_and_comission_csv(self):
+        response = self.c.get('/api/congresista_y_comision.csv/Dammert Ego/economia/')
+        result = response.content.decode('utf-8')
+        expected = '03774-2011'
+        self.assertTrue(expected in result)
+
+    def test_getting_projects_of_person_and_comission_csv_missing(self):
+        response = self.c.get('/api/congresista_y_comision.csv/Dammert Egolalala/economia/')
+        result = response.content.decode('utf-8')
+        expected = 'error,no se pudo encontrar congresista'
+        self.assertEqual(expected, result)
 
     def test_not_enough_names_to_search_for_person(self):
         response = self.c.get('/api/congresista.json/Dammert/')
@@ -113,10 +137,31 @@ class TestAPI(TestCase):
         expected = {'resultado': ['03774-2011']}
         self.assertEqual(expected, result)
 
+    def test_exonerados_dictamen_csv(self):
+        Seguimientos(proyecto=self.p,
+                     evento='exoneración de dictamen',
+                     fecha='2010-10-10').save()
+        response = self.c.get('/api/exonerados_dictamen.csv/')
+        result = response.content.decode('utf-8')
+        expected = '03774-2011'
+        self.assertTrue(expected in result)
+
+    def test_exonerados_dictamen_csv_empty(self):
+        response = self.c.get('/api/exonerados_dictamen.csv/')
+        result = response.content.decode('utf-8')
+        expected = 'error,no se encontraron resultados'
+        self.assertEqual(expected, result)
+
     def test_exonerados_2da_votacion_empty(self):
         response = self.c.get('/api/exonerados_2da_votacion.json/')
         result = json.loads(response.content.decode('utf-8'))
         expected = {'error': 'no se encontraron resultados'}
+        self.assertEqual(expected, result)
+
+    def test_exonerados_2da_votacion_empty_csv(self):
+        response = self.c.get('/api/exonerados_2da_votacion.csv/')
+        result = response.content.decode('utf-8')
+        expected = 'error,no se encontraron resultados'
         self.assertEqual(expected, result)
 
     def test_exonerados_2da_votacion(self):
@@ -127,3 +172,12 @@ class TestAPI(TestCase):
         result = json.loads(response.content.decode('utf-8'))
         expected = {'resultado': ['03774-2011']}
         self.assertEqual(expected, result)
+
+    def test_exonerados_2da_votacion_csv(self):
+        Seguimientos(proyecto=self.p,
+                     evento='dispensado 2da',
+                     fecha='2010-10-10').save()
+        response = self.c.get('/api/exonerados_2da_votacion.csv/')
+        result = response.content.decode('utf-8')
+        expected = '03774-2011'
+        self.assertTrue(expected in result)
