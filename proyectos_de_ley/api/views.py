@@ -360,6 +360,12 @@ def exonerados_dictamen(request):
 def exonerados_dictamen_csv(request):
     """
     Lista proyectos que han sido aprobados y exonerados de dictamen.
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `exonerados_2da_votacion.csv`:
+
+    * <http://proyectosdeley.pe/api/exonerados_2da_votacion.csv/>
     """
     exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
                              for i in Seguimientos.objects.select_related('proyecto').filter(
@@ -376,6 +382,7 @@ def exonerados_dictamen_csv(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
+@renderer_classes((CSVRenderer,))
 def exonerados_2da_votacion(request):
     """
     Lista proyectos que han sido exonerados de 2da votación en el pleno.
@@ -390,6 +397,24 @@ def exonerados_2da_votacion(request):
         if request.method == 'GET':
             serializer = Exonerados2daVotacionSerializer(data)
             return JSONResponse(serializer.data)
+    else:
+        msg = {'error': 'no se encontraron resultados'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+
+@permission_classes((AllowAny, ))
+def exonerados_2da_votacion_csv(request):
+    """
+    Lista proyectos que han sido exonerados de 2da votación en el pleno.
+    ---
+    """
+    data = ["{}-2011".format(i.proyecto.codigo)
+            for i in Seguimientos.objects.select_related('proyecto').filter(
+            evento__icontains='dispensado 2da')]
+
+    if len(data) > 0:
+        if request.method == 'GET':
+            return CSVResponse(data)
     else:
         msg = {'error': 'no se encontraron resultados'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
