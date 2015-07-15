@@ -15,5 +15,7 @@ urlpatterns = patterns(
     url(r'^congresista_y_comision.csv/(?P<nombre_corto>.+)/(?P<comision>.+)/$', views.congresista_y_comision_csv),
 
     url(r'^exonerados_dictamen.json/$', views.exonerados_dictamen),
+    url(r'^exonerados_dictamen.csv/$', views.exonerados_dictamen_csv),
+
     url(r'^exonerados_2da_votacion.json/$', views.exonerados_2da_votacion),
 )

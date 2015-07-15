@@ -333,6 +333,12 @@ def get_projects_by_comission_for_person(comision, names):
 def exonerados_dictamen(request):
     """
     Lista proyectos que han sido aprobados y exonerados de dictamen.
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `exonerados_dictamen.csv`:
+
+    * <http://proyectosdeley.pe/api/exonerados_dictamen.csv/>
     """
     exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
                              for i in Seguimientos.objects.select_related('proyecto').filter(
@@ -344,6 +350,25 @@ def exonerados_dictamen(request):
         if request.method == 'GET':
             serializer = ExoneradoDictamenSerializer(data)
             return JSONResponse(serializer.data)
+    else:
+        msg = {'error': 'no se encontraron resultados'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+
+@permission_classes((AllowAny, ))
+@renderer_classes((CSVRenderer,))
+def exonerados_dictamen_csv(request):
+    """
+    Lista proyectos que han sido aprobados y exonerados de dictamen.
+    """
+    exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
+                             for i in Seguimientos.objects.select_related('proyecto').filter(
+                             evento__icontains='exoneración de dictamen').distinct()]
+    data = list(set(exonerado_de_dictamen))
+
+    if len(exonerado_de_dictamen) > 0:
+        if request.method == 'GET':
+            return CSVResponse(data)
     else:
         msg = {'error': 'no se encontraron resultados'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
