@@ -53,6 +53,12 @@ class CSVRenderer(renderers.CSVRenderer):
 def proyecto(request, codigo):
     """
     Lista metadatos de cada proyecto de ley.
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `proyecto.csv`:
+
+    * <http://proyectosdeley.pe/api/proyecto.csv/00002-2011/>
     ---
     type:
       codigo:
@@ -210,12 +216,17 @@ def get_projects_for_person(names):
 @permission_classes((AllowAny, ))
 def congresista_y_comision(request, nombre_corto, comision):
     """
-    Lista proyectos de ley de cada congresista.
+    Lista proyectos de ley de cada congresista y la comisión que derivó.
 
     # Por ejemplo:
 
-    * <http://proyectosdeley.pe/api/congresista.json/Manuel+Zerillo/>
     * <http://proyectosdeley.pe/api/congresista.json/Manuel+Zerillo/Economía/>
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `congresista.csv`:
+
+    * <http://proyectosdeley.pe/api/congresista.csv/Manuel+Zerillo/Economía/>
     ---
     type:
       nombre_corto:
@@ -259,11 +270,12 @@ def congresista_y_comision(request, nombre_corto, comision):
 @renderer_classes((CSVRenderer,))
 def congresista_y_comision_csv(request, nombre_corto, comision):
     """
-    Lista proyectos de ley de cada congresista.
+    Lista proyectos de ley de cada congresista y la comisión que derivó.
 
-    # Por ejemplo:
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
 
-    * <http://proyectosdeley.pe/api/congresista.csv/Manuel+Zerillo/>
+    Solo es necesario usar la dirección `congresista.csv`:
+
     * <http://proyectosdeley.pe/api/congresista.csv/Manuel+Zerillo/Economía/>
     ---
     type:
