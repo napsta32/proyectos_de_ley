@@ -1,51 +1,29 @@
 import json
 import re
-import unicodedata
 
 from django.http import HttpResponse
-from django.db.models import Q
 from rest_framework.decorators import api_view
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import renderer_classes
 from rest_framework.permissions import AllowAny
-from rest_framework.renderers import JSONRenderer
-from rest_framework_csv import renderers
 
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
-from pdl.models import Slug
 from .serializers import CongresistaSerializer
 from .serializers import ExoneradoDictamenSerializer
 from .serializers import Exonerados2daVotacionSerializer
+from .serializers import IniciativasSerializer
 from .serializers import ProyectoSerializer
-
-
-class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
-
-
-class CSVResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into CSV.
-    """
-    def __init__(self, data, **kwargs):
-        content = CSVRenderer().render(data)
-        kwargs['content_type'] = 'text/csv'
-        super(CSVResponse, self).__init__(content, **kwargs)
-
-
-class CSVRenderer(renderers.CSVRenderer):
-    media_type = 'text/csv'
-    format = 'csv'
-
-    def render(self, data, media_type=None, renderer_context=None):
-        return super(CSVRenderer, self).render(data, media_type, renderer_context)
+from .serializers import SeguimientosSerializer
+from .api_responses import CSVRenderer
+from .api_responses import CSVResponse
+from .api_responses import JSONResponse
+from .utils import convert_date_to_string
+from .utils import find_name_from_short_name
+from .utils import get_projects_by_comission_for_person
+from .utils import get_projects_for_person
+from .utils import get_seguimientos_from_proyecto_id
+from .utils import prepare_json_for_d3
 
 
 @api_view(['GET'])
@@ -201,17 +179,6 @@ def congresista_csv(request, nombre_corto):
         return CSVResponse(data)
 
 
-def get_projects_for_person(names):
-    projects_and_person = []
-    for name in names:
-        queryset = Proyecto.objects.filter(
-            congresistas__icontains=name).order_by('-codigo')
-        projects_list = [str(i.codigo) + '-2011' for i in queryset]
-        obj = {'nombre': name, 'proyectos': projects_list}
-        projects_and_person.append(obj)
-    return projects_and_person
-
-
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def congresista_y_comision(request, nombre_corto, comision):
@@ -315,19 +282,6 @@ def congresista_y_comision_csv(request, nombre_corto, comision):
         return CSVResponse(data)
 
 
-def get_projects_by_comission_for_person(comision, names):
-    projects_and_person = []
-    for name in names:
-        queryset = Proyecto.objects.filter(
-            congresistas__icontains=name).order_by('-codigo')
-        if comision != '':
-            queryset = queryset.filter(nombre_comision__icontains=comision)
-        projects_list = [str(i.codigo) + '-2011' for i in queryset]
-        obj = {'nombre': name, 'proyectos': projects_list}
-        projects_and_person.append(obj)
-    return projects_and_person
-
-
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def exonerados_dictamen(request):
@@ -420,17 +374,78 @@ def exonerados_2da_votacion_csv(request):
         return HttpResponse(msg, content_type='text/csv')
 
 
-def find_name_from_short_name(nombre_corto):
-    nombre_corto = unicodedata.normalize('NFKD', nombre_corto).encode('ascii', 'ignore')
-    nombre_corto = re.sub('\s+', ' ', nombre_corto.decode('utf-8'))
-    nombre_corto = nombre_corto.split(' ')
-    if len(nombre_corto) < 2:
-        return ['---error---', 'ingrese un nombre y un apellido']
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def iniciativa_list(request, codigo):
+    """Lista todas las iniciativas que se agruparon para proyecto de ley.
+    ---
+    type:
+      codigo:
+        required: true
+        type: string
 
-    nombre_corto = nombre_corto[:2]
-    res = Slug.objects.filter(Q(ascii__icontains=nombre_corto[0]) & Q(ascii__icontains=nombre_corto[1]))
+    parameters:
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
+        type: string
+        paramType: path
+        required: true
+    """
+    codigo = re.sub('-[0-9]+', '', codigo)
+    try:
+        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+    except Proyecto.DoesNotExist:
+        msg = {'error': 'proyecto no existe'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
 
-    if len(res) > 0:
-        return [i.nombre for i in res]
-    else:
-        return ['---error---', 'no se pudo encontrar congresista']
+    if proy.iniciativas_agrupadas is None or proy.iniciativas_agrupadas.strip() == '':
+        msg = {'error': 'sin iniciativas agrupadas'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    data = prepare_json_for_d3(proy)
+
+    if request.method == 'GET':
+        serializer = IniciativasSerializer(data)
+        return JSONResponse(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def seguimientos_list(request, codigo):
+    """Lista todos los eventos de seguimiento para cada proyecto de ley.
+    ---
+    type:
+      codigo:
+        required: true
+        type: string
+
+    parameters:
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
+        type: string
+        paramType: path
+        required: true
+    """
+    codigo = re.sub('-[0-9]+', '', codigo)
+    try:
+        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+    except Proyecto.DoesNotExist:
+        msg = {'error': 'proyecto no existe'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    seguimientos = get_seguimientos_from_proyecto_id(proy.id)
+    seguimientos.append({
+        'headline': 'Fecha de presentación',
+        'startDate': convert_date_to_string(proy.fecha_presentacion).replace("-", ","),
+    })
+
+    my_dict = dict()
+    my_dict['type'] = 'default'
+    my_dict['text'] = "Proyecto No: " + str(proy.numero_proyecto).replace("/", "_")
+    my_dict['date'] = seguimientos
+
+    data = {'timeline': my_dict}
+
+    if request.method == 'GET':
+        serializer = SeguimientosSerializer(data)
+        return JSONResponse(serializer.data)

@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, url
 
 from . import views
-from seguimientos import views as seg_views
 
 
 urlpatterns = patterns(
@@ -21,6 +20,7 @@ urlpatterns = patterns(
     url(r'^exonerados_2da_votacion.json/$', views.exonerados_2da_votacion),
     url(r'^exonerados_2da_votacion.csv/$', views.exonerados_2da_votacion_csv),
 
-    url(r'^seguimientos.json/(?P<codigo>[0-9]+\-[0-9]+)/$', seg_views.seguimientos_list),
-    url(r'^iniciativas.json/(?P<codigo>[0-9a-z]+\-[0-9]+)/$', seg_views.iniciativa_list),
+    url(r'^seguimientos.json/(?P<codigo>[0-9]+\-[0-9]+)/$', views.seguimientos_list),
+
+    url(r'^iniciativas.json/(?P<codigo>[0-9a-z]+\-[0-9]+)/$', views.iniciativa_list),
 )

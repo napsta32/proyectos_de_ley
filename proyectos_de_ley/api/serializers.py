@@ -3,6 +3,23 @@ from rest_framework import serializers
 from pdl.models import Proyecto
 
 
+class CongresistaSerializer(serializers.Serializer):
+    resultado = serializers.ListField()
+    numero_de_congresistas = serializers.IntegerField()
+
+
+class ExoneradoDictamenSerializer(serializers.Serializer):
+    resultado = serializers.ListField()
+
+
+class Exonerados2daVotacionSerializer(serializers.Serializer):
+    resultado = serializers.ListField()
+
+
+class IniciativasSerializer(serializers.Serializer):
+    iniciativas = serializers.ListField()
+
+
 class ProyectoSerializer(serializers.ModelSerializer):
     fecha_presentacion = serializers.DateTimeField(format=None)
 
@@ -15,14 +32,5 @@ class ProyectoSerializer(serializers.ModelSerializer):
                   'numero_de_ley')
 
 
-class CongresistaSerializer(serializers.Serializer):
-    resultado = serializers.ListField()
-    numero_de_congresistas = serializers.IntegerField()
-
-
-class ExoneradoDictamenSerializer(serializers.Serializer):
-    resultado = serializers.ListField()
-
-
-class Exonerados2daVotacionSerializer(serializers.Serializer):
-    resultado = serializers.ListField()
+class SeguimientosSerializer(serializers.Serializer):
+    timeline = serializers.DictField()
