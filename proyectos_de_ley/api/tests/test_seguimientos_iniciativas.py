@@ -52,6 +52,18 @@ class TestAPI(TestCase):
         expected = "Proyecto No: 03774_2014-CR"
         self.assertEqual(expected, result['timeline']['text'])
 
+    def test_api_seguimientos_csv(self):
+        response = self.c.get('/api/seguimientos.csv/03774-2011/')
+        result = response.content.decode("utf-8")
+        expected = "Proyecto No: 03774_2014-CR"
+        self.assertTrue(expected in result)
+
+    def test_api_seguimientos_csv_missing(self):
+        response = self.c.get('/api/seguimientos.csv/0377400-2011/')
+        result = response.content.decode("utf-8")
+        expected = "error,proyecto no existe"
+        self.assertEqual(expected, result)
+
     def test_api_seguimientos_missing(self):
         response = self.c.get('/api/seguimientos.json/0377400-2011/')
         as_string = response.content.decode("utf-8")
@@ -65,6 +77,24 @@ class TestAPI(TestCase):
         result = json.loads(as_string)
         expected = '03774'
         self.assertEqual(expected, result['iniciativas'][0]['codigo'])
+
+    def test_api_iniciativas_csv(self):
+        response = self.c.get('/api/iniciativas.csv/03775-2011/')
+        result = response.content.decode("utf-8")
+        expected = '03774'
+        self.assertTrue(expected in result)
+
+    def test_api_iniciativas_csv_project_missing(self):
+        response = self.c.get('/api/iniciativas.csv/037759976987897-2011/')
+        result = response.content.decode("utf-8")
+        expected = 'error,proyecto no existe'
+        self.assertEqual(expected, result)
+
+    def test_api_iniciativas_csv_missing(self):
+        response = self.c.get('/api/iniciativas.csv/03774-2011/')
+        result = response.content.decode("utf-8")
+        expected = 'error,sin iniciativas agrupadas'
+        self.assertEqual(expected, result)
 
     def test_api_iniciativas_missing(self):
         response = self.c.get('/api/iniciativas.json/03774-2011/')
