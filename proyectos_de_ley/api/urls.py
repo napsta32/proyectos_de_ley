@@ -6,6 +6,7 @@ from . import views
 urlpatterns = patterns(
     '',
     url(r'^proyecto.json/(?P<codigo>[0-9]+\-[0-9]+)/$', views.proyecto),
+    url(r'^proyecto.csv/(?P<codigo>[0-9]+\-[0-9]+)/$', views.proyecto_csv),
 
     url(r'^congresista.json/(?P<nombre_corto>.+)/$', views.congresista),
     url(r'^congresista.csv/(?P<nombre_corto>.+)/$', views.congresista_csv),

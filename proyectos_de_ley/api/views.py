@@ -80,6 +80,37 @@ def proyecto(request, codigo):
         return JSONResponse(serializer.data)
 
 
+@permission_classes((AllowAny, ))
+@renderer_classes((CSVRenderer,))
+def proyecto_csv(request, codigo):
+    """
+    Lista metadatos de cada proyecto de ley.
+    ---
+    type:
+      codigo:
+        required: true
+        type: string
+
+    parameters:
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
+        type: string
+        paramType: path
+        required: true
+    """
+    # TODO: hay que agregar un campo a la tabla especificando si es legislatura 2011 o cual.
+    # luego corregir aquí el API
+    codigo = re.sub('-[0-9]+', '', codigo)
+    proyectos = Proyecto.objects.filter(numero_proyecto__startswith=codigo).values()
+    if len(proyectos) < 1:
+        msg = {'error': 'proyecto no existe'}
+        return HttpResponse(json.dumps(msg), content_type='application/json')
+
+    data = [i for i in proyectos]
+    if request.method == 'GET':
+        return CSVResponse(data)
+
+
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def congresista(request, nombre_corto):
