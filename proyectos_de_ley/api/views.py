@@ -449,3 +449,46 @@ def seguimientos_list(request, codigo):
     if request.method == 'GET':
         serializer = SeguimientosSerializer(data)
         return JSONResponse(serializer.data)
+
+
+@permission_classes((AllowAny, ))
+def seguimientos_list_csv(request, codigo):
+    """Lista todos los eventos de seguimiento para cada proyecto de ley.
+    ---
+    type:
+      codigo:
+        required: true
+        type: string
+
+    parameters:
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
+        type: string
+        paramType: path
+        required: true
+    """
+    codigo = re.sub('-[0-9]+', '', codigo)
+    try:
+        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+    except Proyecto.DoesNotExist:
+        msg = 'error,proyecto no existe'
+        return HttpResponse(msg, content_type='text/csv')
+
+    seguimientos = get_seguimientos_from_proyecto_id(proy.id)
+    seguimientos.append({
+        'headline': 'Fecha de presentación',
+        'startDate': convert_date_to_string(proy.fecha_presentacion),
+    })
+
+    proyecto = "Proyecto No: " + str(proy.numero_proyecto).replace("/", "_")
+    data = []
+
+    for i in seguimientos:
+        data.append({
+            'proyecto': proyecto,
+            'headline': i['headline'],
+            'startDate': i['startDate'].replace(',', '-'),
+        })
+
+    if request.method == 'GET':
+        return CSVResponse(data)

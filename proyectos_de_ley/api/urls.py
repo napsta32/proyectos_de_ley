@@ -21,6 +21,7 @@ urlpatterns = patterns(
     url(r'^exonerados_2da_votacion.csv/$', views.exonerados_2da_votacion_csv),
 
     url(r'^seguimientos.json/(?P<codigo>[0-9]+\-[0-9]+)/$', views.seguimientos_list),
+    url(r'^seguimientos.csv/(?P<codigo>[0-9]+\-[0-9]+)/$', views.seguimientos_list_csv),
 
     url(r'^iniciativas.json/(?P<codigo>[0-9a-z]+\-[0-9]+)/$', views.iniciativa_list),
 )
