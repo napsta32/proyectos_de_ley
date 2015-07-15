@@ -336,7 +336,6 @@ def exonerados_dictamen_csv(request):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-@renderer_classes((CSVRenderer,))
 def exonerados_2da_votacion(request):
     """
     Lista proyectos que han sido exonerados de 2da votación en el pleno.
@@ -357,6 +356,7 @@ def exonerados_2da_votacion(request):
 
 
 @permission_classes((AllowAny, ))
+@renderer_classes((CSVRenderer,))
 def exonerados_2da_votacion_csv(request):
     """
     Lista proyectos que han sido exonerados de 2da votación en el pleno.
@@ -378,6 +378,12 @@ def exonerados_2da_votacion_csv(request):
 @permission_classes((AllowAny, ))
 def iniciativa_list(request, codigo):
     """Lista todas las iniciativas que se agruparon para proyecto de ley.
+
+    # Puedes obtener los resultados en archivo CSV (fácil de importar a MS Excel)
+
+    Solo es necesario usar la dirección `iniciativas.csv`:
+
+    * <http://proyectosdeley.pe/api/iniciativas.csv/00002-2011/>
     ---
     type:
       codigo:
@@ -407,6 +413,40 @@ def iniciativa_list(request, codigo):
     if request.method == 'GET':
         serializer = IniciativasSerializer(data)
         return JSONResponse(serializer.data)
+
+
+@permission_classes((AllowAny, ))
+@renderer_classes((CSVRenderer,))
+def iniciativa_list_csv(request, codigo):
+    """Lista todas las iniciativas que se agruparon para proyecto de ley.
+    ---
+    type:
+      codigo:
+        required: true
+        type: string
+
+    parameters:
+      - name: codigo
+        description: código del proyecto de ley incluyendo legislatura, por ejemplo 00002-2011
+        type: string
+        paramType: path
+        required: true
+    """
+    codigo = re.sub('-[0-9]+', '', codigo)
+    try:
+        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+    except Proyecto.DoesNotExist:
+        msg = 'error,proyecto no existe'
+        return HttpResponse(msg, content_type='text/csv')
+
+    if proy.iniciativas_agrupadas is None or proy.iniciativas_agrupadas.strip() == '':
+        msg = 'error,sin iniciativas agrupadas'
+        return HttpResponse(msg, content_type='text/csv')
+
+    data = prepare_json_for_d3(proy)
+
+    if request.method == 'GET':
+        return CSVResponse(data['iniciativas'])
 
 
 @api_view(['GET'])

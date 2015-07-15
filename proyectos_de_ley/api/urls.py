@@ -24,4 +24,5 @@ urlpatterns = patterns(
     url(r'^seguimientos.csv/(?P<codigo>[0-9]+\-[0-9]+)/$', views.seguimientos_list_csv),
 
     url(r'^iniciativas.json/(?P<codigo>[0-9a-z]+\-[0-9]+)/$', views.iniciativa_list),
+    url(r'^iniciativas.csv/(?P<codigo>[0-9a-z]+\-[0-9]+)/$', views.iniciativa_list_csv),
 )
