@@ -76,28 +76,6 @@ class TestSeguimientos(TestCase):
         result = utils.get_proyecto_from_short_url(short_url)
         self.assertEqual(expected, result.iniciativas_agrupadas)
 
-    def test_prepare_json_for_d3(self):
-        item = Object()
-        item.numero_proyecto = "02764/2013-CR"
-        item.codigo = "02764"
-        item.titulo = "Propone Ley Universitaria"
-        item.iniciativas_agrupadas = '{02764}'
-
-        expected = {'iniciativas': [{'codigo': '02764', 'url': '/p/4zhube'}]}
-        result = utils.prepare_json_for_d3(item)
-        self.assertEqual(expected, result)
-
-    def test_prepare_json_for_d3_no_project(self):
-        item = Object()
-        item.numero_proyecto = "02764/2013-CR"
-        item.codigo = "02764"
-        item.titulo = "Propone Ley Universitaria"
-        item.iniciativas_agrupadas = '{027640000}'
-
-        expected = {'iniciativas': []}
-        result = utils.prepare_json_for_d3(item)
-        self.assertEqual(expected, result)
-
     def test_hiperlink_congre(self):
         congresista = 'Gamarra Saldivar, Teofilo'
         expected = "<a href='/congresista/gamarra_saldivar_teofilo/' title='ver todos sus proyectos'>Gamarra Saldivar, Teofilo</a>"
@@ -110,24 +88,7 @@ class TestSeguimientos(TestCase):
         result = utils.convert_name_to_slug(congresista)
         self.assertEqual(expected, result)
 
-    def test_convert_date_to_string(self):
-        fecha = datetime.datetime(2010, 10, 10)
-        expected = '2010-10-10'
-        result = utils.convert_date_to_string(fecha)
-        self.assertEqual(expected, result)
-
-    def test_convert_date_to_string_with_exception(self):
-        fecha = '2010-10-10'
-        expected = '2010-10-10'
-        result = utils.convert_date_to_string(fecha)
-        self.assertEqual(expected, result)
-
     def test_get_events_from_expediente(self):
         result = utils.get_events_from_expediente('1')
         expected = '15 Oct, 2013'
         self.assertEqual(expected, result[0].fecha)
-
-    def test_get_seguimientos_from_proyecto_id(self):
-        result = utils.get_seguimientos_from_proyecto_id('1')
-        expected = 'Decretado a... Educación, Juventud y Deporte'
-        self.assertEqual(expected, result[0]['headline'])
