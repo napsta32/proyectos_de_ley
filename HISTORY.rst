@@ -1,14 +1,26 @@
 History
 =======
 
-v2.x.x (2015-07-04)
+v2.1.0 (2015-07-16)
 ~~~~~~~~~~~~~~~~~~~
+* Footer: ahora aparece en posición inferior en todas las páginas.
 * Stats: "proyectos con dictamen pero sin votación"
-* Búsqueda simple tiene capacidad de hacer *partial match*.
+* Stats: reemplazados los 2 primeros velocímetros.
+* Stats: ahora muestra exonerados de dictamen.
+* Stats: corregidos números de proyetos exonerados de 2da votación.
+* Stats: corregido número de proyectos que aún no son ley.
+* Búsqueda avanzada: permite buscar combinación de campos como: fechas, palabra
+  clave, comisión, nombre de congresista y grupo parlamentario.
 * Corregido: bug cuando query contenía espacios en blanco el navegador entraba
   en loop infinito.
 * Corregido: número de proyectos que no son ley (considerando que en las leyes
   promulgadas hay numerosos proyectos que han sido fusionados).
+* API: tenemos API que emite datos en formato abierto en JSON y CSV.
+  Ver http://proyectosdeley.pe/docs/
+* API: documentación automática.
+* API: nuevo ícono para acceder a la documentación en la barra de navegación.
+* Corregido schema de la base de datos.
+* Nueva columna `ascii` en tabla Slug.
 
 v2.0.1 (2015-03-31)
 ~~~~~~~~~~~~~~~~~~~
