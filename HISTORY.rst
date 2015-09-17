@@ -1,6 +1,10 @@
 History
 =======
 
+v2.1.1 (2015-xx-xx)
+~~~~~~~~~~~~~~~~~~~
+* script para hacer backups de base de datos
+
 v2.1.0 (2015-07-16)
 ~~~~~~~~~~~~~~~~~~~
 * Footer: ahora aparece en posición inferior en todas las páginas.
