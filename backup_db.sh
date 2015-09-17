@@ -1,6 +1,6 @@
 #!/bin/bash
 
 today=$(date +'%Y-%m-%d')
-filename=/var/lib/postgresql/manolo_$today.sql
+filename=/var/lib/postgresql/pdl_$today.sql
 
-pg_dump -d manolo > $filename && bzip2 $filename
+pg_dump -d pdl > $filename && bzip2 $filename
