@@ -48,14 +48,16 @@ def index(request):
     are_not_law, percentage_are_not_law, laws = get_projects_that_arent_law(numero_de_proyectos)
 
     # Projects by comision count
+    total = 0
+    comision_names = ""
+    comision_count = ""
     queryset = ComisionCount.objects.all().order_by('-count')
-    comision_names_str = "['"
-    comision_count_str = "["
     for i in queryset:
-        comision_names_str += str(i.comision) + "', '"
-        comision_count_str += str(i.count) + ", "
-    comision_names_str += "']"
-    comision_count_str += "]"
+        comision_names += "{}', '".format(i.comision)
+        total += i.count
+        comision_count += "{}, ".format(i.count)
+    comision_names_str = "['# Total en comisiones', '{}']".format(comision_names)
+    comision_count_str = "[{0}, {1}]".format(total, comision_count)
 
     # sin dictamen?
     percentage_total_in_commissions, total_in_commissions = dame_sin_dictamen(queryset, numero_de_proyectos)
