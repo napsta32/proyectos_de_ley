@@ -34,7 +34,7 @@ def index(request):
     percentage_without_pdf_url = round(
         (without_pdf_url * 100) / numero_de_proyectos, 1)
 
-    # With dictamen sin votación
+    # con dictamen y sin votación en el pleno
     total_dictamen_sin_votacion = WithDictamenButNotVoted.objects.count()
     percentage_dictamen_sin_votacion = round(
         (total_dictamen_sin_votacion * 100) / numero_de_proyectos, 1
