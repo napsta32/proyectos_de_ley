@@ -1,7 +1,7 @@
 arrow==0.5.0
 binaryornot==0.3.0
 beautifulsoup4==4.3.2
-Django==1.8.2
+Django==1.8.4
 Jinja2==2.7.3
 MarkupSafe==0.23
 Markdown==2.6.2
