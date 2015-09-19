@@ -55,6 +55,7 @@
   </div><!-- container -->
 </div>
 
+{% include 'stats/explanation.html'  %}
 
 {% endblock content %}
 
@@ -254,7 +255,7 @@ $(function () {
     min: 0,
     max: 100,
     levelColorsGradient: false,
-    title: "% proyectos con \ndictamen y sin votación"
+    title: "% proyectos con \ndictamen y sin votación\nen el pleno"
   });
 
   var g = new JustGage({

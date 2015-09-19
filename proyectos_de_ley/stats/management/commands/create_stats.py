@@ -93,6 +93,8 @@ class Command(BaseCommand):
 
     def get_with_dictamen_but_not_voted(self):
         """
+        Proyectos con dictamen pero sin votacion en el pleno.
+
         Crea tabla con lista de: proyectos que no figure
           "publicado" || promulgado || votación || en lista de seguimientos,
         pero tenga "dictamen".
