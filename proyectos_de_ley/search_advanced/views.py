@@ -6,7 +6,6 @@ from . import forms
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
 from pdl.utils import do_pagination
-from pdl.utils import convert_date_to_string
 
 
 def index(request):
