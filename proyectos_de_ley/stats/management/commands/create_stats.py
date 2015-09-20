@@ -16,6 +16,7 @@ from pdl.models import Seguimientos
 from stats.models import ComisionCount
 from stats.models import Dispensed
 from stats.models import WithDictamenButNotVoted
+from stats.models import ProjectsInCommissions
 
 
 class Command(BaseCommand):
@@ -38,6 +39,7 @@ class Command(BaseCommand):
     def get_projects_in_commissions(self):
         queryset = Seguimientos.objects.order_by('proyecto_id', '-fecha')
         commissions_count = {}
+        projects_in_commissions = []
         this_project_id = ''
         for seguimiento in queryset:
             if seguimiento.proyecto_id != this_project_id:
@@ -47,7 +49,14 @@ class Command(BaseCommand):
 
                 if commission is not False:
                     commissions_count[commission] += 1
+                    project_and_commission = ProjectsInCommissions(
+                        project=seguimiento.proyecto,
+                        commission=commission,
+                    )
+                    projects_in_commissions.append(project_and_commission)
             this_project_id = seguimiento.proyecto_id
+        ProjectsInCommissions.objects.all().delete()
+        ProjectsInCommissions.objects.bulk_create(projects_in_commissions)
 
         ComisionCount.objects.all().delete()
         for k, v in commissions_count.items():
