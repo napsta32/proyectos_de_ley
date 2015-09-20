@@ -105,22 +105,8 @@ def combined_search(keywords, form, request):
 
 
 def filter_by_comision(keywords, queryset):
-    comision = keywords['comision']
-    if comision.lower() == 'ciencia':
-        comision = 'Ciencia'
-    seguimientos_queryset = Seguimientos.objects.order_by('-proyecto_id')
-    proyectos = queryset.order_by('-codigo')
-    proyects_found = []
-    this_proyecto_id = ''
-    for i in seguimientos_queryset:
-        if i.proyecto_id != this_proyecto_id:
-            if comision in i.evento:
-                for proyecto in proyectos:
-                    if i.proyecto_id == proyecto.id:
-                        proyects_found.append(proyecto)
-                        continue
-        this_proyecto_id = i.proyecto_id
-    return proyects_found
+    commission = keywords['comision']
+    return queryset.filter(projectsincommissions__commission=commission)
 
 
 def search_dispensados_todos(form, request):
