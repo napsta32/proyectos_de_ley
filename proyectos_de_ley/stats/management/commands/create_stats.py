@@ -180,3 +180,18 @@ class Command(BaseCommand):
             if i['proyecto_id'] == proyect_id:
                 events.append(i['evento'])
         return events
+
+
+def test_if_event_is_in_commission(seguimiento):
+    """
+    We need to check whether the event in the model Seguimientos is one
+    that tells us that the project is in certain Commission.
+    :param Seguimiento object:
+    :return: If true then return commission short name, else False
+    """
+    res = re.match("(en\s+comisión(\s\w+)+)", seguimiento.evento, re.I)
+    if res:
+        full_commission_name = re.sub(r"(?i)En\s+comisión\s+(de\s+)*", "", res.groups()[0])
+        this_commission = re.sub("\s+y\s+.+", "", full_commission_name)
+        return this_commission
+    return False
