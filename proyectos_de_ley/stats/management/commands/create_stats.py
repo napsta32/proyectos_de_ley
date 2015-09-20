@@ -24,35 +24,7 @@ class Command(BaseCommand):
            'is the last event for them.'
 
     def handle(self, *args, **options):
-        queryset = Seguimientos.objects.all()
-
-        # There are 24 `comisiones` in total
-        comisiones = set()
-        for i in queryset:
-            # res = re.match("(en\s+comisión(\s\w+,*)+)", i.evento, re.I)
-            res = re.match("(en\s+comisión(\s\w+)+)", i.evento, re.I)
-            if res:
-                this_comision = re.sub("En\s+comisión\s+", "", res.groups()[0])
-                this_comision = re.sub("\s+y\s+.+", "", this_comision)
-                comisiones.add(this_comision)
-
-        queryset = Seguimientos.objects.order_by('proyecto_id', '-fecha')
-        comisiones_count = {}
-
-        this_proyecto_id = ''
-        for i in queryset:
-            if i.proyecto_id != this_proyecto_id:
-                for comision in comisiones:
-                    if comision in i.evento:
-                        if comision not in comisiones_count:
-                            comisiones_count[comision] = 0
-                        comisiones_count[comision] += 1
-            this_proyecto_id = i.proyecto_id
-
-        for k, v in comisiones_count.items():
-            ComisionCount.objects.update_or_create(
-                comision=k, defaults={'count': v},
-            )
+        self.get_projects_in_commissions()
 
         # Get projects that did not go to 2da round of votes
         self.get_dispensed_projects()
@@ -62,6 +34,38 @@ class Command(BaseCommand):
 
         # Para calcular estadisticas de proyectos que aun no son ley
         self.update_iniciativas_agrupadas_with_title_of_law()
+
+    def get_projects_in_commissions(self):
+        commissions = self.get_all_24_commission_names()
+
+        queryset = Seguimientos.objects.order_by('proyecto_id', '-fecha')
+        commissions_count = {}
+        this_proyecto_id = ''
+        for seguimiento in queryset:
+            if seguimiento.proyecto_id != this_proyecto_id:
+                for comision in commissions:
+                    if comision in seguimiento.evento:
+                        if comision not in commissions_count:
+                            commissions_count[comision] = 0
+                        commissions_count[comision] += 1
+            this_proyecto_id = seguimiento.proyecto_id
+
+        ComisionCount.objects.all().delete()
+        for k, v in commissions_count.items():
+            ComisionCount.objects.update_or_create(
+                comision=k, defaults={'count': v},
+            )
+
+    def get_all_24_commission_names(self):
+        queryset = Seguimientos.objects.all()
+        commissions = set()
+        for i in queryset:
+            res = re.match("(en\s+comisión(\s\w+)+)", i.evento, re.I)
+            if res:
+                full_commission_name = re.sub(r"(?i)En\s+comisión\s+(de\s+)*", "", res.groups()[0])
+                this_commission = re.sub("\s+y\s+.+", "", full_commission_name)
+                commissions.add(this_commission)
+        return commissions
 
     def get_dispensed_projects(self):
         total_approved = set()
@@ -93,8 +97,7 @@ class Command(BaseCommand):
 
     def get_with_dictamen_but_not_voted(self):
         """
-        Proyectos con dictamen pero sin votacion en el pleno.
-
+        Proyectos con dictamen pero no votac
         Crea tabla con lista de: proyectos que no figure
           "publicado" || promulgado || votación || en lista de seguimientos,
         pero tenga "dictamen".
