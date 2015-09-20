@@ -36,18 +36,17 @@ class Command(BaseCommand):
         self.update_iniciativas_agrupadas_with_title_of_law()
 
     def get_projects_in_commissions(self):
-        commissions = self.get_all_24_commission_names()
-
         queryset = Seguimientos.objects.order_by('proyecto_id', '-fecha')
         commissions_count = {}
         this_project_id = ''
         for seguimiento in queryset:
             if seguimiento.proyecto_id != this_project_id:
-                for commission in commissions:
-                    if commission in seguimiento.evento:
-                        if commission not in commissions_count:
-                            commissions_count[commission] = 0
-                        commissions_count[commission] += 1
+                commission = test_if_event_is_in_commission(seguimiento)
+                if commission is not False and commission not in commissions_count:
+                    commissions_count[commission] = 0
+
+                if commission is not False:
+                    commissions_count[commission] += 1
             this_project_id = seguimiento.proyecto_id
 
         ComisionCount.objects.all().delete()
