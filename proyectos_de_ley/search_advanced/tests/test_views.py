@@ -2,6 +2,7 @@ import json
 import os
 
 from django.test import TestCase, Client
+from django.core.management import call_command
 
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
@@ -23,6 +24,9 @@ class TestSearchAdvancedViews(TestCase):
             s = Seguimientos(proyecto=b, fecha='2014-06-23',
                              evento='Decreado a... Ciencia, Innovación y Tecnología')
             s.save()
+            s1 = Seguimientos(proyecto=b, fecha='2015-06-23',
+                              evento='En comisión de Ciencia, Innovación y Tecnología')
+            s1.save()
 
         Slug(nombre='Chihuan Ramos, Leyla Felicita', ascii='Chihuan Ramos, Leyla Felicita',
              slug='chihuan-ramos-leyla-felicita').save()
@@ -40,6 +44,7 @@ class TestSearchAdvancedViews(TestCase):
         self.assertEqual(200, response.status_code)
 
     def test_index_search_comission(self):
+        call_command('create_stats')
         response = self.c.get('/search-advanced/?comision=Ciencia&grupo_parlamentario=--Escoger bancada--')
         self.assertTrue('arco y flecha' in str(response.content))
 

@@ -5,11 +5,12 @@ from pdl.models import Proyecto
 from pdl.models import Seguimientos
 from stats.models import ComisionCount
 from stats.models import Dispensed
+from stats.management.commands.create_stats import test_if_event_is_in_commission
 
 
 class TestCustomCommand(TestCase):
     def setUp(self):
-        b = Proyecto(**{
+        self.b = Proyecto(**{
             'codigo': '00586',
             'numero_proyecto': '00586/2011-CR',
             'fecha_presentacion': '2010-10-10',
@@ -28,24 +29,24 @@ class TestCustomCommand(TestCase):
         c = Seguimientos(**{
             'fecha': '2012-10-10',
             'evento': 'en comisión Justicia',
-            'proyecto': b,
+            'proyecto': self.b,
         })
         c1 = Seguimientos(**{
             'fecha': '2012-10-10',
             'evento': 'Dispensado 2da Votación',
-            'proyecto': b,
+            'proyecto': self.b,
         })
         c2 = Seguimientos(**{
             'fecha': '2012-10-10',
             'evento': 'Promulgado Ley No: 29971',
-            'proyecto': b,
+            'proyecto': self.b,
         })
         c3 = Seguimientos(**{
             'fecha': '2012-10-10',
             'evento': 'Publicado: Ley No: 29971',
-            'proyecto': b,
+            'proyecto': self.b,
         })
-        b.save()
+        self.b.save()
         b1.save()
         c.save()
         c1.save()
@@ -74,3 +75,26 @@ class TestCustomCommand(TestCase):
         res = Dispensed.objects.all()
         expected = 1
         self.assertEqual(expected, res[0].total_approved)
+
+    def test_testing_if_event_is_in_commission(self):
+        """
+        We need to check whether the event in the model Seguimientos is one
+        that tells us that the project is in certain Commission.
+        """
+        c = Seguimientos(**{
+            'fecha': '2012-10-10',
+            'evento': 'en comisión Justicia',
+            'proyecto': self.b,
+        })
+        expected = 'Justicia'
+        result = test_if_event_is_in_commission(c)
+        self.assertEqual(expected, result)
+
+        c = Seguimientos(**{
+            'fecha': '2012-10-10',
+            'evento': 'Publicado: Ley No: 29971',
+            'proyecto': self.b,
+        })
+        expected = False
+        result = test_if_event_is_in_commission(c)
+        self.assertEqual(expected, result)
