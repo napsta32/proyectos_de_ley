@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
-
-import os
-import sys
-
-
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
-import proyectos_de_ley
-version = '2.0.1'
+version = '2.1.0'
 
 setup(
     name='proyectos_de_ley',
@@ -22,7 +16,7 @@ setup(
     ],
     include_package_data=True,
     install_requires=[
-        'Django==1.7.3',
+        'Django==1.8.4',
     ],
     zip_safe=False,
     scripts=['proyectos_de_ley/manage.py'],

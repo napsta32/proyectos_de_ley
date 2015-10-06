@@ -4,9 +4,15 @@
 Proyectos de Ley del Congreso
 =============================
 
-`http://proyectosdeley.pe` es un intento de transparentar el Congreso y poner al alcance de la mayor cantidad de personas los proyectos de ley presentados y discutidos en el parlamento. La información mostrada es tomada directamente de la página web del Congreso.
+`http://proyectosdeley.pe` es un intento de transparentar el Congreso y poner
+al alcance de la mayor cantidad de personas los proyectos de ley presentados y
+discutidos en el parlamento. La información mostrada es tomada directamente de
+la página web del Congreso.
 
-Esta página ha sido desarrollada en forma independiente por la ONG Hiperderecho, una organización civil peruana sin fines de lucro dedicada a investigar, facilitar el entendimiento público y promover el respeto de los derechos y libertades en entornos digitales.
+Esta página ha sido desarrollada en forma independiente por la ONG Hiperderecho
+y la asociación Contribuyentes por Respeto, organizaciones sin fines de lucro
+dedicadas a investigar, facilitar el entendimiento público y promover
+el respeto de los derechos y libertades en entornos digitales.
 
 `http://proyectosdeley.pe`
 
@@ -15,10 +21,10 @@ Configuración
 
 Esta aplicación se basa en el siguiente *software*:
 
-* pip
-* virtualenv
 * python v3
-* django v1.7
+* django v1.8.4
+* PostgreSQL
+* elasticsearch
 
 Crear y un activar un virtualenv_ que use Python3. En un terminal, instalar 
 las dependencias para desarrollo local::
@@ -32,7 +38,7 @@ del folder que contiene el proyecto de Django::
 
     $ python yourapp/manage.py runserver --settings=yourapp.settings.local
 
-Recastind DateField as DateTimeFiel::
+Recasting DateField as DateTimeField::
 
     alter table pdl_proyecto alter column fecha_presentacion TYPE timestamp using fecha_presentacion::timestamp;
 
