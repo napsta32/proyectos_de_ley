@@ -64,17 +64,6 @@ class Command(BaseCommand):
                 comision=k, defaults={'count': v},
             )
 
-    def get_all_24_commission_names(self):
-        queryset = Seguimientos.objects.all()
-        commissions = set()
-        for i in queryset:
-            res = re.match("(en\s+comisión(\s\w+)+)", i.evento, re.I)
-            if res:
-                full_commission_name = re.sub(r"(?i)En\s+comisión\s+(de\s+)*", "", res.groups()[0])
-                this_commission = re.sub("\s+y\s+.+", "", full_commission_name)
-                commissions.add(this_commission)
-        return commissions
-
     def get_dispensed_projects(self):
         total_approved = set()
 
