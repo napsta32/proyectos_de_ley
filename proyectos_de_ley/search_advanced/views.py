@@ -66,8 +66,12 @@ def combined_search(keywords, form, request):
     msg = ''
     queryset = Proyecto.objects.all().order_by('-codigo')
     if 'query' in keywords:
+        query = keywords['query']
         msg = "Número de proyectos encontrados"
         queryset = queryset.filter(titulo__icontains=keywords['query'])
+    else:
+        query = ""
+
     if 'date_to' and 'date_from' in keywords:
         msg = "Número de proyectos entre fecha indicada"
         queryset = queryset.filter(fecha_presentacion__range=(keywords['date_from'], keywords['date_to']))
@@ -77,9 +81,13 @@ def combined_search(keywords, form, request):
     if 'grupo_parlamentario' in keywords:
         msg = "Número de proyectos de bancada {}".format(keywords['grupo_parlamentario'])
         queryset = queryset.filter(grupo_parlamentario=keywords['grupo_parlamentario'])
+
     if 'comision' in keywords:
+        comision = keywords['comision']
         msg = "Número de proyectos de comisión {}".format(keywords['comision'])
         queryset = filter_by_comision(keywords, queryset)
+    else:
+        comision = ""
 
     if len(keywords) > 1:
         msg = "Número de proyectos encontrados"
@@ -89,7 +97,8 @@ def combined_search(keywords, form, request):
     if queryset:
         obj = do_pagination(request, queryset, search=True, advanced_search=True)
         return render(request, "search_advanced/index.html", {
-            "query": keywords['query'],
+            "query": query,
+            "comision": comision,
             "date_from": date_from,
             "date_to": date_to,
             "result_count": len(queryset),
