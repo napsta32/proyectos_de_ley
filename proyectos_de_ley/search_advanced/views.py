@@ -75,9 +75,16 @@ def combined_search(keywords, form, request):
     if 'date_to' and 'date_from' in keywords:
         msg = "Número de proyectos entre fecha indicada"
         queryset = queryset.filter(fecha_presentacion__range=(keywords['date_from'], keywords['date_to']))
+
     if 'congresista' in keywords:
         msg = "Número de proyectos de congresista {}".format(keywords['congresista'])
         queryset = queryset.filter(congresistas__icontains=keywords['congresista'])
+
+    if 'congresista' in request.GET:
+        congresista = request.GET['congresista']
+    else:
+        congresista = ""
+
     if 'grupo_parlamentario' in keywords:
         msg = "Número de proyectos de bancada {}".format(keywords['grupo_parlamentario'])
         queryset = queryset.filter(grupo_parlamentario=keywords['grupo_parlamentario'])
@@ -99,6 +106,7 @@ def combined_search(keywords, form, request):
         return render(request, "search_advanced/index.html", {
             "query": query,
             "comision": comision,
+            "congresista": congresista,
             "date_from": date_from,
             "date_to": date_to,
             "result_count": len(queryset),
