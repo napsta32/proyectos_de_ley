@@ -80,9 +80,9 @@ def combined_search(keywords, form, request):
         msg = "Número de proyectos de congresista {}".format(keywords['congresista'])
         queryset = queryset.filter(congresistas__icontains=keywords['congresista'])
 
-    if 'congresista' in request.GET:
+    try:
         congresista = request.GET['congresista']
-    else:
+    except KeyError:
         congresista = ""
 
     if 'grupo_parlamentario' in keywords:
