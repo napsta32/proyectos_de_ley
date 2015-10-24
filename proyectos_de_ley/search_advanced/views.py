@@ -82,9 +82,10 @@ def combined_search(keywords, form, request):
     if len(keywords) > 1:
         msg = "Número de proyectos encontrados"
 
-    if len(queryset) > 0:
+    if queryset:
         obj = do_pagination(request, queryset, search=True, advanced_search=True)
         return render(request, "search_advanced/index.html", {
+            "query": keywords['query'],
             "result_count": len(queryset),
             "extra_result_msg": msg,
             "items": obj['items'],
