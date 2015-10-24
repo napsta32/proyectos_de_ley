@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+import datetime
+
 from django.shortcuts import render
 from django.db.models import Q
 
@@ -82,10 +84,14 @@ def combined_search(keywords, form, request):
     if len(keywords) > 1:
         msg = "Número de proyectos encontrados"
 
+    date_from, date_to = convert_to_iso_dates(keywords)
+
     if queryset:
         obj = do_pagination(request, queryset, search=True, advanced_search=True)
         return render(request, "search_advanced/index.html", {
             "query": keywords['query'],
+            "date_from": date_from,
+            "date_to": date_to,
             "result_count": len(queryset),
             "extra_result_msg": msg,
             "items": obj['items'],
@@ -102,6 +108,20 @@ def combined_search(keywords, form, request):
             "form": form,
             "info_msg": 'No se encontraron resultados para esa combinación de términos de búsqueda',
         })
+
+
+def convert_to_iso_dates(keywords):
+    try:
+        date_from = datetime.datetime.strftime(keywords['date_from'], '%m/%d/%Y')
+    except KeyError:
+        date_from = ""
+
+    try:
+        date_to = datetime.datetime.strftime(keywords['date_to'], '%m/%d/%Y')
+    except KeyError:
+        date_to = ""
+
+    return date_from, date_to
 
 
 def filter_by_comision(keywords, queryset):
