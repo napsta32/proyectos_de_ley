@@ -88,6 +88,9 @@ def combined_search(keywords, form, request):
     if 'grupo_parlamentario' in keywords:
         msg = "Número de proyectos de bancada {}".format(keywords['grupo_parlamentario'])
         queryset = queryset.filter(grupo_parlamentario=keywords['grupo_parlamentario'])
+        grupo_parlamentario = keywords['grupo_parlamentario']
+    else:
+        grupo_parlamentario = ""
 
     if 'comision' in keywords:
         comision = keywords['comision']
@@ -107,6 +110,7 @@ def combined_search(keywords, form, request):
             "query": query,
             "comision": comision,
             "congresista": congresista,
+            "grupo_parlamentario": grupo_parlamentario,
             "date_from": date_from,
             "date_to": date_to,
             "result_count": len(queryset),
