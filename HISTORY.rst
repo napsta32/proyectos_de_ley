@@ -6,8 +6,8 @@ v2.1.1 (2015-10-29)
 * script para hacer backups de base de datos
 * Stats. Agregado "sin votación en el pleno" para velocímetro "proyectos con
   dictamen pero sin votación". Además agregué explicación para ese número.
-* Busqueda avanzada por comisiones dan el mismo numero de proyectos que los que
-  aparecen en el cuadro de estadisticas.
+* Búsqueda avanzada por comisiones dan el mismo número de proyectos que los que
+  aparecen en el cuadro de estadísticas.
 * Arreglado bug en paginación de búsqueda avanzada. Gracias a @skraelings.
 
 v2.1.0 (2015-07-16)
