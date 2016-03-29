@@ -29,8 +29,11 @@ def index(request):
         Proyecto.objects.filter(titulo_de_ley__isnull=True).count()
 
     # total aprobados
-    res = Dispensed.objects.all()[0]
-    aprobados = res.total_approved
+    try:
+        res = Dispensed.objects.all()[0]
+        aprobados = res.total_approved
+    except IndexError:
+        aprobados = 0
 
     return render(request, "pdl/index.html", {
         "items": obj['items'],
