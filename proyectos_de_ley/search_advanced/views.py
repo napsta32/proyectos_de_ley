@@ -4,7 +4,7 @@ import datetime
 from django.shortcuts import render
 from django.db.models import Q
 
-from . import forms
+from .forms import SearchAdvancedForm
 from pdl.models import Proyecto
 from pdl.models import Seguimientos
 from pdl.utils import do_pagination
@@ -12,7 +12,7 @@ from pdl.utils import do_pagination
 
 def index(request):
     if request.method == 'GET':
-        form = forms.SearchAdvancedForm(request.GET)
+        form = SearchAdvancedForm(request.GET)
         if form.is_valid():
             keywords = clean_keywords_for_combined_search(form.cleaned_data)
             if len(keywords) > 0:

@@ -2,19 +2,15 @@ import datetime
 import re
 import time
 import unicodedata
-from functools import reduce
-from itertools import chain
 
 import arrow
 
 from django.conf import settings
-from django.db.models import Q
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 
 from pdl.models import Proyecto
-from pdl.models import Seguimientos
 from pdl.models import Slug
 
 
