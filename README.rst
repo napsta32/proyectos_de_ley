@@ -1,4 +1,4 @@
-|Build Status| |Cover alls|
+|Build Status| |Cover alls| |Gemnasium|
 
 
 Proyectos de Ley del Congreso
@@ -71,3 +71,6 @@ Plantilla HTML
    :target: https://travis-ci.org/proyectosdeley/proyectos_de_ley
 .. |Cover alls| image:: https://coveralls.io/repos/proyectosdeley/proyectos_de_ley/badge.png
    :target: https://coveralls.io/r/proyectosdeley/proyectos_de_ley
+.. |Gemnasium| image:: https://gemnasium.com/proyectosdeley/proyectos_de_ley.svg
+   :target: https://gemnasium.com/proyectosdeley/proyectos_de_ley
+
