@@ -24,8 +24,7 @@ class CSVResponse(HttpResponse):
 
 
 class CSVRenderer(renderers.CSVRenderer):
-    media_type = 'text/csv'
     format = 'csv'
 
-    def render(self, data, media_type=None, renderer_context=None):
-        return super(CSVRenderer, self).render(data, media_type, renderer_context)
+    def render(self, data, *args, **kwargs):
+        return super(CSVRenderer, self).render(data, media_type="text/csv", *args, **kwargs)

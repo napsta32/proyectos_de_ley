@@ -3,8 +3,8 @@ from django.conf.urls import patterns, url
 from . import views
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
+    # '',
     url(r'^proyecto.json/(?P<codigo>[0-9]+\-[0-9]+)/$', views.proyecto),
     url(r'^proyecto.csv/(?P<codigo>[0-9]+\-[0-9]+)/$', views.proyecto_csv),
 
@@ -25,4 +25,4 @@ urlpatterns = patterns(
 
     url(r'^iniciativas.json/(?P<codigo>[0-9a-z]+\-[0-9]+)/$', views.iniciativa_list),
     url(r'^iniciativas.csv/(?P<codigo>[0-9a-z]+\-[0-9]+)/$', views.iniciativa_list_csv),
-)
+]

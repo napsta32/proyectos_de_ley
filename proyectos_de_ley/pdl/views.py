@@ -5,11 +5,11 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 
-from pdl.models import Proyecto
-from pdl.forms import SimpleSearchForm
 from .utils import prettify_item
 from .utils import do_pagination
 from .utils import find_slug_in_db
+from pdl.models import Proyecto
+from pdl.forms import SimpleSearchForm
 from stats.models import Dispensed
 
 
@@ -29,8 +29,11 @@ def index(request):
         Proyecto.objects.filter(titulo_de_ley__isnull=True).count()
 
     # total aprobados
-    res = Dispensed.objects.all()[0]
-    aprobados = res.total_approved
+    try:
+        res = Dispensed.objects.all()[0]
+        aprobados = res.total_approved
+    except IndexError:
+        aprobados = 0
 
     return render(request, "pdl/index.html", {
         "items": obj['items'],
