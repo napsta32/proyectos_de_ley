@@ -21,7 +21,7 @@ Configuración
 
 Esta aplicación se basa en el siguiente *software*:
 
-* python v3
+* Python v3.4
 * django v1.8.4
 * PostgreSQL
 * elasticsearch
