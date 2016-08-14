@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
-
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -23,7 +21,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +42,7 @@ INSTALLED_APPS = (
     'stats',
     'search_advanced',
     'api',
-)
+]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -83,13 +81,22 @@ USE_TZ = True
 # ENDLESS_PAGINATION_DEFAULT_CALLABLE_ARROWS = True
 # for pagination
 # ENDLESS_PAGINATION_PER_PAGE = 20
-TEMPLATE_CONTEXT_PROCESSORS += (
-    'django.core.context_processors.request',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.core.context_processors.request',
+            ],
+        },
+    }
+]
 
-TEMPLATE_DIRS = (
-    'pdl/templates/pdl',
-)
+# TEMPLATE_DIRS = (
+#     'pdl/templates/pdl',
+# )
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
