@@ -6,6 +6,7 @@ from django.db import models
 # Create your models here.
 class Proyecto(models.Model):
     codigo = models.CharField(max_length=20)
+    legislatura = models.IntegerField(max_length=4)  # e.g. 2011, 2016
     numero_proyecto = models.CharField(max_length=50)
     short_url = models.CharField(max_length=20)
     congresistas = models.TextField(blank=True)
