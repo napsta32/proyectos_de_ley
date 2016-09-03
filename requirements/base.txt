@@ -3,6 +3,7 @@ beautifulsoup4==4.4.1
 bs4==0.0.1
 Django==1.9.4
 git+git://github.com/django-haystack/django-haystack.git@f1ed18313777005dd77ed724ecbfb27c0b03cad8
+django-import-export==0.5.0
 django-rest-swagger==0.3.5
 djangorestframework==3.3.3
 djangorestframework-csv==1.4.1
@@ -13,5 +14,6 @@ python-dateutil==2.5.2
 PyYAML==3.11
 six==1.10.0
 sqlparse==0.1.19
+tablib==0.11.2
 Unipath==1.1
 urllib3==1.14
