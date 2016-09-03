@@ -14,7 +14,7 @@ from stats.models import Dispensed
 
 
 def index(request):
-    all_items = Proyecto.objects.all().order_by('-legislatura', '-codigo')
+    all_items = Proyecto.objects.filter(legislatura=2016).order_by('-codigo')
     obj = do_pagination(request, all_items)
 
     # sin fusionar
