@@ -63,11 +63,14 @@ class Slug(models.Model):
     slug = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-        self.ascii = unicodedata.normalize(
+        self.ascii = self.convert_to_ascii()
+        super(Slug, self).save(*args, **kwargs)
+
+    def convert_to_ascii(self):
+        return unicodedata.normalize(
             'NFKD',
             self.nombre,
         ).encode('ascii', 'ignore').decode('utf-8')
-        super(Slug, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.nombre
