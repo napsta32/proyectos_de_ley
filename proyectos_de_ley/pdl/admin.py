@@ -1,9 +1,10 @@
 from django.contrib import admin
+from import_export.admin import ImportExportActionModelAdmin
 
 from pdl.models import Proyecto
 
 
-class ProyectoAdmin(admin.ModelAdmin):
+class ProyectoAdmin(ImportExportActionModelAdmin):
     list_display = [
         'legislatura',
         'numero_proyecto',
