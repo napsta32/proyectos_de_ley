@@ -11,6 +11,7 @@ class TestAPI(TestCase):
         self.maxDiff = None
         dummy = {
             "codigo": "03774",
+            'legislatura': 2011,
             "congresistas": "Dammert Ego Aguirre, Manuel Enrique Ernesto; Lescano Ancieta, Yonhy; Merino De Lama, Manuel; Guevara Amasifuen, Mesias Antonio; Mavila Leon, Rosa Delsa; Mendoza Frisch, Veronika Fanny",
             "expediente": "http://www2.congreso.gob.pe/sicr/tradocestproc/Expvirt_2011.nsf/visbusqptramdoc/03774?opendocument",
             "fecha_presentacion": "2014-09-05",
@@ -25,6 +26,7 @@ class TestAPI(TestCase):
         }
         dummy1 = {
             "codigo": "03775",
+            'legislatura': 2011,
             "congresistas": "Dammert Ego Aguirre, Manuel Enrique Ernesto; Lescano Ancieta, Yonhy; Merino De Lama, Manuel; Guevara Amasifuen, Mesias Antonio; Mavila Leon, Rosa Delsa; Mendoza Frisch, Veronika Fanny",
             "expediente": "http://www2.congreso.gob.pe/sicr/tradocestproc/Expvirt_2011.nsf/visbusqptramdoc/03774?opendocument",
             "fecha_presentacion": "2014-09-05",

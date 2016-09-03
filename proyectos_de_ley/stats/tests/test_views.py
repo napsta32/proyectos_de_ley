@@ -12,6 +12,7 @@ class TestStatsViews(TestCase):
     def setUp(self):
         Proyecto.objects.create(**{
             'numero_proyecto': '02764',
+            'legislatura': 2011,
             'time_created': datetime.datetime.now(),
             'fecha_presentacion': '2010-10-10',
             'titulo_de_ley': 'Ley No 2261',
