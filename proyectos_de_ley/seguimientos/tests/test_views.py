@@ -10,6 +10,7 @@ class TestViews(TestCase):
     def setUp(self):
         b = Proyecto(**{
             'codigo': '00586',
+            'legislatura': 2011,
             'numero_proyecto': '00586/2011-CR',
             'fecha_presentacion': '2010-10-10',
             'short_url': '4huj5x',
