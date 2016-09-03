@@ -7,7 +7,7 @@ for `/stats` page. These stat values go to tables for this app.
 """
 import re
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db import connection
 from django.conf import settings
 

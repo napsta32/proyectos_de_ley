@@ -54,13 +54,19 @@ class Expedientes(models.Model):
 
 class Slug(models.Model):
     """A translation table between a Congresista name and a slug to be used
-    as hiperlink."""
+    as hyperlink."""
     nombre = models.CharField(max_length=200)
-    ascii = models.CharField(max_length=200, help_text='nombre sin caracteres escpeciales')
+    ascii = models.CharField(
+        max_length=200,
+        help_text='nombre sin caracteres escpeciales',
+    )
     slug = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-        self.ascii = unicodedata.normalize('NFKD', self.nombre).encode('ascii', 'ignore').decode('utf-8')
+        self.ascii = unicodedata.normalize(
+            'NFKD',
+            self.nombre,
+        ).encode('ascii', 'ignore').decode('utf-8')
         super(Slug, self).save(*args, **kwargs)
 
     def __str__(self):
