@@ -20,7 +20,7 @@
 
 {% block content %}
 <div class="container">
-  {% if not items %}
+  {% if not items and not items_previous_legislatures %}
   <div class="row">
     <div class="col-xs-12">
       <h1 style="padding-bottom:30px;" class="text-center">Búsqueda avanzada</h1>
@@ -37,7 +37,6 @@
       </div><!-- col -->
     </div><!-- row -->
   {% endif %}
-
 
   <div class="row">
     <div class="col-lg-3 col-md-4 col-sm-3">
@@ -144,9 +143,20 @@
 
 </div>
 
-{% if items %}
+{% if items or items_previous_legislatures %}
   <div id="contenido" class="container">
-    <h1>Resultados de búsqueda: <small>{{ extra_result_msg }} {{ result_count|intcomma }}</small></h1>
+    <h1>Resultados de búsqueda: <small>{{ extra_result_msg }} {{ result_count|intcomma }}</small><br />
+      <small>Legislatura 2016</small>
+    </h1>
+
+    {% if items_previous_legislatures %}
+    <p>
+      Se encontraron proyectos en
+      <a href="/listado?keywords={{ query|safe }}&list={{ items_previous_legislatures }}">
+        previas legislaturas
+      </a>
+    </p>
+    {% endif %}
 
     {% if results == 'No se encontraron resultados.' %}
       <h2>{{ results }}</h2>

@@ -16,7 +16,7 @@ class TestSeguimientos(TestCase):
         proyecto = Proyecto(**{
             "numero_proyecto": "02764/2013-CR",
             "codigo": "02764",
-            'legislatura': 2011,
+            'legislatura': 2016,
             "short_url": "4zhube",
             "titulo": "Propone Ley Universitaria",
             "iniciativas_agrupadas": ['01790', '01800'],
@@ -51,6 +51,7 @@ class TestSeguimientos(TestCase):
         item = Object()
         item.numero_proyecto = "02764/2013-CR"
         item.codigo = "02764"
+        item.legislatura = 2016
         item.titulo = "Propone Ley Universitaria"
         item.iniciativas_agrupadas = '{02764}'
 
@@ -62,6 +63,7 @@ class TestSeguimientos(TestCase):
         item = Object()
         item.numero_proyecto = "02764/2013-CR"
         item.codigo = "02764"
+        item.legislatura = 2016
         item.titulo = "Propone Ley Universitaria"
         item.iniciativas_agrupadas = '{027640000}'
 

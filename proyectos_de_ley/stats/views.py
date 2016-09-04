@@ -8,9 +8,13 @@ from stats.models import Dispensed
 from stats.models import WithDictamenButNotVoted
 
 
+LEGISLATURE = 2016
+
 def dame_sin_tramitar(numero_de_proyectos):
-    with_seguimientos = Seguimientos.objects.values_list('proyecto_id',
-                                                         flat=True).distinct().count()
+    print(numero_de_proyectos, "dame sin tramitar")
+    with_seguimientos = Seguimientos.objects.filter(
+        proyecto__legislatura=LEGISLATURE,
+    ).values_list('proyecto_id', flat=True).distinct().count()
     without_seguimientos = numero_de_proyectos - with_seguimientos
     percentage_without_seguimientos = round(
         (without_seguimientos * 100) / numero_de_proyectos, 1)
@@ -20,14 +24,21 @@ def dame_sin_tramitar(numero_de_proyectos):
 def dame_sin_dictamen(queryset, numero_de_proyectos):
     # thanks to @eyscode
     count = queryset.aggregate(Sum('count'))['count__sum']
-    percentage = round((count * 100) / numero_de_proyectos, 1)
+    if count:
+        percentage = round((count * 100) / numero_de_proyectos, 1)
+    else:
+        percentage = 0
     return percentage, count
 
 
 def index(request):
-    numero_de_proyectos = Proyecto.objects.all().count()
+    numero_de_proyectos = Proyecto.objects.filter(
+        legislatura=LEGISLATURE,
+    ).count()
 
-    with_pdf_url = Proyecto.objects.exclude(
+    with_pdf_url = Proyecto.objects.filter(
+        legislatura=LEGISLATURE,
+    ).exclude(
         pdf_url__isnull=True).exclude(
         pdf_url__exact='').count()
     without_pdf_url = numero_de_proyectos - with_pdf_url
@@ -106,15 +117,23 @@ def index(request):
 
 def get_projects_that_arent_law(numero_de_proyectos):
     laws = set()
-    are_law = Proyecto.objects.exclude(
+    are_law = Proyecto.objects.filter(
+        legislatura=LEGISLATURE
+    ).exclude(
         titulo_de_ley__isnull=True).exclude(
         titulo_de_ley__exact='')
+    print("are_law", len(are_law), [(i.codigo, i.titulo_de_ley) for i in are_law])
 
     for i in are_law:
         laws.add(i.titulo_de_ley)
 
     are_not_law = Proyecto.objects.filter(
-        titulo_de_ley='').count() + Proyecto.objects.filter(titulo_de_ley__isnull=True).count()
+        legislatura=LEGISLATURE,
+        titulo_de_ley='',
+    ).count() + Proyecto.objects.filter(
+        legislatura=LEGISLATURE,
+        titulo_de_ley__isnull=True,
+    ).count()
     percentage_are_not_law = round(
         (are_not_law * 100) / numero_de_proyectos, 1)
     return are_not_law, percentage_are_not_law, laws

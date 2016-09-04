@@ -19,6 +19,8 @@ from stats.models import WithDictamenButNotVoted
 from stats.models import ProjectsInCommissions
 
 
+LEGISLATURE = 2016
+
 class Command(BaseCommand):
     help = 'Parses the table `pdl_seguimientos` and creates a summary table ' \
            'containing `En Comision` events for each proyecto, only if this ' \
@@ -37,7 +39,9 @@ class Command(BaseCommand):
         self.update_iniciativas_agrupadas_with_title_of_law()
 
     def get_projects_in_commissions(self):
-        queryset = Seguimientos.objects.order_by('proyecto_id', '-fecha')
+        queryset = Seguimientos.objects.filter(
+            proyecto__legislatura=LEGISLATURE,
+        ).order_by('proyecto_id', '-fecha')
         commissions_count = {}
         projects_in_commissions = []
         this_project_id = ''
@@ -67,19 +71,32 @@ class Command(BaseCommand):
     def get_dispensed_projects(self):
         total_approved = set()
 
-        tmp = Seguimientos.objects.filter(evento__icontains='promulgado')
+        tmp = Seguimientos.objects.filter(
+            evento__icontains='promulgado',
+            proyecto__legislatura=LEGISLATURE,
+        )
         for i in tmp:
             total_approved.add(i.proyecto_id)
 
-        tmp = Seguimientos.objects.filter(evento__icontains='publicado')
+        tmp = Seguimientos.objects.filter(
+            evento__icontains='publicado',
+            proyecto__legislatura=LEGISLATURE,
+        )
         for i in tmp:
             total_approved.add(i.proyecto_id)
 
-        total_dispensed = Seguimientos.objects.filter(evento__icontains='dispensado 2da').count()
+        total_dispensed = Seguimientos.objects.filter(
+            evento__icontains='dispensado 2da',
+            proyecto__legislatura=LEGISLATURE,
+        ).count()
         dispensed_by_plenary = Seguimientos.objects.filter(
-            evento__icontains='dispensado 2da').filter(evento__icontains='pleno').count()
+            evento__icontains='dispensado 2da',
+            proyecto__legislatura=LEGISLATURE,
+        ).filter(evento__icontains='pleno').count()
         dispensed_by_spokesmen = Seguimientos.objects.filter(
-            evento__icontains='dispensado 2da').filter(evento__icontains='portavoces').count()
+            evento__icontains='dispensado 2da',
+            proyecto__legislatura=LEGISLATURE,
+        ).filter(evento__icontains='portavoces').count()
         dispensed_others = total_dispensed - dispensed_by_plenary - dispensed_by_spokesmen
 
         Dispensed.objects.update_or_create(
@@ -99,7 +116,9 @@ class Command(BaseCommand):
           "publicado" || promulgado || votación || en lista de seguimientos,
         pero tenga "dictamen".
         """
-        queryset = Seguimientos.objects.all().order_by('proyecto_id').values('proyecto_id', 'evento')
+        queryset = Seguimientos.objects.filter(
+            proyecto__legislatura=LEGISLATURE,
+        ).order_by('proyecto_id').values('proyecto_id', 'evento')
         proyect_ids = self.get_proyect_ids(queryset)
 
         if not settings.TESTING:
@@ -114,7 +133,9 @@ class Command(BaseCommand):
         WithDictamenButNotVoted.objects.bulk_create(projects)
 
     def update_iniciativas_agrupadas_with_title_of_law(self):
-        projects_with_law = Proyecto.objects.all().exclude(
+        projects_with_law = Proyecto.objects.filter(
+            legislatura=LEGISLATURE,
+        ).exclude(
             titulo_de_ley='').exclude(
             titulo_de_ley__isnull=True).values('codigo', 'titulo_de_ley', 'iniciativas_agrupadas')
 
@@ -124,7 +145,7 @@ class Command(BaseCommand):
             for i in iniciativa[1]['iniciativas']:
                 if i not in iniciativas_deben_tener_ley.keys():
                     try:
-                        p = Proyecto.objects.get(codigo=i)
+                        p = Proyecto.objects.get(codigo=i, legislatura=LEGISLATURE)
                     except Proyecto.DoesNotExist:
                         continue
                     if p.titulo_de_ley == '':
