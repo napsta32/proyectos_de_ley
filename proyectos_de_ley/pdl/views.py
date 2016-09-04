@@ -82,9 +82,17 @@ def about(request):
 
 
 def listado(request):
-    keywords = ast.literal_eval(
-        request.GET.get('keywords', ''),
-    )
+    try:
+        keywords = ast.literal_eval(
+            request.GET.get('keywords', ''),
+        )
+    except ValueError:
+        keywords = request.GET.get('keywords', '')
+
+    if isinstance(keywords, list):
+        query = " ".join(keywords)
+    else:
+        query = " ".join([keywords])
     project_codes = request.GET.get('list', '').split(",")
     all_items = Proyecto.objects.filter(
         codigo__in=project_codes,
@@ -101,8 +109,8 @@ def listado(request):
         "last_page": obj['last_page'],
         "current": obj['current'],
         "keywords": keywords,
-        "query": "query",
-        "pagination_keyword": "query",
+        "query": query,
+        "pagination_keyword": query,
     })
 
 
