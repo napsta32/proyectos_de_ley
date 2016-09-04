@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'haystack',
     'rest_framework',
     'rest_framework_swagger',
+    'import_export',
 
     'pdl',
     'seguimientos',
