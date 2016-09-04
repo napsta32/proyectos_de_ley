@@ -5,6 +5,8 @@ v2.2.0 (2016-09-xx
 ~~~~~~~~~~~~~~~~~~
 * agregada capacidad de soportar proyectos de Legislatura 2011 y 2016.
 * agregada interface administrador en Django.
+* mostrar proyectos de actual legislatura y menor prominencia a proyectos de
+  legislaturas pasadas.
 
 v2.1.1 (2015-10-29)
 ~~~~~~~~~~~~~~~~~~~
