@@ -108,7 +108,6 @@ def hiperlink_congre(congresistas):
     congresistas = congresistas.replace("; ", ";\n")
     return congresistas
 
-
 def convert_name_to_slug(name):
     """Takes a congresista name and returns its slug."""
     name = name.strip()

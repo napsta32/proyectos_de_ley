@@ -6,6 +6,7 @@ from django.db import models
 # Create your models here.
 class Proyecto(models.Model):
     codigo = models.CharField(max_length=20)
+    legislatura = models.IntegerField()  # e.g. 2011, 2016
     numero_proyecto = models.CharField(max_length=50)
     short_url = models.CharField(max_length=20)
     congresistas = models.TextField(blank=True)
@@ -53,14 +54,23 @@ class Expedientes(models.Model):
 
 class Slug(models.Model):
     """A translation table between a Congresista name and a slug to be used
-    as hiperlink."""
+    as hyperlink."""
     nombre = models.CharField(max_length=200)
-    ascii = models.CharField(max_length=200, help_text='nombre sin caracteres escpeciales')
+    ascii = models.CharField(
+        max_length=200,
+        help_text='nombre sin caracteres escpeciales',
+    )
     slug = models.CharField(max_length=100)
 
     def save(self, *args, **kwargs):
-        self.ascii = unicodedata.normalize('NFKD', self.nombre).encode('ascii', 'ignore').decode('utf-8')
+        self.ascii = self.convert_to_ascii()
         super(Slug, self).save(*args, **kwargs)
+
+    def convert_to_ascii(self):
+        return unicodedata.normalize(
+            'NFKD',
+            self.nombre,
+        ).encode('ascii', 'ignore').decode('utf-8')
 
     def __str__(self):
         return self.nombre
