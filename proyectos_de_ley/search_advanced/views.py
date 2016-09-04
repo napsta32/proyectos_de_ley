@@ -45,7 +45,6 @@ def index(request):
                 "form": form,
             })
         else:
-            print(form.errors)
             return render(request, "search_advanced/index.html", {
                 "form": form,
             })
@@ -64,7 +63,6 @@ def clean_keywords_for_combined_search(cleaned_data):
 
 
 def combined_search(keywords, form, request):
-    print("########## keywords", keywords)
     queryset1 = Proyecto.objects.filter(legislatura=LEGISLATURE).order_by('-codigo')
     queryset2 = Proyecto.objects.all().order_by('-codigo').exclude(legislatura=LEGISLATURE)
     comision, congresista, grupo_parlamentario, msg, query, queryset2 = filter_queryset(
@@ -170,8 +168,14 @@ def filter_by_comision(keywords, queryset):
 
 
 def search_dispensados_todos(form, request):
-    total_dispensed = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
-                       evento__icontains='dispensado 2da')]
+    total_dispensed = [
+        i.proyecto
+        for i in Seguimientos.objects.select_related('proyecto').filter(
+            evento__icontains='dispensado 2da',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        )
+    ]
 
     obj = do_pagination(request, total_dispensed, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
@@ -191,8 +195,12 @@ def search_dispensados_todos(form, request):
 
 def search_total_leyes(form, request):
     are_law = Proyecto.objects.exclude(
-        titulo_de_ley__isnull=True).exclude(
-        titulo_de_ley__exact='')
+        titulo_de_ley__isnull=True,
+    ).exclude(
+        titulo_de_ley__exact='',
+    ).filter(
+        legislatura=LEGISLATURE,
+    )
 
     obj = do_pagination(request, are_law, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
@@ -211,8 +219,14 @@ def search_total_leyes(form, request):
 
 
 def search_exonerados_dictamen(form, request):
-    exonerado_de_dictamen = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
-        evento__icontains='exoneración de dictamen').distinct()]
+    exonerado_de_dictamen = [
+        i.proyecto
+        for i in Seguimientos.objects.select_related('proyecto').filter(
+            evento__icontains='exoneración de dictamen',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        ).distinct()
+    ]
     exonerado_de_dictamen = list(set(exonerado_de_dictamen))
 
     obj = do_pagination(request, exonerado_de_dictamen, search=True, advanced_search=True)
@@ -232,8 +246,14 @@ def search_exonerados_dictamen(form, request):
 
 
 def search_total_aprobados(form, request):
-    total_approved = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
-        Q(evento__icontains='promulgado') | Q(evento__icontains='publicado'))]
+    total_approved = [
+        i.proyecto
+        for i in Seguimientos.objects.select_related('proyecto').filter(
+            Q(evento__icontains='promulgado') | Q(evento__icontains='publicado'),
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        )
+    ]
     total_approved = list(set(total_approved))
 
     obj = do_pagination(request, total_approved, search=True, advanced_search=True)
@@ -253,8 +273,16 @@ def search_total_aprobados(form, request):
 
 
 def search_dispensados_acuerdo_pleno(form, request):
-    dispensed_by_plenary = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
-        evento__icontains='dispensado 2da').filter(evento__icontains='pleno')]
+    dispensed_by_plenary = [
+        i.proyecto
+        for i in Seguimientos.objects.select_related('proyecto').filter(
+            evento__icontains='dispensado 2da',
+        ).filter(
+            evento__icontains='pleno',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        )
+    ]
 
     obj = do_pagination(request, dispensed_by_plenary, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
@@ -273,8 +301,14 @@ def search_dispensados_acuerdo_pleno(form, request):
 
 
 def search_dispensados_junta_portavoces(form, request):
-    dispensed_by_spokesmen = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
-        evento__icontains='dispensado 2da').filter(evento__icontains='portavoces')]
+    dispensed_by_spokesmen = [
+        i.proyecto
+        for i in Seguimientos.objects.select_related('proyecto').filter(
+            evento__icontains='dispensado 2da',
+        ).filter(
+            evento__icontains='portavoces',
+        )
+    ]
 
     obj = do_pagination(request, dispensed_by_spokesmen, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
@@ -293,10 +327,16 @@ def search_dispensados_junta_portavoces(form, request):
 
 
 def search_dispensados_otros(form, request):
-    otros_dispensados = [i.proyecto for i in Seguimientos.objects.select_related('proyecto').filter(
-        evento__icontains='dispensado 2da').exclude(
-        evento__icontains='pleno').exclude(
-        evento__icontains='portavoces')]
+    otros_dispensados = [
+        i.proyecto
+        for i in Seguimientos.objects.select_related('proyecto').filter(
+            evento__icontains='dispensado 2da',
+        ).exclude(
+            evento__icontains='pleno',
+        ).exclude(
+            evento__icontains='portavoces',
+        )
+    ]
 
     obj = do_pagination(request, otros_dispensados, search=True, advanced_search=True)
     return render(request, "search_advanced/index.html", {
