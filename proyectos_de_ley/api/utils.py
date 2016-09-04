@@ -49,15 +49,18 @@ def find_name_from_short_name(nombre_corto):
         return ['---error---', 'no se pudo encontrar congresista']
 
 
-def prepare_json_for_d3(item):
+def prepare_json_for_d3(proyecto):
     nodes = []
     append = nodes.append
 
-    iniciativas_agrupadas = item.iniciativas_agrupadas.replace('{', '').replace('}', '').split(',')
+    iniciativas_agrupadas = proyecto.iniciativas_agrupadas.replace('{', '').replace('}', '').split(',')
 
     for i in iniciativas_agrupadas:
         try:
-            queryset = Proyecto.objects.get(codigo=i)
+            queryset = Proyecto.objects.get(
+                codigo=i,
+                legislatura=int(proyecto.legislatura),
+            )
         except Proyecto.DoesNotExist:
             continue
         node = {"codigo": i, "url": "/p/" + queryset.short_url}

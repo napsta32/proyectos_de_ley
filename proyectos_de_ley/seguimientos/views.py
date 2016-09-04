@@ -11,9 +11,10 @@ def index(request, short_url):
     short_url = re.sub("/seguimiento/", "", short_url)
     item = utils.get_proyecto_from_short_url(short_url)
     item.expediente_events = utils.get_events_from_expediente(item.id)
-
-    # TODO: arreglar esto para cuanto tengamos proyectos de la legislatura 2016
-    friendly_code = str(item.codigo) + '-2011'
+    friendly_code = "{}-{}".format(
+        item.codigo,
+        item.legislatura,
+    )
     return render(request, "seguimientos/index.html",
                   {
                       "item": item,
