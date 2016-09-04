@@ -19,14 +19,21 @@ def index(request):
 
     # sin fusionar
     numero_de_proyectos = len(all_items)
-    with_iniciativas = Proyecto.objects.exclude(
+    with_iniciativas = Proyecto.objects.filter(legislatura=2016).exclude(
         iniciativas_agrupadas__isnull=True).exclude(
         iniciativas_agrupadas__exact='').count()
     without_iniciativas = numero_de_proyectos - with_iniciativas
 
     # no son ley
-    are_not_law = Proyecto.objects.filter(titulo_de_ley='').count() + \
-        Proyecto.objects.filter(titulo_de_ley__isnull=True).count()
+    projects_empty_title = Proyecto.objects.filter(
+        titulo_de_ley='',
+        legislatura=2016,
+    ).count()
+    projects_null_title = Proyecto.objects.filter(
+        titulo_de_ley__isnull=True,
+        legislatura=2016,
+    ).count()
+    are_not_law = projects_empty_title + projects_null_title
 
     # total aprobados
     try:
