@@ -3,7 +3,8 @@ History
 
 v2.2.0 (2016-09-xx
 ~~~~~~~~~~~~~~~~~~
-* agregar capacidad de soportar proyectos de Legislatura 2011 y 2016.
+* agregada capacidad de soportar proyectos de Legislatura 2011 y 2016.
+* agregada interface administrador en Django.
 
 v2.1.1 (2015-10-29)
 ~~~~~~~~~~~~~~~~~~~
