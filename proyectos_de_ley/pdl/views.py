@@ -170,7 +170,10 @@ def congresista(request, congresista_slug):
     congresista_name = find_slug_in_db(congresista_slug)
     if congresista_name is not None:
         all_items = Proyecto.objects.filter(
-            congresistas__icontains=congresista_name).order_by('-codigo')
+            congresistas__icontains=congresista_name,
+        ).filter(
+            legislatura=LEGISLATURE,
+        ).order_by('-codigo')
         obj = do_pagination(request, all_items)
         return render(request, "pdl/congresista.html", {
             "items": obj['items'],
