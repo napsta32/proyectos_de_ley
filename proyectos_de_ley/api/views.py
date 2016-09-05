@@ -475,9 +475,12 @@ def seguimientos_list(request, codigo):
         paramType: path
         required: true
     """
-    codigo = re.sub('-[0-9]+', '', codigo)
+    codigo, legislatura = codigo.split("-")
     try:
-        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+        proy = Proyecto.objects.get(
+            codigo=codigo,
+            legislatura=legislatura,
+        )
     except Proyecto.DoesNotExist:
         msg = {'error': 'proyecto no existe'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
