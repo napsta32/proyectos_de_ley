@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 import ast
 import re
+import copy
 
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -118,12 +119,14 @@ def listado(request):
 def search(request):
     if 'q' not in request.GET:
         return redirect('/')
+    else:
+        query = request.GET['q']
+        if query.strip() == '':
+            return redirect('/')
+        else:
+            query = fix_query(request)
 
-    query = request.GET['q']
-    if query.strip() == '':
-        return redirect('/')
-
-    form = SimpleSearchForm(request.GET)
+    form = SimpleSearchForm(query)
     all_items = form.search()
     items_current_legislature = [
         i
@@ -137,7 +140,7 @@ def search(request):
     ]
     obj = do_pagination(request, items_current_legislature, search=True)
 
-    keywords = clean_my_query(query)
+    keywords = clean_my_query(query['q'])
 
     return render(request, "pdl/search.html", {
         "result_count": len(items_current_legislature),
@@ -150,9 +153,28 @@ def search(request):
         "last_page": obj['last_page'],
         "current": obj['current'],
         "keywords": keywords,
-        "query": query,
-        "pagination_keyword": query,
+        "query": query['q'],
+        "pagination_keyword": query['q'],
     })
+
+
+def fix_query(request):
+    r = copy.copy(request.GET)
+    query_parts = []
+    for i in r['q'].split(" "):
+        try:
+            number = int(i)
+        except ValueError:
+            query_parts.append(i)
+            continue
+
+        if number and len(i) < 5:
+            padded_number = i.zfill(5)
+            query_parts.append(padded_number)
+        else:
+            query_parts.append(i)
+    r['q'] = " ".join(query_parts)
+    return r
 
 
 def clean_my_query(query):
