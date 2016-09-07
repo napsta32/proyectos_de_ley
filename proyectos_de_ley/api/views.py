@@ -62,12 +62,7 @@ def proyecto(request, codigo):
         paramType: path
         required: true
     """
-    codigo = codigo.split("-")
-    if len(codigo) > 1:
-        legislatura = int(codigo[1])
-    else:
-        legislatura = LEGISLATURE
-    codigo = codigo[0]
+    codigo, legislatura = split_code_input(codigo)
 
     try:
         proy = Proyecto.objects.get(
@@ -101,12 +96,7 @@ def proyecto_csv(request, codigo):
         paramType: path
         required: true
     """
-    codigo = codigo.split("-")
-    if len(codigo) > 1:
-        legislatura = int(codigo[1])
-    else:
-        legislatura = LEGISLATURE
-    codigo = codigo[0]
+    codigo, legislatura = split_code_input(codigo)
 
     proyectos = Proyecto.objects.filter(
         codigo=codigo,
@@ -320,9 +310,16 @@ def exonerados_dictamen(request):
 
     * <http://proyectosdeley.pe/api/exonerados_dictamen.csv/>
     """
-    exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
-                             for i in Seguimientos.objects.select_related('proyecto').filter(
-                             evento__icontains='exoneración de dictamen').distinct()]
+    exonerado_de_dictamen = [
+        '{}-{}'.format(i.proyecto.codigo, LEGISLATURE)
+        for i in Seguimientos.objects.select_related(
+            'proyecto',
+        ).filter(
+            evento__icontains='exoneración de dictamen',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        ).distinct()
+    ]
     exonerado_de_dictamen = list(set(exonerado_de_dictamen))
 
     if len(exonerado_de_dictamen) > 0:
@@ -347,9 +344,16 @@ def exonerados_dictamen_csv(request):
 
     * <http://proyectosdeley.pe/api/exonerados_2da_votacion.csv/>
     """
-    exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
-                             for i in Seguimientos.objects.select_related('proyecto').filter(
-                             evento__icontains='exoneración de dictamen').distinct()]
+    exonerado_de_dictamen = [
+        '{}-{}'.format(i.proyecto.codigo, LEGISLATURE)
+        for i in Seguimientos.objects.select_related(
+            'proyecto',
+        ).filter(
+            evento__icontains='exoneración de dictamen',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        ).distinct()
+        ]
     data = list(set(exonerado_de_dictamen))
 
     if len(exonerado_de_dictamen) > 0:
@@ -367,9 +371,16 @@ def exonerados_2da_votacion(request):
     Lista proyectos que han sido exonerados de 2da votación en el pleno.
     ---
     """
-    total_dispensed = ["{}-2011".format(i.proyecto.codigo)
-                       for i in Seguimientos.objects.select_related('proyecto').filter(
-                       evento__icontains='dispensado 2da')]
+    total_dispensed = [
+        "{}-{}".format(i.proyecto.codigo, LEGISLATURE)
+        for i in Seguimientos.objects.select_related(
+            'proyecto',
+        ).filter(
+            evento__icontains='dispensado 2da',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        )
+    ]
 
     if len(total_dispensed) > 0:
         data = {'resultado': total_dispensed}
@@ -388,9 +399,16 @@ def exonerados_2da_votacion_csv(request):
     Lista proyectos que han sido exonerados de 2da votación en el pleno.
     ---
     """
-    data = ["{}-2011".format(i.proyecto.codigo)
-            for i in Seguimientos.objects.select_related('proyecto').filter(
-            evento__icontains='dispensado 2da')]
+    data = [
+        "{}-{}".format(i.proyecto.codigo, LEGISLATURE)
+        for i in Seguimientos.objects.select_related(
+            'proyecto',
+        ).filter(
+            evento__icontains='dispensado 2da',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        )
+    ]
 
     if len(data) > 0:
         if request.method == 'GET':
@@ -423,7 +441,7 @@ def iniciativa_list(request, codigo):
         paramType: path
         required: true
     """
-    codigo, legislatura = codigo.split("-")
+    codigo, legislatura = split_code_input(codigo)
     try:
         proy = Proyecto.objects.get(
             codigo=codigo,
@@ -461,9 +479,12 @@ def iniciativa_list_csv(request, codigo):
         paramType: path
         required: true
     """
-    codigo = re.sub('-[0-9]+', '', codigo)
+    codigo, legislatura = split_code_input(codigo)
     try:
-        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+        proy = Proyecto.objects.get(
+            codigo=codigo,
+            legislatura=legislatura,
+        )
     except Proyecto.DoesNotExist:
         msg = 'error,proyecto no existe'
         return HttpResponse(msg, content_type='text/csv')
@@ -501,7 +522,7 @@ def seguimientos_list(request, codigo):
         paramType: path
         required: true
     """
-    codigo, legislatura = codigo.split("-")
+    codigo, legislatura = split_code_input(codigo)
     try:
         proy = Proyecto.objects.get(
             codigo=codigo,
@@ -545,9 +566,12 @@ def seguimientos_list_csv(request, codigo):
         paramType: path
         required: true
     """
-    codigo = re.sub('-[0-9]+', '', codigo)
+    codigo, legislatura = split_code_input(codigo)
     try:
-        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+        proy = Proyecto.objects.get(
+            codigo=codigo,
+            legislatura=legislatura,
+        )
     except Proyecto.DoesNotExist:
         msg = 'error,proyecto no existe'
         return HttpResponse(msg, content_type='text/csv')
@@ -570,3 +594,16 @@ def seguimientos_list_csv(request, codigo):
 
     if request.method == 'GET':
         return CSVResponse(data)
+
+
+def split_code_input(codigo):
+    print(codigo)
+    codigo = codigo.split("-")
+    if len(codigo) > 1:
+        legislatura = int(codigo[1])
+    else:
+        legislatura = LEGISLATURE
+    codigo = codigo[0]
+    return codigo, legislatura
+
+
