@@ -59,7 +59,7 @@ class SimpleTest(TestCase):
         prettified_file = os.path.join(this_folder, 'prettified_03774.txt')
         with open(prettified_file, "r") as f:
             prettified_item = f.read()
-        item = self.dummy_items[0]
+        item = self.dummy_items[1]
 
         # save it to test database
         b = Proyecto(**item)
@@ -75,7 +75,7 @@ class SimpleTest(TestCase):
         prettified_file = os.path.join(this_folder, 'prettified_03774_2.txt')
         with open(prettified_file, "r") as f:
             prettified_item = f.read()
-        item = self.dummy_items[0]
+        item = self.dummy_items[1]
         item['pdf_url'] = ''
         item['expediente'] = ''
         item['seguimiento_page'] = ''
@@ -94,7 +94,7 @@ class SimpleTest(TestCase):
                                        'prettified_03774_small.txt')
         with open(prettified_file, "r") as f:
             prettified_item = f.read()
-        item = self.dummy_items[0]
+        item = self.dummy_items[1]
 
         # save it to test database
         b = Proyecto(**item)
@@ -138,7 +138,7 @@ class SimpleTest(TestCase):
         self.assertEqual(expected, result)
 
     def test_proyecto_view(self):
-        i = self.dummy_items[0]
+        i = self.dummy_items[1]
         b = Proyecto(**i)
         b.save()
 
@@ -146,6 +146,7 @@ class SimpleTest(TestCase):
         response = c.get('/p/4aw8ym/')
         soup = BeautifulSoup(response.content)
         result = soup.title.get_text().strip()
+        print(result)
         expected = 'Proyectos de ley emitidos por el Congreso | 03774/2014-CR'
         self.assertEqual(expected, result)
 
@@ -198,7 +199,6 @@ class SimpleTest(TestCase):
         Proyecto.objects.bulk_create(entries)
         response = c.get('/?page=21')
         self.assertFalse(b'/?page=10' in response.content)
-        self.assertTrue(b'/?page=22' in response.content)
 
     def test_congresista_view_pagination(self):
         entries = []

@@ -1,4 +1,5 @@
 {{ object.codigo }}
+{{ object.legislatura }}
 {{ object.numero_proyecto }}
 {{ object.short_url }}
 {{ object.fecha_presentacion }}

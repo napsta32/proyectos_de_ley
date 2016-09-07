@@ -16,6 +16,7 @@ class TestSeguimientos(TestCase):
         proyecto = Proyecto(**{
             "numero_proyecto": "02764/2013-CR",
             "codigo": "02764",
+            "legislatura": 2011,
             "short_url": "4zhube",
             "titulo": "Propone Ley Universitaria",
             "iniciativas_agrupadas": ['01790', '01800'],
@@ -64,6 +65,7 @@ class TestSeguimientos(TestCase):
             "numero_proyecto": "02764/2013-CR",
             "codigo": "02764",
             "short_url": "4zhube",
+            "legislatura": 2011,
             "titulo": "Propone Ley Universitaria",
             "iniciativas_agrupadas": '{01790,01800}',
             "fecha_presentacion": "2010-10-10",

@@ -1,9 +1,11 @@
 from django.conf.urls import include, url
 from django.contrib.sitemaps.views import sitemap
+from django.contrib import admin
 
 from pdl.feeds import LatestEntriesFeed
 from pdl.sitemaps import ProyectoSitemap, CongresistaSitemap
 from seguimientos import views as seg_views
+from api.views import schema_view
 
 
 sitemaps = {
@@ -13,7 +15,8 @@ sitemaps = {
 
 urlpatterns = [
     # '',
-    url(r'^docs/', include('rest_framework_swagger.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^docs/', schema_view),
     url(r'^stats/', include('stats.urls', namespace='stats')),
     url(r'^', include('pdl.urls', namespace='pdl')),
     url(r'^p/', include('pdl.urls', namespace='pdl-proyecto')),
@@ -25,5 +28,4 @@ urlpatterns = [
     url(r'^api/', include('api.urls')),
 
     url(r'^search-advanced/', include('search_advanced.urls')),
-    # url(r'^admin/', include(admin.site.urls)),
 ]

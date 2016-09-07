@@ -12,6 +12,7 @@ class TestCustomCommand(TestCase):
     def setUp(self):
         self.b = Proyecto(**{
             'codigo': '00586',
+            'legislatura': 2016,
             'numero_proyecto': '00586/2011-CR',
             'fecha_presentacion': '2010-10-10',
             'short_url': '4huj5x',
@@ -21,6 +22,7 @@ class TestCustomCommand(TestCase):
         })
         b1 = Proyecto(**{
             'codigo': '00001',
+            'legislatura': 2016,
             'numero_proyecto': '00001/2011-CR',
             'fecha_presentacion': '2010-10-10',
             'short_url': '4auj5a',

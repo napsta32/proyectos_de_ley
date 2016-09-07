@@ -13,6 +13,7 @@ class TestAPI(TestCase):
         self.maxDiff = None
         dummy = {
             "codigo": "03774",
+            'legislatura': 2016,
             "congresistas": "Dammert Ego Aguirre, Manuel Enrique Ernesto; Lescano Ancieta, Yonhy; Merino De Lama, Manuel; Guevara Amasifuen, Mesias Antonio; Mavila Leon, Rosa Delsa; Mendoza Frisch, Veronika Fanny",
             "expediente": "http://www2.congreso.gob.pe/sicr/tradocestproc/Expvirt_2011.nsf/visbusqptramdoc/03774?opendocument",
             "fecha_presentacion": "2014-09-05",
@@ -39,25 +40,25 @@ class TestAPI(TestCase):
         self.c = Client()
 
     def test_getting_proyecto(self):
-        response = self.c.get('/api/proyecto.json/03774-2011/')
+        response = self.c.get('/api/proyecto.json/03774-2016/')
         result = json.loads(response.content.decode('utf-8'))
         expected = "03774"
         self.assertEqual(expected, result['codigo'])
 
     def test_getting_proyecto_csv(self):
-        response = self.c.get('/api/proyecto.csv/03774-2011/')
+        response = self.c.get('/api/proyecto.csv/03774-2016/')
         result = response.content.decode('utf-8')
         expected = "03774"
         self.assertTrue(expected in result)
 
     def test_getting_proyecto_missing(self):
-        response = self.c.get('/api/proyecto.json/037740-2011/')
+        response = self.c.get('/api/proyecto.json/037740-2016/')
         result = response.content.decode('utf-8')
         expected = '{"error": "proyecto no existe"}'
         self.assertEqual(expected, result)
 
     def test_getting_proyecto_missing_csv(self):
-        response = self.c.get('/api/proyecto.csv/037740-2011/')
+        response = self.c.get('/api/proyecto.csv/037740-2016/')
         result = response.content.decode('utf-8')
         expected = 'error,proyecto no existe'
         self.assertEqual(expected, result)
@@ -77,13 +78,13 @@ class TestAPI(TestCase):
     def test_getting_projects_of_person_and_comission(self):
         response = self.c.get('/api/congresista_y_comision.json/Dammert Ego/economia/')
         result = json.loads(response.content.decode('utf-8'))
-        expected = ['03774-2011']
+        expected = ['03774-2016']
         self.assertEqual(expected, result['resultado'][0]['proyectos'])
 
     def test_getting_projects_of_person_and_comission_csv(self):
         response = self.c.get('/api/congresista_y_comision.csv/Dammert Ego/economia/')
         result = response.content.decode('utf-8')
-        expected = '03774-2011'
+        expected = '03774-2016'
         self.assertTrue(expected in result)
 
     def test_getting_projects_of_person_and_comission_csv_missing(self):
@@ -134,7 +135,7 @@ class TestAPI(TestCase):
                      fecha='2010-10-10').save()
         response = self.c.get('/api/exonerados_dictamen.json/')
         result = json.loads(response.content.decode('utf-8'))
-        expected = {'resultado': ['03774-2011']}
+        expected = {'resultado': ['03774-2016']}
         self.assertEqual(expected, result)
 
     def test_exonerados_dictamen_csv(self):
@@ -143,7 +144,7 @@ class TestAPI(TestCase):
                      fecha='2010-10-10').save()
         response = self.c.get('/api/exonerados_dictamen.csv/')
         result = response.content.decode('utf-8')
-        expected = '03774-2011'
+        expected = '03774-2016'
         self.assertTrue(expected in result)
 
     def test_exonerados_dictamen_csv_empty(self):
@@ -170,7 +171,7 @@ class TestAPI(TestCase):
                      fecha='2010-10-10').save()
         response = self.c.get('/api/exonerados_2da_votacion.json/')
         result = json.loads(response.content.decode('utf-8'))
-        expected = {'resultado': ['03774-2011']}
+        expected = {'resultado': ['03774-2016']}
         self.assertEqual(expected, result)
 
     def test_exonerados_2da_votacion_csv(self):
@@ -179,5 +180,5 @@ class TestAPI(TestCase):
                      fecha='2010-10-10').save()
         response = self.c.get('/api/exonerados_2da_votacion.csv/')
         result = response.content.decode('utf-8')
-        expected = '03774-2011'
+        expected = '03774-2016'
         self.assertTrue(expected in result)

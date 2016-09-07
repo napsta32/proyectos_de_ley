@@ -24,6 +24,18 @@ from .utils import get_projects_by_comission_for_person
 from .utils import get_projects_for_person
 from .utils import get_seguimientos_from_proyecto_id
 from .utils import prepare_json_for_d3
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework import response, schemas
+from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
+
+LEGISLATURE = 2016
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+@renderer_classes([OpenAPIRenderer, SwaggerUIRenderer])
+def schema_view(request):
+    generator = schemas.SchemaGenerator(title='Documentación del API de Proyectos de ley.')
+    return response.Response(generator.get_schema(request=request))
 
 
 @api_view(['GET'])
@@ -50,11 +62,13 @@ def proyecto(request, codigo):
         paramType: path
         required: true
     """
-    # TODO: hay que agregar un campo a la tabla especificando si es legislatura 2011 o cual.
-    # luego corregir aquí el API
-    codigo = re.sub('-[0-9]+', '', codigo)
+    codigo, legislatura = split_code_input(codigo)
+
     try:
-        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+        proy = Proyecto.objects.get(
+            codigo=codigo,
+            legislatura=legislatura,
+        )
     except Proyecto.DoesNotExist:
         msg = {'error': 'proyecto no existe'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
@@ -82,10 +96,12 @@ def proyecto_csv(request, codigo):
         paramType: path
         required: true
     """
-    # TODO: hay que agregar un campo a la tabla especificando si es legislatura 2011 o cual.
-    # luego corregir aquí el API
-    codigo = re.sub('-[0-9]+', '', codigo)
-    proyectos = Proyecto.objects.filter(numero_proyecto__startswith=codigo).values()
+    codigo, legislatura = split_code_input(codigo)
+
+    proyectos = Proyecto.objects.filter(
+        codigo=codigo,
+        legislatura=legislatura,
+    ).values()
     if len(proyectos) < 1:
         msg = 'error,proyecto no existe'
         return HttpResponse(msg, content_type='text/csv')
@@ -294,9 +310,16 @@ def exonerados_dictamen(request):
 
     * <http://proyectosdeley.pe/api/exonerados_dictamen.csv/>
     """
-    exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
-                             for i in Seguimientos.objects.select_related('proyecto').filter(
-                             evento__icontains='exoneración de dictamen').distinct()]
+    exonerado_de_dictamen = [
+        '{}-{}'.format(i.proyecto.codigo, LEGISLATURE)
+        for i in Seguimientos.objects.select_related(
+            'proyecto',
+        ).filter(
+            evento__icontains='exoneración de dictamen',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        ).distinct()
+    ]
     exonerado_de_dictamen = list(set(exonerado_de_dictamen))
 
     if len(exonerado_de_dictamen) > 0:
@@ -321,9 +344,16 @@ def exonerados_dictamen_csv(request):
 
     * <http://proyectosdeley.pe/api/exonerados_2da_votacion.csv/>
     """
-    exonerado_de_dictamen = ['{}-2011'.format(i.proyecto.codigo)
-                             for i in Seguimientos.objects.select_related('proyecto').filter(
-                             evento__icontains='exoneración de dictamen').distinct()]
+    exonerado_de_dictamen = [
+        '{}-{}'.format(i.proyecto.codigo, LEGISLATURE)
+        for i in Seguimientos.objects.select_related(
+            'proyecto',
+        ).filter(
+            evento__icontains='exoneración de dictamen',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        ).distinct()
+        ]
     data = list(set(exonerado_de_dictamen))
 
     if len(exonerado_de_dictamen) > 0:
@@ -341,9 +371,16 @@ def exonerados_2da_votacion(request):
     Lista proyectos que han sido exonerados de 2da votación en el pleno.
     ---
     """
-    total_dispensed = ["{}-2011".format(i.proyecto.codigo)
-                       for i in Seguimientos.objects.select_related('proyecto').filter(
-                       evento__icontains='dispensado 2da')]
+    total_dispensed = [
+        "{}-{}".format(i.proyecto.codigo, LEGISLATURE)
+        for i in Seguimientos.objects.select_related(
+            'proyecto',
+        ).filter(
+            evento__icontains='dispensado 2da',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        )
+    ]
 
     if len(total_dispensed) > 0:
         data = {'resultado': total_dispensed}
@@ -362,9 +399,16 @@ def exonerados_2da_votacion_csv(request):
     Lista proyectos que han sido exonerados de 2da votación en el pleno.
     ---
     """
-    data = ["{}-2011".format(i.proyecto.codigo)
-            for i in Seguimientos.objects.select_related('proyecto').filter(
-            evento__icontains='dispensado 2da')]
+    data = [
+        "{}-{}".format(i.proyecto.codigo, LEGISLATURE)
+        for i in Seguimientos.objects.select_related(
+            'proyecto',
+        ).filter(
+            evento__icontains='dispensado 2da',
+        ).filter(
+            proyecto__legislatura=LEGISLATURE,
+        )
+    ]
 
     if len(data) > 0:
         if request.method == 'GET':
@@ -397,14 +441,17 @@ def iniciativa_list(request, codigo):
         paramType: path
         required: true
     """
-    codigo = re.sub('-[0-9]+', '', codigo)
+    codigo, legislatura = split_code_input(codigo)
     try:
-        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+        proy = Proyecto.objects.get(
+            codigo=codigo,
+            legislatura=legislatura,
+        )
     except Proyecto.DoesNotExist:
         msg = {'error': 'proyecto no existe'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
-    if proy.iniciativas_agrupadas is None or proy.iniciativas_agrupadas.strip() == '':
+    if not proy.iniciativas_agrupadas:
         msg = {'error': 'sin iniciativas agrupadas'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
 
@@ -432,9 +479,12 @@ def iniciativa_list_csv(request, codigo):
         paramType: path
         required: true
     """
-    codigo = re.sub('-[0-9]+', '', codigo)
+    codigo, legislatura = split_code_input(codigo)
     try:
-        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+        proy = Proyecto.objects.get(
+            codigo=codigo,
+            legislatura=legislatura,
+        )
     except Proyecto.DoesNotExist:
         msg = 'error,proyecto no existe'
         return HttpResponse(msg, content_type='text/csv')
@@ -472,9 +522,12 @@ def seguimientos_list(request, codigo):
         paramType: path
         required: true
     """
-    codigo = re.sub('-[0-9]+', '', codigo)
+    codigo, legislatura = split_code_input(codigo)
     try:
-        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+        proy = Proyecto.objects.get(
+            codigo=codigo,
+            legislatura=legislatura,
+        )
     except Proyecto.DoesNotExist:
         msg = {'error': 'proyecto no existe'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
@@ -513,9 +566,12 @@ def seguimientos_list_csv(request, codigo):
         paramType: path
         required: true
     """
-    codigo = re.sub('-[0-9]+', '', codigo)
+    codigo, legislatura = split_code_input(codigo)
     try:
-        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+        proy = Proyecto.objects.get(
+            codigo=codigo,
+            legislatura=legislatura,
+        )
     except Proyecto.DoesNotExist:
         msg = 'error,proyecto no existe'
         return HttpResponse(msg, content_type='text/csv')
@@ -538,3 +594,16 @@ def seguimientos_list_csv(request, codigo):
 
     if request.method == 'GET':
         return CSVResponse(data)
+
+
+def split_code_input(codigo):
+    print(codigo)
+    codigo = codigo.split("-")
+    if len(codigo) > 1:
+        legislatura = int(codigo[1])
+    else:
+        legislatura = LEGISLATURE
+    codigo = codigo[0]
+    return codigo, legislatura
+
+

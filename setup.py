@@ -4,13 +4,13 @@ try:
 except ImportError:
     from distutils.core import setup
 
-version = '2.1.1'
+version = '2.2.0'
 
 setup(
     name='proyectos_de_ley',
     version=version,
-    author='Aniversario Peru',
-    author_email='aniversarioperu1@gmail.com',
+    author='Carlos Peña',
+    author_email='mycalesis@gmail.com',
     packages=[
         'proyectos_de_ley',
     ],

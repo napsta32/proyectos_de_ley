@@ -12,6 +12,14 @@ class TestStatsViews(TestCase):
     def setUp(self):
         Proyecto.objects.create(**{
             'numero_proyecto': '02764',
+            'legislatura': 2011,
+            'time_created': datetime.datetime.now(),
+            'fecha_presentacion': '2010-10-10',
+            'titulo_de_ley': 'Ley No 2261',
+        })
+        Proyecto.objects.create(**{
+            'numero_proyecto': '02764',
+            'legislatura': 2016,
             'time_created': datetime.datetime.now(),
             'fecha_presentacion': '2010-10-10',
             'titulo_de_ley': 'Ley No 2261',
@@ -35,7 +43,7 @@ class TestStatsViews(TestCase):
 
     def test_dame_sin_tramitar(self):
         numero_de_proyectos = Proyecto.objects.all().count()
-        expected = (100.0, 1)
+        expected = (100.0, 2)
         result = views.dame_sin_tramitar(numero_de_proyectos)
         self.assertEqual(expected, result)
 

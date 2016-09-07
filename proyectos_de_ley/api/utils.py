@@ -9,12 +9,19 @@ from pdl.models import Seguimientos
 from pdl.models import Slug
 
 
+LEGISLATURE = 2016
+
 def get_projects_for_person(names):
     projects_and_person = []
     for name in names:
         queryset = Proyecto.objects.filter(
-            congresistas__icontains=name).order_by('-codigo')
-        projects_list = [str(i.codigo) + '-2011' for i in queryset]
+            congresistas__icontains=name,
+            legislatura=LEGISLATURE,
+        ).order_by('-codigo')
+        projects_list = [
+            "{}-{}".format(i.codigo, LEGISLATURE)
+            for i in queryset
+        ]
         obj = {'nombre': name, 'proyectos': projects_list}
         projects_and_person.append(obj)
     return projects_and_person
@@ -24,10 +31,15 @@ def get_projects_by_comission_for_person(comision, names):
     projects_and_person = []
     for name in names:
         queryset = Proyecto.objects.filter(
-            congresistas__icontains=name).order_by('-codigo')
+            congresistas__icontains=name,
+            legislatura=LEGISLATURE,
+        ).order_by('-codigo')
         if comision != '':
             queryset = queryset.filter(nombre_comision__icontains=comision)
-        projects_list = [str(i.codigo) + '-2011' for i in queryset]
+        projects_list = [
+            "{}-{}".format(i.codigo, LEGISLATURE)
+            for i in queryset
+        ]
         obj = {'nombre': name, 'proyectos': projects_list}
         projects_and_person.append(obj)
     return projects_and_person
@@ -49,15 +61,18 @@ def find_name_from_short_name(nombre_corto):
         return ['---error---', 'no se pudo encontrar congresista']
 
 
-def prepare_json_for_d3(item):
+def prepare_json_for_d3(proyecto):
     nodes = []
     append = nodes.append
 
-    iniciativas_agrupadas = item.iniciativas_agrupadas.replace('{', '').replace('}', '').split(',')
+    iniciativas_agrupadas = proyecto.iniciativas_agrupadas.replace('{', '').replace('}', '').split(',')
 
     for i in iniciativas_agrupadas:
         try:
-            queryset = Proyecto.objects.get(codigo=i)
+            queryset = Proyecto.objects.get(
+                codigo=i,
+                legislatura=int(proyecto.legislatura),
+            )
         except Proyecto.DoesNotExist:
             continue
         node = {"codigo": i, "url": "/p/" + queryset.short_url}
