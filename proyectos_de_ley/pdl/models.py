@@ -10,6 +10,13 @@ class Proyecto(models.Model):
     numero_proyecto = models.CharField(max_length=50)
     short_url = models.CharField(max_length=20)
     congresistas = models.TextField(blank=True)
+    congresistas_ascii = models.TextField(
+        blank=True,
+        help_text="Congress data is not 100% consistent in names and in some "
+                  "projects the names come with full accents or sometimes "
+                  "some are missing. It is better to compare them by using "
+                  "the ascii form of their names."
+    )
 
     # migrate from date as string
     fecha_presentacion = models.DateField(null=False)

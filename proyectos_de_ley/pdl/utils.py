@@ -204,12 +204,12 @@ def do_pagination(request, all_items, search=False, advanced_search=None):
 def find_slug_in_db(congresista_slug):
     try:
         item = Slug.objects.get(slug=congresista_slug)
-        return item.nombre
+        return item.ascii
     except Slug.DoesNotExist:
         try:
             congresista_slug += '/'
             item = Slug.objects.get(slug=congresista_slug)
-            return item.nombre
+            return item.ascii
         except Slug.DoesNotExist:
             return None
 

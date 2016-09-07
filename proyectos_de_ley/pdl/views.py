@@ -187,10 +187,10 @@ def congresista(request, congresista_slug):
     if congresista_slug.strip() == '':
         return redirect('/')
 
-    congresista_name = find_slug_in_db(congresista_slug)
-    if congresista_name is not None:
+    congresista_ascii = find_slug_in_db(congresista_slug)
+    if congresista_ascii:
         all_items = Proyecto.objects.filter(
-            congresistas__icontains=congresista_name,
+            congresistas_ascii__contains=congresista_ascii,
         ).filter(
             legislatura=LEGISLATURE,
         ).order_by('-codigo')
@@ -203,7 +203,7 @@ def congresista(request, congresista_slug):
             "first_page": obj['first_page'],
             "last_page": obj['last_page'],
             "current": obj['current'],
-            "congresista": congresista_name,
+            "congresista": congresista_ascii,
             "slug": congresista_slug.replace("/", ""),
         })
     else:
