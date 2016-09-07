@@ -128,16 +128,14 @@ def search(request):
 
     form = SimpleSearchForm(query)
     all_items = form.search()
-    items_current_legislature = [
-        i
-        for i in all_items
-        if i.legislatura == str(LEGISLATURE)
-    ]
-    items_previous_legislatures = [
-        i.codigo
-        for i in all_items
-        if i.legislatura != str(LEGISLATURE)
-    ]
+    items_current_legislature = set()
+    items_previous_legislatures = set()
+    for i in all_items:
+        if i.legislatura == str(LEGISLATURE):
+            items_current_legislature.add(i)
+        else:
+            if len(items_previous_legislatures) < 8000:
+                items_previous_legislatures.add(i.codigo)
     obj = do_pagination(request, items_current_legislature, search=True)
 
     keywords = clean_my_query(query['q'])
