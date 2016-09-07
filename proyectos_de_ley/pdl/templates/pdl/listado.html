@@ -11,7 +11,14 @@ Proyectos de ley emitidos por el Congreso de la República del Perú | About
   {% if not pretty_items and not items_previous_legislatures %}
     <h2>No se encontraron resultados.</h2>
   {% else %}
-  <h1>Resultados de búsqueda: <small>{{ extra_result_msg }} {{ result_count|intcomma }}</small><br />
+  <h1>Resultados de búsqueda: <small>{{ extra_result_msg }}
+    {% if result_count > 300 %}
+      +{{ result_count|intcomma }}
+    {% else %}
+      {{ result_count|intcomma }}
+    {% endif %}
+
+    </small><br />
     <small>Legislatura 2011</small>
   </h1>
 
