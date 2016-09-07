@@ -5,6 +5,7 @@ from django.contrib import admin
 from pdl.feeds import LatestEntriesFeed
 from pdl.sitemaps import ProyectoSitemap, CongresistaSitemap
 from seguimientos import views as seg_views
+from api.views import schema_view
 
 
 sitemaps = {
@@ -15,7 +16,7 @@ sitemaps = {
 urlpatterns = [
     # '',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^docs/', include('rest_framework_swagger.urls')),
+    url(r'^docs/', schema_view),
     url(r'^stats/', include('stats.urls', namespace='stats')),
     url(r'^', include('pdl.urls', namespace='pdl')),
     url(r'^p/', include('pdl.urls', namespace='pdl-proyecto')),

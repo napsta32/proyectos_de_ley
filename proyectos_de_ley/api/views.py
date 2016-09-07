@@ -24,6 +24,18 @@ from .utils import get_projects_by_comission_for_person
 from .utils import get_projects_for_person
 from .utils import get_seguimientos_from_proyecto_id
 from .utils import prepare_json_for_d3
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework import response, schemas
+from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
+
+LEGISLATURE = 2016
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+@renderer_classes([OpenAPIRenderer, SwaggerUIRenderer])
+def schema_view(request):
+    generator = schemas.SchemaGenerator(title='Documentación del API de Proyectos de ley.')
+    return response.Response(generator.get_schema(request=request))
 
 
 @api_view(['GET'])
@@ -50,11 +62,18 @@ def proyecto(request, codigo):
         paramType: path
         required: true
     """
-    # TODO: hay que agregar un campo a la tabla especificando si es legislatura 2011 o cual.
-    # luego corregir aquí el API
-    codigo = re.sub('-[0-9]+', '', codigo)
+    codigo = codigo.split("-")
+    if len(codigo) > 1:
+        legislatura = int(codigo[1])
+    else:
+        legislatura = LEGISLATURE
+    codigo = codigo[0]
+
     try:
-        proy = Proyecto.objects.get(numero_proyecto__startswith=codigo)
+        proy = Proyecto.objects.get(
+            codigo=codigo,
+            legislatura=legislatura,
+        )
     except Proyecto.DoesNotExist:
         msg = {'error': 'proyecto no existe'}
         return HttpResponse(json.dumps(msg), content_type='application/json')
@@ -82,10 +101,17 @@ def proyecto_csv(request, codigo):
         paramType: path
         required: true
     """
-    # TODO: hay que agregar un campo a la tabla especificando si es legislatura 2011 o cual.
-    # luego corregir aquí el API
-    codigo = re.sub('-[0-9]+', '', codigo)
-    proyectos = Proyecto.objects.filter(numero_proyecto__startswith=codigo).values()
+    codigo = codigo.split("-")
+    if len(codigo) > 1:
+        legislatura = int(codigo[1])
+    else:
+        legislatura = LEGISLATURE
+    codigo = codigo[0]
+
+    proyectos = Proyecto.objects.filter(
+        codigo=codigo,
+        legislatura=legislatura,
+    ).values()
     if len(proyectos) < 1:
         msg = 'error,proyecto no existe'
         return HttpResponse(msg, content_type='text/csv')
