@@ -134,7 +134,7 @@ def search(request):
         if i.legislatura == str(LEGISLATURE):
             items_current_legislature.add(i)
         else:
-            if len(items_previous_legislatures) < 1300:
+            if len(items_previous_legislatures) < 666:
                 items_previous_legislatures.add(i.codigo)
     print(len(items_previous_legislatures))
     obj = do_pagination(request, list(items_current_legislature), search=True)
