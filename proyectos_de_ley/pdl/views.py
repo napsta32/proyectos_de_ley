@@ -134,9 +134,10 @@ def search(request):
         if i.legislatura == str(LEGISLATURE):
             items_current_legislature.add(i)
         else:
-            if len(items_previous_legislatures) < 8000:
+            if len(items_previous_legislatures) < 1300:
                 items_previous_legislatures.add(i.codigo)
-    obj = do_pagination(request, items_current_legislature, search=True)
+    print(len(items_previous_legislatures))
+    obj = do_pagination(request, list(items_current_legislature), search=True)
 
     keywords = clean_my_query(query['q'])
 
