@@ -1,12 +1,22 @@
 History
 =======
 
-v2.2.0 (2016-09-xx
-~~~~~~~~~~~~~~~~~~
+v2.2.0 (2016-09-07)
+~~~~~~~~~~~~~~~~~~~
 * agregada capacidad de soportar proyectos de Legislatura 2011 y 2016.
 * agregada interface administrador en Django.
 * mostrar proyectos de actual legislatura y menor prominencia a proyectos de
   legislaturas pasadas.
+* actualización de spiders.
+* actualización de dependencias: Django, rest_framework, rest_framework_swagger.
+* actualización de layout de docs en API.
+* bug fixed: número de proyectos aprovados en front-page
+* bug fixed: búsqueda de proyecto "209" resultará en búsqueda de proyecto 00209-2016.
+* bug fixed: ya no se muestra código 404 en el API.
+* bug fixed: logo de Hiperderecho está hosteado en nuestro server.
+* bug fixed: lista de proyectos de legislatura pasada ya no genera error 500.
+* bug fixed: modificación de modelos para casos en que congresistas tengan nombres
+  con y sin tildes. Cualquier variación mostrará proyectos de cada congresista.
 
 v2.1.1 (2015-10-29)
 ~~~~~~~~~~~~~~~~~~~
