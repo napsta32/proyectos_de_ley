@@ -38,12 +38,8 @@ def index(request):
     ).count()
     are_not_law = projects_empty_title + projects_null_title
 
-    # total aprobados
-    try:
-        res = Dispensed.objects.all()[0]
-        aprobados = res.total_approved
-    except IndexError:
-        aprobados = 0
+    # total aprobados o sea total proyectos que generaron leyes
+    aprobados = len(all_items) - are_not_law
 
     return render(request, "pdl/index.html", {
         "items": obj['items'],
