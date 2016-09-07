@@ -18,8 +18,6 @@ class Command(BaseCommand):
             congresistas_ascii="",
         ).exclude(
             congresistas="",
-        ).exclude(
-            congresistas_ascii="",
         )
         for p in projects_to_process:
             ascii_name = convert_to_ascii(
