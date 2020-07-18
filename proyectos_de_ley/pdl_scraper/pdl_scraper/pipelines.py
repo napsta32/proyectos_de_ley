@@ -9,9 +9,8 @@ import re
 import six
 import unicodedata
 
-from scrapy import log
 
-from models import db_connect
+from pdl_scraper.models import db_connect
 
 
 def convert_to_ascii(my_string):

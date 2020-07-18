@@ -6,7 +6,7 @@ import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
-from pdl_scraper.pdl_scraper.items import PdlScraperItem
+from pdl_scraper.items import PdlScraperItem
 
 
 class ProyectoSpider(CrawlSpider):
@@ -21,9 +21,11 @@ class ProyectoSpider(CrawlSpider):
         Rule(LinkExtractor(allow=('opendocument$',)), callback='parse_item'),
     )
 
-    def __init__(self, category=None, *args, **kwargs):
+    def __init__(self, legislatura=None, *args, **kwargs):
         super(ProyectoSpider, self).__init__(*args, **kwargs)
-        self.legislatura = 2016
+        if not legislatura:
+            raise Exception('use the argument `-a legislatura=2016`')
+        self.legislatura = legislatura
 
     def parse_item(self, response):
         self.log("this is the url: %s" % response.url)

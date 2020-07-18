@@ -46,10 +46,9 @@ DOWNLOAD_DELAY = 2
 
 
 DOWNLOADER_MIDDLEWARES = {
-    'scrapylib.crawlera.CrawleraMiddleware': 600,
-    'scrapy.contrib.downloadermiddleware.useragent.UserAgentMiddleware': "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36",
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 500,
 }
-
+USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36"
 
 LOG_LEVEL = 'DEBUG'
 LOG_ENABLED = True

@@ -1,5 +1,4 @@
 import scrapy
-from scrapy import log
 
 from pdl_scraper.items import SeguimientosItem
 from pdl_scraper.models import db_connect
