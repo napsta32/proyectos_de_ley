@@ -1,7 +1,7 @@
-from haystack.forms import SearchForm
+from django.forms import Form
 
 
-class SimpleSearchForm(SearchForm):
+class SimpleSearchForm(Form):
     def search(self):
         sqs = super(SimpleSearchForm, self).search()
         if not self.is_valid():

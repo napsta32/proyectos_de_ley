@@ -1,7 +1,7 @@
 -r base.txt
 
 coverage==4.0.3
-django-debug-toolbar==1.4
+django-debug-toolbar
 nose==1.3.7
 pep8==1.7.0
 

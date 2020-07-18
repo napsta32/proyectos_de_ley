@@ -45,7 +45,7 @@ class Seguimientos(models.Model):
     """
     fecha = models.DateField(blank=True)
     evento = models.TextField(blank=True)
-    proyecto = models.ForeignKey(Proyecto)
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.SET_NULL, null=True)
 
 
 class Expedientes(models.Model):
@@ -56,7 +56,7 @@ class Expedientes(models.Model):
     fecha = models.DateField(blank=True)
     evento = models.TextField(blank=True)
     pdf_url = models.URLField(blank=True)
-    proyecto = models.ForeignKey(Proyecto)
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.SET_NULL, null=True)
 
 
 class Slug(models.Model):

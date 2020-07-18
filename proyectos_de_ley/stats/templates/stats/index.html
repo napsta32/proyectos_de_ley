@@ -1,7 +1,7 @@
 {% extends "pdl/base.html" %}
 
 
-{% load staticfiles %}
+{% load static %}
 {% block additional_head_javascript %}
 {% endblock additional_head_javascript %}
 
@@ -61,7 +61,7 @@
 {% endblock content %}
 
 {% block additional_javascript %}
-{% load staticfiles %}
+{% load static %}
 <script src="{% static 'js/raphael.2.1.0.min.js' %}"></script>
 <script src="{% static 'js/justgage.1.0.1.min.js' %}"></script>
 <script src='{% static "js/highcharts.js" %}'></script>

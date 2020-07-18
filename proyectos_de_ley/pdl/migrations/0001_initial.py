@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
                 ('fecha', models.DateField(blank=True)),
                 ('evento', models.TextField(blank=True)),
-                ('proyecto', models.ForeignKey(to='pdl.Proyecto')),
+                ('proyecto', models.ForeignKey(to='pdl.Proyecto', on_delete=models.SET_NULL, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -63,6 +63,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='expedientes',
             name='proyecto',
-            field=models.ForeignKey(to='pdl.Proyecto'),
+            field=models.ForeignKey(to='pdl.Proyecto', on_delete=models.SET_NULL, null=True),
         ),
     ]
