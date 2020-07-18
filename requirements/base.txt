@@ -9,7 +9,7 @@ djangorestframework==3.4.1
 djangorestframework-csv==1.4.1
 elasticsearch==2.3.0
 Markdown==2.6.6
-psycopg2==2.6.1
+psycopg2
 python-dateutil==2.5.2
 PyYAML==3.11
 six==1.10.0
