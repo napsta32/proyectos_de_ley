@@ -3,12 +3,9 @@ language: python
 sudo: false
 
 python:
-    - "3.4"
+    - "3.7"
 
-services:
-    - elasticsearch
-
-install: pip install -r requirements/dev.txt 
+install: pip install -r requirements/dev.txt
 
 script: make coverage
 
