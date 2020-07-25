@@ -9,27 +9,20 @@ from scrapy.linkextractors import LinkExtractor
 from pdl_scraper.items import PdlScraperItem
 
 
-class ProyectoSpider(CrawlSpider):
-    name = "proyecto"
+class ProyectoSpider2001(CrawlSpider):
+    name = "proyecto_2001"
     allowed_domains = ["www2.congreso.gob.pe"]
+    start_urls = (
+        'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/CLProLey2001.nsf/PorNumeroInverso?OpenView',
+    )
 
     rules = (
-        Rule(LinkExtractor(allow=('opendocument$',)), callback='parse_item'),
+        Rule(LinkExtractor(allow=('OpenDocument$',)), callback='parse_item'),
     )
 
     def __init__(self, *args, **kwargs):
-        super(ProyectoSpider, self).__init__(*args, **kwargs)
-        self.legislatura = 2016
-
-    def start_requests(self):
-        base_url = (
-            'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/CLProLey2016.nsf'
-            '/PAporNumeroInverso?OpenView&Start='
-        )
-        pages = range(1, 6000, 99)
-        for page in pages:
-            url = f'{base_url}{page}'
-            yield scrapy.Request(url=url)
+        super(ProyectoSpider2001, self).__init__(*args, **kwargs)
+        self.legislatura = 2001
 
     def parse_item(self, response):
         self.log("this is the url: %s" % response.url)
@@ -57,24 +50,16 @@ class ProyectoSpider(CrawlSpider):
                 item['codigo'] = sel.xpath('@value').extract()[0]
             if attr_name == 'CodIni_web_1':
                 item['numero_proyecto'] = sel.xpath('@value').extract()[0]
-            if attr_name == 'DesPerio':
-                item['periodo'] = sel.xpath('@value').extract()[0]
-            if attr_name == 'DesLegis':
-                item['legislatura2'] = sel.xpath('@value').extract()[0]
+            if attr_name == 'NomCongre':
+                item['congresistas'] = sel.xpath('@value').extract()[0]
             if attr_name == 'fechapre':
                 item['fecha_presentacion'] = sel.xpath('@value').extract()[0]
             if attr_name == 'DesPropo':
                 item['proponente'] = sel.xpath('@value').extract()[0]
             if attr_name == 'DesGrupParla':
                 item['grupo_parlamentario'] = sel.xpath('@value').extract()[0]
-            if attr_name == 'TitIni':
-                item['titulo'] = sel.xpath('@value').extract()[0]
             if attr_name == 'Titulo':
-                item['titulo2'] = sel.xpath('@value').extract()[0]
-            if attr_name == 'SumIni':
-                item['sumilla'] = sel.xpath('@value').extract()[0]
-            if attr_name == 'NomCongre':
-                item['congresistas'] = sel.xpath('@value').extract()[0]
+                item['titulo'] = sel.xpath('@value').extract()[0]
             if attr_name == 'CodIniSecu':
                 item['iniciativas_agrupadas'] = sel.xpath('@value').extract()[0]
             if attr_name == 'NumLey':

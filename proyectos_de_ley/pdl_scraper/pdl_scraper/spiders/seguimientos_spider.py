@@ -32,7 +32,7 @@ class SeguimientoSpider(scrapy.Spider):
         that need to be updates.
         :return: set of URLs
         """
-        db = db_connect()
+        #db = db_connect()
         start_urls = []
         append = start_urls.append
 
