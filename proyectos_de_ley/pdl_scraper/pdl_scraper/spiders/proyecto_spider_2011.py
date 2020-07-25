@@ -9,8 +9,8 @@ from scrapy.linkextractors import LinkExtractor
 from pdl_scraper.items import PdlScraperItem
 
 
-class ProyectoSpider2001(CrawlSpider):
-    name = "proyecto_2001"
+class ProyectoSpider2011(CrawlSpider):
+    name = "proyecto_2011"
     allowed_domains = ["www2.congreso.gob.pe"]
 
     rules = (
@@ -18,14 +18,14 @@ class ProyectoSpider2001(CrawlSpider):
     )
 
     def __init__(self, *args, **kwargs):
-        super(ProyectoSpider2001, self).__init__(*args, **kwargs)
-        self.legislatura = 2001
+        super(ProyectoSpider2011, self).__init__(*args, **kwargs)
+        self.legislatura = 2011
 
     def start_requests(self):
         base_url = (
-            'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/CLProLey2001.nsf/PorNumeroInverso?OpenView&Start='
+            'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/CLProLey2011.nsf/Local%20Por%20Numero%20Inverso?OpenView&Start='
         )
-        pages = range(1, 14900, 499)
+        pages = range(1, 5500, 999)
         for page in pages:
             url = f'{base_url}{page}'
             yield scrapy.Request(url=url)
