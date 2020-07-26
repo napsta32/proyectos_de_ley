@@ -3,7 +3,6 @@ import scrapy
 
 from pdl_scraper.items import ExpedienteItem
 from pdl_scraper.models import db_connect
-from pdl.models import Expedientes
 from pdl_scraper import settings
 
 

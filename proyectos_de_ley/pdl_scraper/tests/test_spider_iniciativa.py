@@ -2,7 +2,7 @@
 import unittest
 
 from pdl_scraper.tests._test_utils import fake_response_from_file
-from pdl_scraper.pdl_scraper.spiders.iniciativas_spider import IniciativaSpider
+from pdl_scraper.spiders.iniciativas_spider import IniciativaSpider
 
 
 class TestSpiderIniciativa(unittest.TestCase):

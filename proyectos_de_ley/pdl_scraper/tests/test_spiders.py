@@ -4,7 +4,7 @@ import unittest
 
 from scrapy.http import TextResponse, Request
 
-from pdl_scraper.pdl_scraper.spiders.proyecto_spider import ProyectoSpider
+from pdl_scraper.spiders.proyecto_spider import ProyectoSpider
 
 
 class TestProyectoSpider(unittest.TestCase):

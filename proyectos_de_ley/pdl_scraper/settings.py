@@ -10,7 +10,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath('.')))
-print(sys.path)
+print('%%%%%%%%', sys.path)
 # Do not forget the change iCrawler part based on your project name
 os.environ['DJANGO_SETTINGS_MODULE'] = 'proyectos_de_ley.settings.local'
 
@@ -22,8 +22,8 @@ LEGISLATURE = '2016'
 
 BOT_NAME = 'pdl_scraper'
 
-SPIDER_MODULES = ['pdl_scraper.spiders']
-NEWSPIDER_MODULE = 'pdl_scraper.spiders'
+SPIDER_MODULES = ['spiders']
+NEWSPIDER_MODULE = 'spiders'
 
 ITEM_PIPELINES = {
     'pdl_scraper.pipelines.PdlScraperPipeline': 300,
