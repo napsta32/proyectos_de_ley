@@ -3,6 +3,7 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+from copy import copy, deepcopy
 from datetime import datetime
 import pytz
 import re
@@ -10,11 +11,9 @@ import six
 import unicodedata
 import logging
 
+from pdl.models import Proyecto
 
 log = logging.getLogger()
-
-
-from pdl_scraper.models import db_connect
 
 
 def convert_to_ascii(my_string):
@@ -26,7 +25,6 @@ def convert_to_ascii(my_string):
 
 class PdlScraperPipeline(object):
     def process_item(self, item, spider):
-        print(f' 1 spider name {spider.name}')
         if 'proyecto' in str(spider.name):
             print(f' 2 spider name {spider.name}')
             item['fecha_presentacion'] = self.fix_date(item['fecha_presentacion'])
@@ -35,23 +33,19 @@ class PdlScraperPipeline(object):
             item['iniciativas_agrupadas'] = self.parse_iniciativas(item['iniciativas_agrupadas'])
             item['time_created'] = datetime.utcnow().replace(tzinfo=pytz.utc)
             item['time_edited'] = datetime.utcnow().replace(tzinfo=pytz.utc)
-            #self.save_item(item)
+            self.save_item(item)
             return item
         return item
 
     def save_item(self, item):
-        db = db_connect()
-        table = db['pdl_proyecto']
-
-        db.query("SELECT setval('pdl_proyecto_id_seq', (SELECT MAX(id) FROM pdl_proyecto)+1)")
-        is_in_db = table.find_one(
-            codigo=item['codigo'],
-            legislatura=item['legislatura'],
-        )
-        if is_in_db is None:
+        proyecto = Proyecto.objects.filter(codigo=item['codigo'])
+        if not proyecto.exists():
             log.debug(">> %s is not in db" % item['codigo'])
-            # get last used id in our database
-            table.insert(item)
+            item_for_db = deepcopy(item)
+            item_for_db['legislatura_name'] = item['legislatura2']
+            del item_for_db['legislatura2']
+            del item_for_db['periodo']
+            Proyecto.objects.create(**item_for_db)
             log.debug("Saving project: %s" % item['codigo'])
         else:
             log.debug("%s is found in db" % item['codigo'])

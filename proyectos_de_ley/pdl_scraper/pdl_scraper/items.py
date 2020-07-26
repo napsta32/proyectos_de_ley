@@ -15,6 +15,7 @@ class PdlScraperItem(Item):
     periodo = Field()
     legislatura = Field()
     legislatura2 = Field()
+    legislatura_name = Field()
     fecha_presentacion = Field()
     proponente = Field()
     grupo_parlamentario = Field()

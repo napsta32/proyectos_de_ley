@@ -9,6 +9,9 @@ from scrapy.linkextractors import LinkExtractor
 from pdl_scraper.items import PdlScraperItem
 
 
+LEGISLATURA = 2006
+
+
 class ProyectoSpider2006(CrawlSpider):
     name = "proyecto_2006"
     allowed_domains = ["www2.congreso.gob.pe"]
@@ -19,7 +22,7 @@ class ProyectoSpider2006(CrawlSpider):
 
     def __init__(self, *args, **kwargs):
         super(ProyectoSpider2006, self).__init__(*args, **kwargs)
-        self.legislatura = 2006
+        self.legislatura = LEGISLATURA
 
     def start_requests(self):
         base_url = (

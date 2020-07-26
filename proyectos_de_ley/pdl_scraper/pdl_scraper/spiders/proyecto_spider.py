@@ -8,6 +8,8 @@ from scrapy.linkextractors import LinkExtractor
 
 from pdl_scraper.items import PdlScraperItem
 
+LEGISLATURA = 2016
+
 
 class ProyectoSpider(CrawlSpider):
     name = "proyecto"
@@ -19,14 +21,15 @@ class ProyectoSpider(CrawlSpider):
 
     def __init__(self, *args, **kwargs):
         super(ProyectoSpider, self).__init__(*args, **kwargs)
-        self.legislatura = 2016
+        self.legislatura = LEGISLATURA
 
     def start_requests(self):
         base_url = (
             'http://www2.congreso.gob.pe/Sicr/TraDocEstProc/CLProLey2016.nsf'
             '/PAporNumeroInverso?OpenView&Start='
         )
-        pages = range(1, 6000, 99)
+        # pages = range(1, 6000, 99)
+        pages = range(1, 99 * 2, 99)
         for page in pages:
             url = f'{base_url}{page}'
             yield scrapy.Request(url=url)
@@ -92,13 +95,6 @@ class ProyectoSpider(CrawlSpider):
 
         item['short_url'] = self.create_shorturl(item['codigo'])
         return item
-        # self.log("Worked on item %s." % str(item['codigo']))
-        # request = scrapy.Request(
-        #     item['expediente'],
-        #     callback=self.parse_pdfurl,
-        # )
-        # request.meta['item'] = item
-        # return request
 
     def parse_pdfurl(self, response):
         item = response.meta['item']
@@ -121,7 +117,6 @@ class ProyectoSpider(CrawlSpider):
 
         self.log("We failed to parse pdfurl for this project %s:" % str(codigo))
         item['pdf_url'] = ''
-        print(f'2 item {item}')
         return item
 
     def create_shorturl(self, codigo):
