@@ -9,7 +9,7 @@ djangorestframework-csv==1.4.1
 Markdown==2.6.6
 psycopg2
 python-dateutil==2.5.2
-PyYAML==3.11
+PyYAML
 sqlparse==0.3.1
 tablib[all]==2.0.0
 Unipath==1.1
