@@ -1,6 +1,11 @@
 History
 =======
 
+vX.Y.Z (2020-)
+~~~~~~~~~~~~~~~~~~~
+* actualizados dependencias, python, django, scrapy.
+* todos los scrapers han sido movidos aqui.
+
 v2.2.0 (2016-09-07)
 ~~~~~~~~~~~~~~~~~~~
 * agregada capacidad de soportar proyectos de Legislatura 2011 y 2016.
