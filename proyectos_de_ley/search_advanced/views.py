@@ -116,7 +116,6 @@ def filter_queryset(keywords, request, queryset):
         query = keywords['query']
         msg = "Número de proyectos encontrados"
         queryset = queryset.filter(titulo__icontains=keywords['query'])
-        print(len(queryset), queryset)
     else:
         query = ""
     if 'date_to' in keywords and 'date_from' in keywords:

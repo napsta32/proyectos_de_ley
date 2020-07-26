@@ -44,7 +44,6 @@ class ExpedienteSpider(scrapy.Spider):
             date_sel = i.xpath("td/div/font/text()").extract()
             if len(date_sel) > 0:
                 this_date = date_sel[0]
-                print(this_date)
 
             pdf_url_sel = i.xpath("td/a/@href").extract()
             if len(pdf_url_sel) > 0:

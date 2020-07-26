@@ -14,7 +14,6 @@ class TestProyectoSpider(unittest.TestCase):
     def test_parse_pdfurl(self):
         filename = os.path.join('test_spiders_data', '02764.html')
         results = self.spider.parse_item(fake_response_from_file(filename))
-        print(results.meta['item'])
         item = results.meta['item']
         self.assertEqual(item['numero_proyecto'], u'02764/2013-CR')
         self.assertEqual(item['codigo'], u'02764')

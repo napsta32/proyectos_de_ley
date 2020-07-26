@@ -98,7 +98,6 @@ class ProyectoSpider(CrawlSpider):
 
     def parse_pdfurl(self, response):
         item = response.meta['item']
-        print(f'1 item {item}')
         codigo = item['codigo']
         for sel in response.xpath("//a"):
             href = sel.xpath("@href").extract()[0]

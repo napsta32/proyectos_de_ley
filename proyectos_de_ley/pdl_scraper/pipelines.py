@@ -26,7 +26,6 @@ def convert_to_ascii(my_string):
 class PdlScraperPipeline(object):
     def process_item(self, item, spider):
         if 'proyecto' in str(spider.name):
-            print(f' 2 spider name {spider.name}')
             item['fecha_presentacion'] = self.fix_date(item['fecha_presentacion'])
             item['congresistas'] = self.parse_names(item['congresistas'])
             item['congresistas_ascii'] = convert_to_ascii(item['congresistas'])

@@ -10,7 +10,6 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath('.')))
-print('%%%%%%%%', sys.path)
 # Do not forget the change iCrawler part based on your project name
 os.environ['DJANGO_SETTINGS_MODULE'] = 'proyectos_de_ley.settings.local'
 
