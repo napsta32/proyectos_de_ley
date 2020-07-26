@@ -33,6 +33,7 @@ class PdlScraperItem(Item):
     pdf_url = Field()
     time_created = Field()
     time_edited = Field()
+    seguimiento = Field()
 
 
 class SeguimientosItem(Item):

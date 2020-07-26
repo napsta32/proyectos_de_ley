@@ -85,6 +85,9 @@ class ProyectoSpider2006(CrawlSpider):
         item['expediente'] = "http://www2.congreso.gob.pe/sicr/tradocestproc/Expvirt_2011.nsf/" \
                              "visbusqptramdoc1621/{}?opendocument".format(item['codigo'])
         item['seguimiento_page'] = response.url
+        for sel in response.xpath('//td[@width="112"]'):
+            if sel.xpath('font/text()').extract()[0] == 'Seguimiento':
+                item['seguimiento'] = sel.xpath('following-sibling::*//text()').extract()
         item['short_url'] = self.create_shorturl(item['codigo'])
         return item
         # self.log("Worked on item %s." % str(item['codigo']))
