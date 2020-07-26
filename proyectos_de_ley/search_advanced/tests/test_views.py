@@ -54,10 +54,6 @@ class TestSearchAdvancedViews(TestCase):
         response = self.c.get('/search-advanced/?query=arco y flecha')
         self.assertTrue('arco y flecha' in str(response.content))
 
-    def test_search_congresista(self):
-        response = self.c.get('/search-advanced/?congresista=1&grupo_parlamentario=--Escoger bancada--')
-        self.assertTrue('arco y flecha' in str(response.content))
-
     def test_numero_total_de_leyes(self):
         response = self.c.get('/search-advanced/?dictamen=NÚMERO TOTAL DE LEYES')
         self.assertEqual(200, response.status_code)
