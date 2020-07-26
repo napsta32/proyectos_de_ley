@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'stats',
     'search_advanced',
     'api',
+    'pdl_scraper',
 ]
 
 MIDDLEWARE = [

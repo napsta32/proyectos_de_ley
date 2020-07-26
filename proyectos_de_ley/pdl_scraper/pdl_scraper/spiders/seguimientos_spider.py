@@ -1,8 +1,7 @@
 import scrapy
 
-from pdl_scraper.items import SeguimientosItem
-from pdl_scraper.models import db_connect
-from pdl_scraper import settings
+from pdl_scraper.pdl_scraper.items import SeguimientosItem
+from pdl_scraper.pdl_scraper import settings
 
 
 class SeguimientoSpider(scrapy.Spider):

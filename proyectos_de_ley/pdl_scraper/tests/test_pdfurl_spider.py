@@ -3,7 +3,7 @@ import unittest
 
 from scrapy.http import TextResponse, Request
 
-from pdl_scraper.spiders.pdfurl_spider import PdfUrlSpider
+from pdl_scraper.pdl_scraper.spiders.pdfurl_spider import PdfUrlSpider
 
 
 class TestPdfUrlSpider(unittest.TestCase):

@@ -1,6 +1,4 @@
-
-
-from pdl_scraper import settings
+from pdl_scraper.pdl_scraper import settings
 
 
 def db_connect():

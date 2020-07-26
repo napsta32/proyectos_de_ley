@@ -11,6 +11,7 @@ from pdl.utils import do_pagination
 
 LEGISLATURE = 2016
 
+
 def index(request):
     if request.method == 'GET':
         form = SearchAdvancedForm(request.GET)

@@ -27,5 +27,5 @@ urlpatterns = [
 
     url(r'^api/', include('api.urls')),
 
-    # url(r'^search-advanced/', include('search_advanced.urls')),
+    url(r'^search-advanced/', include('search_advanced.urls')),
 ]
