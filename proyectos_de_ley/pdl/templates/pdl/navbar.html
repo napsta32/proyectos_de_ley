@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
    <!-- Static navbar -->
     <div class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container">
@@ -24,7 +24,7 @@
             <li><a title="Estadísticas" href="/stats/"><img alt="Estadísticas" width="26px" height="25px" src="{% static 'img/g_statistics.png' %}"/></a></li>
             <li><a title="Documentación del API" href="/docs/"><img alt="API" width="34px" height="27px" src="{% static 'img/g_cogwheels.png' %}" /></a></li>
           </ul>
-          <form action="{% url 'pdl:search' %}"
+          <form action="{% url 'search' %}"
                 method="get" class="navbar-form navbar-right" role="search">
               <div class="form-group">
                   <input style="width:240px;" type="text" id="query" name="q"

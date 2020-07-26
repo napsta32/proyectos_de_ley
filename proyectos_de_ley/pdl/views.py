@@ -3,6 +3,7 @@ import ast
 import re
 import copy
 
+from django.db.models import Q
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -11,10 +12,9 @@ from .utils import prettify_item
 from .utils import do_pagination
 from .utils import find_slug_in_db
 from pdl.models import Proyecto
-from pdl.forms import SimpleSearchForm
-from stats.models import Dispensed
 
 LEGISLATURE = 2016
+
 
 def index(request):
     all_items = Proyecto.objects.filter(legislatura=LEGISLATURE).order_by('-codigo')
@@ -122,12 +122,12 @@ def search(request):
         else:
             query = fix_query(request)
 
-    form = SimpleSearchForm(query)
-    all_items = form.search()
+    query_string = query.get('q')
+    all_items = get_matching_query(query_string)
     items_current_legislature = set()
     items_previous_legislatures = set()
     for i in all_items:
-        if i.legislatura == str(LEGISLATURE):
+        if i.legislatura == LEGISLATURE:
             items_current_legislature.add(i)
         else:
             if len(items_previous_legislatures) < 400:
@@ -150,6 +150,16 @@ def search(request):
         "query": query['q'],
         "pagination_keyword": query['q'],
     })
+
+
+def get_matching_query(query):
+    q = Q()
+
+    for keyword in query.split(' '):
+        q |= Q(codigo__icontains=keyword)
+        q |= Q(titulo__icontains=keyword)
+
+    return Proyecto.objects.filter(q).distinct('codigo')
 
 
 def fix_query(request):

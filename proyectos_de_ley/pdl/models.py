@@ -7,6 +7,8 @@ from django.db import models
 class Proyecto(models.Model):
     codigo = models.CharField(max_length=20)
     legislatura = models.IntegerField()  # e.g. 2011, 2016
+    legislatura_name = models.TextField(null=True)  # e.g. Segunda Legislatura Ordinaria 2020
+    sumilla = models.TextField(null=True)
     numero_proyecto = models.CharField(max_length=50)
     short_url = models.CharField(max_length=20)
     congresistas = models.TextField(blank=True)
@@ -21,8 +23,10 @@ class Proyecto(models.Model):
     # migrate from date as string
     fecha_presentacion = models.DateField(null=False)
     titulo = models.TextField(blank=True)
+    titulo2 = models.TextField(blank=True)
     expediente = models.URLField(max_length=200, blank=True)
     pdf_url = models.URLField(max_length=200, blank=True)
+    seguimiento = models.TextField(blank=True)
     seguimiento_page = models.URLField(max_length=200, blank=True)
 
     # migrate from timestamp field
@@ -45,7 +49,7 @@ class Seguimientos(models.Model):
     """
     fecha = models.DateField(blank=True)
     evento = models.TextField(blank=True)
-    proyecto = models.ForeignKey(Proyecto)
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.SET_NULL, null=True)
 
 
 class Expedientes(models.Model):
@@ -56,7 +60,7 @@ class Expedientes(models.Model):
     fecha = models.DateField(blank=True)
     evento = models.TextField(blank=True)
     pdf_url = models.URLField(blank=True)
-    proyecto = models.ForeignKey(Proyecto)
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.SET_NULL, null=True)
 
 
 class Slug(models.Model):

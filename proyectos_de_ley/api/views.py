@@ -597,7 +597,6 @@ def seguimientos_list_csv(request, codigo):
 
 
 def split_code_input(codigo):
-    print(codigo)
     codigo = codigo.split("-")
     if len(codigo) > 1:
         legislatura = int(codigo[1])

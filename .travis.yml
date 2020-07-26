@@ -3,12 +3,12 @@ language: python
 sudo: false
 
 python:
-    - "3.4"
+    - "3.7"
 
 services:
-    - elasticsearch
+    - postgresql
 
-install: pip install -r requirements/dev.txt 
+install: pip install -r requirements/dev.txt
 
 script: make coverage
 

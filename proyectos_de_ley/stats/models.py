@@ -9,7 +9,7 @@ class ComisionCount(models.Model):
 
 
 class ProjectsInCommissions(models.Model):
-    project = models.ForeignKey(Proyecto)
+    project = models.ForeignKey(Proyecto, on_delete=models.SET_NULL, null=True)
     commission = models.TextField()
 
 

@@ -146,7 +146,6 @@ class SimpleTest(TestCase):
         response = c.get('/p/4aw8ym/')
         soup = BeautifulSoup(response.content)
         result = soup.title.get_text().strip()
-        print(result)
         expected = 'Proyectos de ley emitidos por el Congreso | 03774/2014-CR'
         self.assertEqual(expected, result)
 

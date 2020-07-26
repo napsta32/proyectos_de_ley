@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
                 ('commission', models.TextField()),
-                ('project', models.ForeignKey(to='pdl.Proyecto')),
+                ('project', models.ForeignKey(to='pdl.Proyecto', on_delete=models.SET_NULL, null=True)),
             ],
         ),
     ]

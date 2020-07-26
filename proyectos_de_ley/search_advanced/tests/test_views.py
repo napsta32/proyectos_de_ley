@@ -19,17 +19,19 @@ class TestSearchAdvancedViews(TestCase):
         dummy_items = json.loads(open(dummy_db_json, 'r').read())
 
         for i in dummy_items:
-            b = Proyecto(**i)
-            b.save()
-            s = Seguimientos(proyecto=b, fecha='2014-06-23',
-                             evento='Decreado a... Ciencia, Innovación y Tecnología')
-            s.save()
-            s1 = Seguimientos(proyecto=b, fecha='2015-06-23',
-                              evento='En comisión de Ciencia, Innovación y Tecnología')
-            s1.save()
+            b, _ = Proyecto.objects.get_or_create(**i)
+            s, _ = Seguimientos.objects.get_or_create(
+                proyecto=b, fecha='2014-06-23', evento='Decreado a... Ciencia, Innovación y Tecnología'
+            )
+            s1, _ = Seguimientos.objects.get_or_create(
+                proyecto=b, fecha='2015-06-23', evento='En comisión de Ciencia, Innovación y Tecnología'
+            )
 
-        Slug(nombre='Chihuan Ramos, Leyla Felicita', ascii='Chihuan Ramos, Leyla Felicita',
-             slug='chihuan-ramos-leyla-felicita').save()
+        Slug.objects.get_or_create(
+            nombre='Chihuan Ramos, Leyla Felicita',
+            ascii='Chihuan Ramos, Leyla Felicita',
+            slug='chihuan-ramos-leyla-felicita'
+        )
 
     def test_index(self):
         response = self.c.get('/search-advanced/')
@@ -50,10 +52,6 @@ class TestSearchAdvancedViews(TestCase):
 
     def test_search_palabra_clave(self):
         response = self.c.get('/search-advanced/?query=arco y flecha')
-        self.assertTrue('arco y flecha' in str(response.content))
-
-    def test_search_congresista(self):
-        response = self.c.get('/search-advanced/?congresista=1&grupo_parlamentario=--Escoger bancada--')
         self.assertTrue('arco y flecha' in str(response.content))
 
     def test_numero_total_de_leyes(self):

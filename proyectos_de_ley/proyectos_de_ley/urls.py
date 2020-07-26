@@ -1,4 +1,5 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
+from django.urls import path, include
 from django.contrib.sitemaps.views import sitemap
 from django.contrib import admin
 
@@ -14,12 +15,11 @@ sitemaps = {
 }
 
 urlpatterns = [
-    # '',
-    url(r'^admin/', include(admin.site.urls)),
+    path('admin/', admin.site.urls),
     url(r'^docs/', schema_view),
-    url(r'^stats/', include('stats.urls', namespace='stats')),
-    url(r'^', include('pdl.urls', namespace='pdl')),
-    url(r'^p/', include('pdl.urls', namespace='pdl-proyecto')),
+    url(r'^stats/', include('stats.urls')),
+    url(r'^', include('pdl.urls')),
+    url(r'^p/', include('pdl.urls')),
     url(r'^p/(?P<short_url>[0-9a-z]+/seguimiento/)', seg_views.index),
     url(r'^rss.xml$', LatestEntriesFeed(), name='pdl-rss'),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},

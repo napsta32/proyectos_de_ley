@@ -10,8 +10,8 @@ from stats.models import WithDictamenButNotVoted
 
 LEGISLATURE = 2016
 
+
 def dame_sin_tramitar(numero_de_proyectos):
-    print(numero_de_proyectos, "dame sin tramitar")
     with_seguimientos = Seguimientos.objects.filter(
         proyecto__legislatura=LEGISLATURE,
     ).values_list('proyecto_id', flat=True).distinct().count()
@@ -73,17 +73,20 @@ def index(request):
     # sin dictamen?
     percentage_total_in_commissions, total_in_commissions = dame_sin_dictamen(queryset, numero_de_proyectos)
 
-    # Projects dispensed of 2nd round of votes
-    res = Dispensed.objects.all()[0]
-    dispensed_values = "[" + str(res.total_approved) + ", " \
-                       + str(res.total_dispensed) + ", " \
-                       + str(res.dispensed_by_plenary) + ", " \
-                       + str(res.dispensed_by_spokesmen) + ", " \
-                       + str(res.dispensed_others) + "]"
     dispensed_categories = "['TOTAL aprobados', 'TOTAL dispensados', " \
                            "'Dispensados por acuerdo del pleno', " \
                            "'Dispensados por junta portavoces', " \
                            "'Otros proyectos dispensados']"
+    # Projects dispensed of 2nd round of votes
+    res = Dispensed.objects.all().first()
+    if res:
+        dispensed_values = "[" + str(res.total_approved) + ", " \
+                           + str(res.total_dispensed) + ", " \
+                           + str(res.dispensed_by_plenary) + ", " \
+                           + str(res.dispensed_by_spokesmen) + ", " \
+                           + str(res.dispensed_others) + "]"
+    else:
+        dispensed_values = "[]"
 
     exonerado_de_dictamen = Seguimientos.objects.filter(
         evento__icontains='exoneración de dictamen').values_list('proyecto_id', flat=True).distinct().count()
@@ -122,7 +125,6 @@ def get_projects_that_arent_law(numero_de_proyectos):
     ).exclude(
         titulo_de_ley__isnull=True).exclude(
         titulo_de_ley__exact='')
-    print("are_law", len(are_law), [(i.codigo, i.titulo_de_ley) for i in are_law])
 
     for i in are_law:
         laws.add(i.titulo_de_ley)
