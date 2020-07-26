@@ -5,6 +5,7 @@ vX.Y.Z (2020-)
 ~~~~~~~~~~~~~~~~~~~
 * actualizados dependencias, python, django, scrapy.
 * todos los scrapers han sido movidos aqui.
+* se ha removido elasticsearch y haystack.
 
 v2.2.0 (2016-09-07)
 ~~~~~~~~~~~~~~~~~~~
