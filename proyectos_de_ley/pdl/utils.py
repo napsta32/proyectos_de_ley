@@ -172,7 +172,7 @@ def do_pagination(request, all_items, search=False, advanced_search=None):
             elif advanced_search is True:
                 pretty_items.append(prettify_item_small(i))
             else:
-                pretty_items.append(prettify_item_small(i.object))
+                pretty_items.append(prettify_item_small(i))
 
     if cur > 20:
         first_half = range(cur - 10, cur)
