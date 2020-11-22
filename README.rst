@@ -33,10 +33,9 @@ las dependencias para desarrollo local::
 
 .. _virtualenv: http://docs.python-guide.org/en/latest/dev/virtualenvs/
 
-Para correr el software, reemplazar ``yourapp`` con el nombre
-del folder que contiene el proyecto de Django::
+Para correr el software::
 
-    $ python yourapp/manage.py runserver --settings=yourapp.settings.local
+    $ python proyectos_de_ley/manage.py runserver --settings=yourapp.settings.local
 
 Recasting DateField as DateTimeField::
 
